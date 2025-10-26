@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ grupo.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="bi bi-people-fill"></i> {{ grupo.nombre }}</h2>
+                        <p class="text-muted mb-0">{{ grupo.descripcion or 'Sin descripción' }}</p>
+                        <small class="text-muted">Administrador: {{ grupo.admin_nombre }}</small>
+                    </div>
+                    <div>
+                        {% if es_admin %}
+                            <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn btn-success me-2">
+                                <i class="bi bi-check-circle"></i> Tomar Asistencia
+                            </a>
+                            <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn btn-primary">
+                                <i class="bi bi-star"></i> Gestionar Puntos
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <strong>Código de invitación:</strong> 
+                    <code class="bg-light p-2 rounded">{{ grupo.codigo_invitacion }}</code>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('{{ grupo.codigo_invitacion }}')">
+                        <i class="bi bi-clipboard"></i> Copiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-trophy-fill text-warning"></i> Tabla de Clasificación</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Nombre</th>
+                                <th>Puntos</th>
+                                <th>Racha</th>
+                                <th>Medallas</th>
+                                <th>Asistencias</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in ranking %}
+                                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
+                                    <td>
+                                        {% if loop.index == 1 %}
+                                            <i class="bi bi-trophy-fill" style="color: gold; font-size: 1.5rem;"></i>
+                                        {% elif loop.index == 2 %}
+                                            <i class="bi bi-trophy-fill" style="color: silver; font-size: 1.5rem;"></i>
+                                        {% elif loop.index == 3 %}
+                                            <i class="bi bi-trophy-fill" style="color: #cd7f32; font-size: 1.5rem;"></i>
+                                        {% else %}
+                                            {{ loop.index }}
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ usuario.nombre }}</strong></td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ usuario.puntos }} pts</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-fire"></i> {{ usuario.racha }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-trophy"></i> {{ usuario.total_medallas }}
+                                        </span>
+                                    </td>
+                                    <td>{{ usuario.asistencias_grupo }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copiarCodigo(codigo) {
+    navigator.clipboard.writeText(codigo).then(() => {
+        alert('Código copiado al portapapeles!');
+    });
+}
+</script>
+{% endblock %}

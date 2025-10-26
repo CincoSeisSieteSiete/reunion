@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Unirse a Grupo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Unirse a un Grupo</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código de Invitación</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" 
+                               placeholder="Ingresa el código del grupo" required>
+                        <div class="form-text">Solicita el código al administrador del grupo</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Unirse al Grupo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

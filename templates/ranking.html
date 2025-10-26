@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking Global{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h2 class="mb-0 text-center">
+                    <i class="bi bi-trophy-fill text-warning"></i> Ranking Global
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Posición</th>
+                                <th>Nombre</th>
+                                <th>Puntos</th>
+                                <th>Racha</th>
+                                <th>Medallas</th>
+                                <th>Asistencias Totales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in ranking %}
+                                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
+                                    <td>
+                                        {% if loop.index == 1 %}
+                                            <i class="bi bi-trophy-fill" style="color: gold; font-size: 2rem;"></i>
+                                        {% elif loop.index == 2 %}
+                                            <i class="bi bi-trophy-fill" style="color: silver; font-size: 1.8rem;"></i>
+                                        {% elif loop.index == 3 %}
+                                            <i class="bi bi-trophy-fill" style="color: #cd7f32; font-size: 1.6rem;"></i>
+                                        {% else %}
+                                            <strong>{{ loop.index }}</strong>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ usuario.nombre }}</strong></td>
+                                    <td>
+                                        <span class="badge bg-primary" style="font-size: 1rem;">
+                                            <i class="bi bi-star-fill"></i> {{ usuario.puntos }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger" style="font-size: 1rem;">
+                                            <i class="bi bi-fire"></i> {{ usuario.racha }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark" style="font-size: 1rem;">
+                                            <i class="bi bi-trophy"></i> {{ usuario.total_medallas }}
+                                        </span>
+                                    </td>
+                                    <td>{{ usuario.total_asistencias }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

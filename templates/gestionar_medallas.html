@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Gestionar Medallas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Crear Nueva Medalla</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="accion" value="crear">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen" class="form-label">Nombre del archivo de imagen</label>
+                        <input type="text" class="form-control" id="imagen" name="imagen" 
+                               placeholder="medalla1.png" required>
+                        <div class="form-text">La imagen debe estar en static/medallas/</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-save"></i> Crear Medalla
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-award"></i> Asignar Medalla</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="accion" value="asignar">
+                    <div class="mb-3">
+                        <label for="usuario_id" class="form-label">Usuario</label>
+                        <select class="form-select" id="usuario_id" name="usuario_id" required>
+                            <option value="">Seleccionar usuario...</option>
+                            {% for usuario in usuarios %}
+                                <option value="{{ usuario.id }}">{{ usuario.nombre }} ({{ usuario.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medalla_id" class="form-label">Medalla</label>
+                        <select class="form-select" id="medalla_id" name="medalla_id" required>
+                            <option value="">Seleccionar medalla...</option>
+                            {% for medalla in medallas %}
+                                <option value="{{ medalla.id }}">{{ medalla.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-check-circle"></i> Asignar Medalla
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-trophy"></i> Medallas Existentes</h4>
+            </div>
+            <div class="card-body">
+                {% if medallas %}
+                    <div class="row">
+                        {% for medalla in medallas %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
+                                             alt="{{ medalla.nombre }}" 
+                                             class="medal-img mb-2"
+                                             onerror="this.src='https://via.placeholder.com/60?text=No+Image'">
+                                        <h6>{{ medalla.nombre }}</h6>
+                                        <p class="small text-muted">{{ medalla.descripcion or 'Sin descripción' }}</p>
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="accion" value="eliminar">
+                                            <input type="hidden" name="medalla_id" value="{{ medalla.id }}">
+                                            <button type="submit" class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('¿Eliminar esta medalla?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">No hay medallas creadas</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
