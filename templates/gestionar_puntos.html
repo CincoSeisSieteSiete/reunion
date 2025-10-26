@@ -3,67 +3,325 @@
 {% block title %}Gestionar Puntos{% endblock %}
 
 {% block content %}
-<div class="centered-layout">
-    <div class="card manage-card">
-        <div class="card-header">
-            <h3><i class="bi bi-star"></i> Gestionar Puntos</h3>
-        </div>
-        <div class="card-body">
-            <form method="POST" class="manage-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="usuario_id" class="form-label">Usuario</label>
-                        <select class="form-control" id="usuario_id" name="usuario_id" required>
-                            <option value="">Seleccionar usuario...</option>
-                            {% for miembro in miembros %}
-                            <option value="{{ miembro.id }}">
-                                {{ miembro.nombre }} ({{ miembro.puntos }} pts)
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="puntos" class="form-label">Cantidad de Puntos</label>
-                        <input type="number" class="form-control" id="puntos" name="puntos" 
-                               min="1" value="10" required>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" name="accion" value="agregar" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> Agregar Puntos
-                    </button>
-                    <button type="submit" name="accion" value="quitar" class="btn btn-danger">
-                        <i class="bi bi-dash-circle"></i> Quitar Puntos
-                    </button>
-                </div>
-            </form>
-            
-            <div class="divider"></div>
-            
-            <h5 class="section-title">Miembros del Grupo</h5>
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Puntos</th>
-                            <th>Racha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for miembro in miembros %}
-                        <tr>
-                            <td class="member-name">{{ miembro.nombre }}</td>
-                            <td><span class="status-badge status-primary">{{ miembro.puntos }}</span></td>
-                            <td><span class="status-badge status-danger">{{ miembro.racha }}</span></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<style>
+  .manage-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .manage-card {
+    background: white;
+    border: 2px solid #000;
+    padding: 2.5rem;
+  }
+
+  .manage-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #000;
+  }
+
+  .manage-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: #000;
+    text-transform: uppercase;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #000;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-select,
+  .form-input {
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #000;
+    background: white;
+    color: #000;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .form-select:focus,
+  .form-input:focus {
+    background: #000;
+    color: white;
+  }
+
+  .button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .action-btn {
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-add {
+    background: #000;
+    color: white;
+  }
+
+  .btn-add:hover {
+    background: white;
+    color: #000;
+    transform: translateY(-2px);
+  }
+
+  .btn-remove {
+    background: white;
+    color: #000;
+  }
+
+  .btn-remove:hover {
+    background: #000;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .section-divider {
+    height: 2px;
+    background: #000;
+    margin: 3rem 0;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1.5rem 0;
+    color: #000;
+  }
+
+  .members-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .members-table thead {
+    background: #000;
+    color: white;
+  }
+
+  .members-table th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 2px solid #000;
+  }
+
+  .members-table td {
+    padding: 1rem;
+    border: 2px solid #000;
+    font-family: 'Courier New', monospace;
+  }
+
+  .members-table tbody tr {
+    background: white;
+    transition: background 0.3s ease;
+  }
+
+  .members-table tbody tr:hover {
+    background: #f5f5f5;
+  }
+
+  .member-name-cell {
+    font-weight: 700;
+  }
+
+  .stat-value {
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .manage-container {
+      padding: 2rem 1rem;
+    }
+
+    .manage-card {
+      padding: 1.5rem;
+    }
+
+    .manage-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .button-group {
+      grid-template-columns: 1fr;
+    }
+
+    .members-table {
+      display: block;
+      overflow-x: auto;
+    }
+
+    .members-table thead {
+      display: none;
+    }
+
+    .members-table tbody,
+    .members-table tr,
+    .members-table td {
+      display: block;
+    }
+
+    .members-table tr {
+      margin-bottom: 1rem;
+      border: 2px solid #000;
+    }
+
+    .members-table td {
+      padding: 0.75rem 1rem;
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .members-table td:last-child {
+      border-bottom: none;
+    }
+
+    .members-table td::before {
+      content: attr(data-label);
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .manage-container {
+      padding: 1rem 0.5rem;
+    }
+
+    .manage-card {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<div class="manage-container">
+  <div class="manage-card">
+    <div class="manage-header">
+      <h1>Gestionar Puntos</h1>
     </div>
+
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="usuario_id" class="form-label">Usuario</label>
+          <select class="form-select" id="usuario_id" name="usuario_id" required>
+            <option value="">Seleccionar usuario...</option>
+            {% for miembro in miembros %}
+            <option value="{{ miembro.id }}">
+              {{ miembro.nombre }} ({{ miembro.puntos }} pts)
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="puntos" class="form-label">Cantidad de Puntos</label>
+          <input type="number" class="form-input" id="puntos" name="puntos" 
+                 min="1" value="10" required>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="submit" name="accion" value="agregar" class="action-btn btn-add">
+          Agregar Puntos
+        </button>
+        <button type="submit" name="accion" value="quitar" class="action-btn btn-remove">
+          Quitar Puntos
+        </button>
+      </div>
+    </form>
+    
+    <div class="section-divider"></div>
+    
+    <h2 class="section-title">Miembros del Grupo</h2>
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Puntos</th>
+          <th>Racha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for miembro in miembros %}
+        <tr>
+          <td class="member-name-cell" data-label="Nombre">{{ miembro.nombre }}</td>
+          <td data-label="Puntos"><span class="stat-value">{{ miembro.puntos }}</span></td>
+          <td data-label="Racha"><span class="stat-value">{{ miembro.racha }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  anime({
+    targets: '.manage-card',
+    opacity: [0, 1],
+    translateY: [30, 0],
+    duration: 800,
+    easing: 'easeOutCubic'
+  });
+
+  anime({
+    targets: '.members-table tbody tr',
+    opacity: [0, 1],
+    translateX: [-20, 0],
+    duration: 600,
+    delay: anime.stagger(50, {start: 400}),
+    easing: 'easeOutCubic'
+  });
+</script>
 {% endblock %}

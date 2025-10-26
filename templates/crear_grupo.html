@@ -3,85 +3,220 @@
 {% block title %}Crear Grupo{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0" style="background-color: #fff; border-radius: 20px;">
-                <div class="card-header bg-white border-0 text-center pt-4">
-                    <h3 class="fw-bold mb-0" style="color: #222;">
-                        <i class="bi bi-plus-circle" style="color: var(--primary-color);"></i>
-                        Crear Nuevo Grupo
-                    </h3>
-                </div>
-                <div class="card-body px-4 py-4">
-                    <form method="POST">
-                        <div class="mb-4">
-                            <label for="nombre" class="form-label fw-semibold text-secondary">Nombre del Grupo</label>
-                            <input 
-                                type="text" 
-                                class="form-control border rounded-4 shadow-none p-2"
-                                id="nombre" 
-                                name="nombre" 
-                                placeholder="Escribe el nombre del grupo"
-                                required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="descripcion" class="form-label fw-semibold text-secondary">Descripción</label>
-                            <textarea 
-                                class="form-control border rounded-4 shadow-none p-2" 
-                                id="descripcion" 
-                                name="descripcion" 
-                                rows="3" 
-                                placeholder="Agrega una breve descripción"></textarea>
-                        </div>
-                        <button type="submit" class="btn w-100 py-2 fw-semibold" 
-                            style="background: var(--primary-color); color: white; border-radius: 12px;">
-                            <i class="bi bi-check-circle"></i> Crear Grupo
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<style>
+  .create-group-container {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+  }
+
+  .create-group-card {
+    background: white;
+    border: 2px solid #000;
+    max-width: 600px;
+    width: 100%;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .create-group-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #000 0%, #666 50%, #000 100%);
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem 0;
+    color: #000;
+    text-transform: uppercase;
+  }
+
+  .form-header p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #000;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #000;
+    background: white;
+    color: #000;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    background: #000;
+    color: white;
+    border-color: #000;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: #999;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: #000;
+    color: white;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn:hover {
+    background: white;
+    color: #000;
+    transform: translateY(-2px);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    .create-group-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .form-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .form-header p {
+      font-size: 0.85rem;
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: 0.875rem;
+      font-size: 0.95rem;
+    }
+
+    .submit-btn {
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .create-group-container {
+      padding: 1rem 0.5rem;
+    }
+
+    .create-group-card {
+      padding: 1.5rem 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>
+
+<div class="create-group-container">
+  <div class="create-group-card">
+    <div class="form-header">
+      <h1>Crear Grupo</h1>
+      <p>Configura tu nuevo grupo de asistencia</p>
     </div>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="nombre" class="form-label">Nombre del Grupo</label>
+        <input 
+          type="text" 
+          class="form-input"
+          id="nombre" 
+          name="nombre" 
+          placeholder="Escribe el nombre del grupo"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea 
+          class="form-textarea" 
+          id="descripcion" 
+          name="descripcion" 
+          placeholder="Agrega una breve descripción"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Crear Grupo
+      </button>
+    </form>
+  </div>
 </div>
 
-<style>
-body {
-    background-color: #fff;
-    color: #333;
-}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  anime({
+    targets: '.create-group-card',
+    opacity: [0, 1],
+    translateY: [30, 0],
+    duration: 800,
+    easing: 'easeOutCubic'
+  });
 
-/* Tarjeta */
-.card {
-    transition: none !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-}
-
-/* Etiquetas */
-.form-label {
-    font-size: 0.95rem;
-}
-
-/* Inputs */
-.form-control {
-    font-size: 0.95rem;
-    transition: border-color 0.2s ease;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.1);
-}
-
-/* Botón */
-.btn {
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.btn:hover {
-    opacity: 0.95;
-    transform: translateY(-1px);
-}
-</style>
+  anime({
+    targets: '.form-group',
+    opacity: [0, 1],
+    translateY: [20, 0],
+    duration: 600,
+    delay: anime.stagger(100, {start: 300}),
+    easing: 'easeOutCubic'
+  });
+</script>
 {% endblock %}

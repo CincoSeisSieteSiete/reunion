@@ -2,101 +2,405 @@
 
 {% block title %}{{ grupo.nombre }}{% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-12 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2><i class="bi bi-people-fill"></i> {{ grupo.nombre }}</h2>
-                        <p class="text-muted mb-0">{{ grupo.descripcion or 'Sin descripción' }}</p>
-                        <small class="text-muted">Administrador: {{ grupo.admin_nombre }}</small>
-                    </div>
-                    <div>
-                        {% if es_admin %}
-                            <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn btn-success me-2">
-                                <i class="bi bi-check-circle"></i> Tomar Asistencia
-                            </a>
-                            <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn btn-primary">
-                                <i class="bi bi-star"></i> Gestionar Puntos
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <strong>Código de invitación:</strong> 
-                    <code class="bg-light p-2 rounded">{{ grupo.codigo_invitacion }}</code>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('{{ grupo.codigo_invitacion }}')">
-                        <i class="bi bi-clipboard"></i> Copiar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+{% block extra_css %}
+<style>
+    :root {
+        --black: #000000;
+        --white: #ffffff;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-300: #d4d4d4;
+        --gray-400: #a3a3a3;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-700: #404040;
+        --gray-800: #262626;
+        --gray-900: #171717;
+    }
+    
+    .grupo-header {
+        background: var(--black);
+        color: var(--white);
+        padding: 4rem 3rem;
+        margin: -2rem -2rem 3rem;
+        border: 2px solid var(--black);
+    }
+    
+    .grupo-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+    }
+    
+    .grupo-description {
+        font-size: 1.125rem;
+        color: var(--gray-300);
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.02em;
+    }
+    
+    .grupo-admin {
+        font-size: 0.875rem;
+        color: var(--gray-400);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    
+    .grupo-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        padding: 1rem 2rem;
+        background: var(--white);
+        color: var(--black);
+        border: 2px solid var(--white);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        background: var(--black);
+        color: var(--white);
+    }
+    
+    .codigo-container {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: var(--gray-900);
+        border: 1px solid var(--gray-700);
+        display: inline-block;
+    }
+    
+    .codigo-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--gray-400);
+        margin-bottom: 0.5rem;
+    }
+    
+    .codigo-value {
+        font-family: 'Courier New', monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--white);
+        letter-spacing: 0.2em;
+    }
+    
+    .btn-copy {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        background: var(--gray-800);
+        color: var(--white);
+        border: 1px solid var(--gray-600);
+        font-size: 0.75rem;
+    }
+    
+    .btn-copy:hover {
+        background: var(--white);
+        color: var(--black);
+    }
+    
+    /* Leaderboard */
+    .leaderboard-card {
+        background: var(--white);
+        border: 2px solid var(--black);
+        margin-top: 3rem;
+    }
+    
+    .leaderboard-header {
+        background: var(--black);
+        color: var(--white);
+        padding: 2rem 3rem;
+        border-bottom: 2px solid var(--black);
+    }
+    
+    .leaderboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+    }
+    
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .leaderboard-table thead {
+        background: var(--gray-100);
+        border-bottom: 2px solid var(--black);
+    }
+    
+    .leaderboard-table th {
+        padding: 1.5rem 2rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--black);
+    }
+    
+    .leaderboard-table td {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: 1rem;
+    }
+    
+    .leaderboard-table tbody tr {
+        transition: background 0.3s ease;
+    }
+    
+    .leaderboard-table tbody tr:hover {
+        background: var(--gray-100);
+    }
+    
+    .ranking-gold {
+        background: var(--black) !important;
+        color: var(--white);
+        font-weight: 700;
+    }
+    
+    .ranking-gold td {
+        border-bottom: 2px solid var(--gray-800);
+    }
+    
+    .ranking-silver {
+        background: var(--gray-800) !important;
+        color: var(--white);
+        font-weight: 600;
+    }
+    
+    .ranking-bronze {
+        background: var(--gray-700) !important;
+        color: var(--white);
+        font-weight: 600;
+    }
+    
+    .position-icon {
+        font-size: 2rem;
+        display: inline-block;
+    }
+    
+    .badge {
+        padding: 0.5rem 1rem;
+        background: var(--black);
+        color: var(--white);
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-block;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+    }
+    
+    .ranking-gold .badge,
+    .ranking-silver .badge,
+    .ranking-bronze .badge {
+        background: var(--white);
+        color: var(--black);
+    }
+    
+    /* Enhanced mobile responsive design */
+    @media (max-width: 768px) {
+        .grupo-header {
+            padding: 2rem 1.5rem;
+            margin: -1rem -1rem 2rem;
+        }
+        
+        .grupo-title {
+            font-size: 2rem;
+        }
+        
+        .grupo-description {
+            font-size: 1rem;
+        }
+        
+        .grupo-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .codigo-container {
+            width: 100%;
+            padding: 1rem;
+        }
+        
+        .codigo-value {
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-copy {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        .leaderboard-header {
+            padding: 1.5rem;
+        }
+        
+        .leaderboard-title {
+            font-size: 1.5rem;
+        }
+        
+        /* Transform table into cards on mobile */
+        .leaderboard-table thead {
+            display: none;
+        }
+        
+        .leaderboard-table,
+        .leaderboard-table tbody,
+        .leaderboard-table tr,
+        .leaderboard-table td {
+            display: block;
+            width: 100%;
+        }
+        
+        .leaderboard-table tr {
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 1.5rem;
+        }
+        
+        .leaderboard-table td {
+            border: none;
+            padding: 0.75rem 0;
+            text-align: left;
+            position: relative;
+        }
+        
+        .leaderboard-table td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .position-icon {
+            font-size: 1.5rem;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .ranking-gold,
+        .ranking-silver,
+        .ranking-bronze {
+            color: var(--white);
+        }
+    }
+</style>
+{% endblock %}
 
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="mb-0"><i class="bi bi-trophy-fill text-warning"></i> Tabla de Clasificación</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Posición</th>
-                                <th>Nombre</th>
-                                <th>Puntos</th>
-                                <th>Racha</th>
-                                <th>Medallas</th>
-                                <th>Asistencias</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for usuario in ranking %}
-                                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
-                                    <td>
-                                        {% if loop.index == 1 %}
-                                            <i class="bi bi-trophy-fill" style="color: gold; font-size: 1.5rem;"></i>
-                                        {% elif loop.index == 2 %}
-                                            <i class="bi bi-trophy-fill" style="color: silver; font-size: 1.5rem;"></i>
-                                        {% elif loop.index == 3 %}
-                                            <i class="bi bi-trophy-fill" style="color: #cd7f32; font-size: 1.5rem;"></i>
-                                        {% else %}
-                                            {{ loop.index }}
-                                        {% endif %}
-                                    </td>
-                                    <td><strong>{{ usuario.nombre }}</strong></td>
-                                    <td>
-                                        <span class="badge bg-primary">{{ usuario.puntos }} pts</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-danger">
-                                            <i class="bi bi-fire"></i> {{ usuario.racha }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="bi bi-trophy"></i> {{ usuario.total_medallas }}
-                                        </span>
-                                    </td>
-                                    <td>{{ usuario.asistencias_grupo }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+{% block content %}
+<div class="grupo-header">
+    <h1 class="grupo-title">{{ grupo.nombre }}</h1>
+    <p class="grupo-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
+    <p class="grupo-admin">Administrador: {{ grupo.admin_nombre }}</p>
+    
+    {% if es_admin %}
+    <div class="grupo-actions">
+        <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn">Tomar Asistencia</a>
+        <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn">Gestionar Puntos</a>
+    </div>
+    {% endif %}
+    
+    <div class="codigo-container">
+        <div class="codigo-label">Código de Invitación</div>
+        <span class="codigo-value">{{ grupo.codigo_invitacion }}</span>
+        <button class="btn btn-copy" onclick="copiarCodigo('{{ grupo.codigo_invitacion }}')">Copiar</button>
     </div>
 </div>
 
+<div class="leaderboard-card">
+    <div class="leaderboard-header">
+        <h2 class="leaderboard-title">Tabla de Clasificación</h2>
+    </div>
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Nombre</th>
+                <th>Puntos</th>
+                <th>Racha</th>
+                <th>Medallas</th>
+                <th>Asistencias</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in ranking %}
+            <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
+                <td data-label="Posición">
+                    {% if loop.index == 1 %}
+                        <span class="position-icon">★</span>
+                    {% elif loop.index == 2 %}
+                        <span class="position-icon">★</span>
+                    {% elif loop.index == 3 %}
+                        <span class="position-icon">★</span>
+                    {% else %}
+                        {{ loop.index }}
+                    {% endif %}
+                </td>
+                <td data-label="Nombre"><strong>{{ usuario.nombre }}</strong></td>
+                <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>
+                <td data-label="Racha"><span class="badge">{{ usuario.racha }} 🔥</span></td>
+                <td data-label="Medallas"><span class="badge">{{ usuario.total_medallas }} 🏆</span></td>
+                <td data-label="Asistencias">{{ usuario.asistencias_grupo }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
 function copiarCodigo(codigo) {
     navigator.clipboard.writeText(codigo).then(() => {
         alert('Código copiado al portapapeles!');
     });
 }
+
+// Animate header
+anime({
+    targets: '.grupo-header',
+    opacity: [0, 1],
+    translateY: [-50, 0],
+    duration: 1000,
+    easing: 'easeOutExpo'
+});
+
+// Animate table rows
+anime({
+    targets: '.leaderboard-table tbody tr',
+    opacity: [0, 1],
+    translateX: [-30, 0],
+    delay: anime.stagger(100, {start: 500}),
+    duration: 800,
+    easing: 'easeOutExpo'
+});
 </script>
 {% endblock %}

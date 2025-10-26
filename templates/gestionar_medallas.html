@@ -3,105 +3,338 @@
 {% block title %}Gestionar Medallas{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Crear Nueva Medalla</h4>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <input type="hidden" name="accion" value="crear">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="2"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="imagen" class="form-label">Nombre del archivo de imagen</label>
-                        <input type="text" class="form-control" id="imagen" name="imagen" 
-                               placeholder="medalla1.png" required>
-                        <div class="form-text">La imagen debe estar en static/medallas/</div>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-save"></i> Crear Medalla
-                    </button>
-                </form>
-            </div>
-        </div>
+<style>
+  .medals-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
 
-        <div class="card mt-4">
-            <div class="card-header bg-white">
-                <h4 class="mb-0"><i class="bi bi-award"></i> Asignar Medalla</h4>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <input type="hidden" name="accion" value="asignar">
-                    <div class="mb-3">
-                        <label for="usuario_id" class="form-label">Usuario</label>
-                        <select class="form-select" id="usuario_id" name="usuario_id" required>
-                            <option value="">Seleccionar usuario...</option>
-                            {% for usuario in usuarios %}
-                                <option value="{{ usuario.id }}">{{ usuario.nombre }} ({{ usuario.email }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="medalla_id" class="form-label">Medalla</label>
-                        <select class="form-select" id="medalla_id" name="medalla_id" required>
-                            <option value="">Seleccionar medalla...</option>
-                            {% for medalla in medallas %}
-                                <option value="{{ medalla.id }}">{{ medalla.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">
-                        <i class="bi bi-check-circle"></i> Asignar Medalla
-                    </button>
-                </form>
-            </div>
+  .medals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .medal-card {
+    background: white;
+    border: 2px solid #000;
+    padding: 2rem;
+  }
+
+  .card-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #000;
+  }
+
+  .card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: #000;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #000;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.95rem;
+    border: 2px solid #000;
+    background: white;
+    color: #000;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    background: #000;
+    color: white;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-hint {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: #000;
+    color: white;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background: white;
+    color: #000;
+    transform: translateY(-2px);
+  }
+
+  .submit-btn.btn-success {
+    background: #000;
+  }
+
+  .submit-btn.btn-success:hover {
+    background: white;
+    color: #000;
+  }
+
+  .medals-display {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .medal-item {
+    background: white;
+    border: 2px solid #000;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .medal-item:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+  }
+
+  .medal-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    filter: grayscale(100%);
+  }
+
+  .medal-name {
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0;
+    color: #000;
+  }
+
+  .medal-desc {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0 0 1rem 0;
+    font-family: 'Courier New', monospace;
+  }
+
+  .delete-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: white;
+    color: #000;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .delete-btn:hover {
+    background: #000;
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+    font-family: 'Courier New', monospace;
+  }
+
+  @media (max-width: 968px) {
+    .medals-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .medals-container {
+      padding: 2rem 1rem;
+    }
+
+    .medal-card {
+      padding: 1.5rem;
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+    }
+
+    .medals-display {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .medals-container {
+      padding: 1rem 0.5rem;
+    }
+
+    .medal-card {
+      padding: 1rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      padding: 0.875rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<div class="medals-container">
+  <div class="medals-grid">
+    <div>
+      <div class="medal-card">
+        <div class="card-header">
+          <h2>Crear Nueva Medalla</h2>
         </div>
+        <form method="POST">
+          <input type="hidden" name="accion" value="crear">
+          <div class="form-group">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-input" id="nombre" name="nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-textarea" id="descripcion" name="descripcion"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="imagen" class="form-label">Nombre del archivo de imagen</label>
+            <input type="text" class="form-input" id="imagen" name="imagen" 
+                   placeholder="medalla1.png" required>
+            <div class="form-hint">La imagen debe estar en static/medallas/</div>
+          </div>
+          <button type="submit" class="submit-btn">
+            Crear Medalla
+          </button>
+        </form>
+      </div>
+
+      <div class="medal-card" style="margin-top: 2rem;">
+        <div class="card-header">
+          <h2>Asignar Medalla</h2>
+        </div>
+        <form method="POST">
+          <input type="hidden" name="accion" value="asignar">
+          <div class="form-group">
+            <label for="usuario_id" class="form-label">Usuario</label>
+            <select class="form-select" id="usuario_id" name="usuario_id" required>
+              <option value="">Seleccionar usuario...</option>
+              {% for usuario in usuarios %}
+                <option value="{{ usuario.id }}">{{ usuario.nombre }} ({{ usuario.email }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="medalla_id" class="form-label">Medalla</label>
+            <select class="form-select" id="medalla_id" name="medalla_id" required>
+              <option value="">Seleccionar medalla...</option>
+              {% for medalla in medallas %}
+                <option value="{{ medalla.id }}">{{ medalla.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="submit-btn btn-success">
+            Asignar Medalla
+          </button>
+        </form>
+      </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="mb-0"><i class="bi bi-trophy"></i> Medallas Existentes</h4>
+    <div class="medal-card">
+      <div class="card-header">
+        <h2>Medallas Existentes</h2>
+      </div>
+      {% if medallas %}
+        <div class="medals-display">
+          {% for medalla in medallas %}
+            <div class="medal-item">
+              <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
+                   alt="{{ medalla.nombre }}" 
+                   class="medal-img"
+                   onerror="this.src='https://via.placeholder.com/80?text=No+Image'">
+              <h3 class="medal-name">{{ medalla.nombre }}</h3>
+              <p class="medal-desc">{{ medalla.descripcion or 'Sin descripción' }}</p>
+              <form method="POST" style="display: inline;">
+                <input type="hidden" name="accion" value="eliminar">
+                <input type="hidden" name="medalla_id" value="{{ medalla.id }}">
+                <button type="submit" class="delete-btn" 
+                        onclick="return confirm('¿Eliminar esta medalla?')">
+                  Eliminar
+                </button>
+              </form>
             </div>
-            <div class="card-body">
-                {% if medallas %}
-                    <div class="row">
-                        {% for medalla in medallas %}
-                            <div class="col-md-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body text-center">
-                                        <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
-                                             alt="{{ medalla.nombre }}" 
-                                             class="medal-img mb-2"
-                                             onerror="this.src='https://via.placeholder.com/60?text=No+Image'">
-                                        <h6>{{ medalla.nombre }}</h6>
-                                        <p class="small text-muted">{{ medalla.descripcion or 'Sin descripción' }}</p>
-                                        <form method="POST" class="d-inline">
-                                            <input type="hidden" name="accion" value="eliminar">
-                                            <input type="hidden" name="medalla_id" value="{{ medalla.id }}">
-                                            <button type="submit" class="btn btn-sm btn-danger" 
-                                                    onclick="return confirm('¿Eliminar esta medalla?')">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="text-center text-muted">No hay medallas creadas</p>
-                {% endif %}
-            </div>
+          {% endfor %}
         </div>
+      {% else %}
+        <div class="empty-state">
+          <p>No hay medallas creadas</p>
+        </div>
+      {% endif %}
     </div>
+  </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  anime({
+    targets: '.medal-card',
+    opacity: [0, 1],
+    translateY: [30, 0],
+    duration: 800,
+    delay: anime.stagger(100),
+    easing: 'easeOutCubic'
+  });
+
+  anime({
+    targets: '.medal-item',
+    opacity: [0, 1],
+    scale: [0.9, 1],
+    duration: 600,
+    delay: anime.stagger(80, {start: 400}),
+    easing: 'easeOutCubic'
+  });
+</script>
 {% endblock %}

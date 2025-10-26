@@ -2,66 +2,275 @@
 
 {% block title %}Ranking Global{% endblock %}
 
+{% block extra_css %}
+<style>
+    :root {
+        --black: #000000;
+        --white: #ffffff;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-300: #d4d4d4;
+        --gray-400: #a3a3a3;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-700: #404040;
+        --gray-800: #262626;
+        --gray-900: #171717;
+    }
+    
+    .ranking-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .ranking-header {
+        background: var(--black);
+        color: var(--white);
+        padding: 4rem 3rem;
+        margin: -2rem -2rem 3rem;
+        border: 2px solid var(--black);
+        text-align: center;
+    }
+    
+    .ranking-header-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin: 0;
+        line-height: 1.1;
+        text-transform: uppercase;
+    }
+    
+    .ranking-header-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    
+    .ranking-card {
+        background: var(--white);
+        border: 2px solid var(--black);
+    }
+    
+    .ranking-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .ranking-table thead {
+        background: var(--gray-100);
+        border-bottom: 2px solid var(--black);
+    }
+    
+    .ranking-table th {
+        padding: 1.5rem 1.5rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--black);
+    }
+    
+    .ranking-table td {
+        padding: 1.5rem 1.5rem;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: 1rem;
+    }
+    
+    .ranking-table tbody tr {
+        transition: background 0.3s ease;
+    }
+    
+    .ranking-table tbody tr:hover {
+        background: var(--gray-100);
+    }
+    
+    .ranking-gold {
+        background: var(--black) !important;
+        color: var(--white);
+        font-weight: 700;
+    }
+    
+    .ranking-gold td {
+        border-bottom: 2px solid var(--gray-800);
+    }
+    
+    .ranking-silver {
+        background: var(--gray-800) !important;
+        color: var(--white);
+        font-weight: 600;
+    }
+    
+    .ranking-bronze {
+        background: var(--gray-700) !important;
+        color: var(--white);
+        font-weight: 600;
+    }
+    
+    .position-icon {
+        font-size: 2rem;
+        display: inline-block;
+    }
+    
+    .badge {
+        padding: 0.5rem 1rem;
+        background: var(--black);
+        color: var(--white);
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-block;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+    }
+    
+    .ranking-gold .badge,
+    .ranking-silver .badge,
+    .ranking-bronze .badge {
+        background: var(--white);
+        color: var(--black);
+    }
+    
+    /* Mobile responsive design */
+    @media (max-width: 768px) {
+        .ranking-container {
+            padding: 1rem;
+        }
+        
+        .ranking-header {
+            padding: 2rem 1.5rem;
+            margin: -1rem -1rem 2rem;
+        }
+        
+        .ranking-header-title {
+            font-size: 2rem;
+        }
+        
+        .ranking-header-icon {
+            font-size: 2.5rem;
+        }
+        
+        /* Transform table into cards on mobile */
+        .ranking-table thead {
+            display: none;
+        }
+        
+        .ranking-table,
+        .ranking-table tbody,
+        .ranking-table tr,
+        .ranking-table td {
+            display: block;
+            width: 100%;
+        }
+        
+        .ranking-table tr {
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 1.5rem;
+        }
+        
+        .ranking-table td {
+            border: none;
+            padding: 0.75rem 0;
+            text-align: left;
+            position: relative;
+        }
+        
+        .ranking-table td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .position-icon {
+            font-size: 1.5rem;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .ranking-gold,
+        .ranking-silver,
+        .ranking-bronze {
+            color: var(--white);
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h2 class="mb-0 text-center">
-                    <i class="bi bi-trophy-fill text-warning"></i> Ranking Global
-                </h2>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Posición</th>
-                                <th>Nombre</th>
-                                <th>Puntos</th>
-                                <th>Racha</th>
-                                <th>Medallas</th>
-                                <th>Asistencias Totales</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for usuario in ranking %}
-                                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
-                                    <td>
-                                        {% if loop.index == 1 %}
-                                            <i class="bi bi-trophy-fill" style="color: gold; font-size: 2rem;"></i>
-                                        {% elif loop.index == 2 %}
-                                            <i class="bi bi-trophy-fill" style="color: silver; font-size: 1.8rem;"></i>
-                                        {% elif loop.index == 3 %}
-                                            <i class="bi bi-trophy-fill" style="color: #cd7f32; font-size: 1.6rem;"></i>
-                                        {% else %}
-                                            <strong>{{ loop.index }}</strong>
-                                        {% endif %}
-                                    </td>
-                                    <td><strong>{{ usuario.nombre }}</strong></td>
-                                    <td>
-                                        <span class="badge bg-primary" style="font-size: 1rem;">
-                                            <i class="bi bi-star-fill"></i> {{ usuario.puntos }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-danger" style="font-size: 1rem;">
-                                            <i class="bi bi-fire"></i> {{ usuario.racha }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-warning text-dark" style="font-size: 1rem;">
-                                            <i class="bi bi-trophy"></i> {{ usuario.total_medallas }}
-                                        </span>
-                                    </td>
-                                    <td>{{ usuario.total_asistencias }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<div class="ranking-container">
+    <div class="ranking-header">
+        <span class="ranking-header-icon">★</span>
+        <h1 class="ranking-header-title">Ranking Global</h1>
+    </div>
+    
+    <div class="ranking-card">
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>Puntos</th>
+                    <th>Racha</th>
+                    <th>Medallas</th>
+                    <th>Asistencias</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in ranking %}
+                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
+                    <td data-label="Posición">
+                        {% if loop.index == 1 %}
+                            <span class="position-icon">★</span>
+                        {% elif loop.index == 2 %}
+                            <span class="position-icon">★</span>
+                        {% elif loop.index == 3 %}
+                            <span class="position-icon">★</span>
+                        {% else %}
+                            <strong>{{ loop.index }}</strong>
+                        {% endif %}
+                    </td>
+                    <td data-label="Nombre"><strong>{{ usuario.nombre }}</strong></td>
+                    <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>
+                    <td data-label="Racha"><span class="badge">{{ usuario.racha }} 🔥</span></td>
+                    <td data-label="Medallas"><span class="badge">{{ usuario.total_medallas }} 🏆</span></td>
+                    <td data-label="Asistencias">{{ usuario.total_asistencias }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+// Animate header
+anime({
+    targets: '.ranking-header',
+    opacity: [0, 1],
+    translateY: [-50, 0],
+    duration: 1000,
+    easing: 'easeOutExpo'
+});
+
+// Animate table rows
+anime({
+    targets: '.ranking-table tbody tr',
+    opacity: [0, 1],
+    translateX: [-30, 0],
+    delay: anime.stagger(100, {start: 500}),
+    duration: 800,
+    easing: 'easeOutExpo'
+});
+</script>
 {% endblock %}
