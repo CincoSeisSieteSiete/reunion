@@ -1,0 +1,503 @@
+
+/* Main container */
+.dashboard-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px;
+}
+
+/* Hero Profile Section - Editorial style */
+.profile-hero {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    padding: 80px 60px;
+    margin-bottom: 100px;
+    overflow: hidden;
+}
+
+/* Minimalist accent line */
+.profile-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+}
+
+.profile-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+/* Minimalist avatar with geometric border */
+.avatar-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.avatar-image {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 0;
+    border: 2px solid #ffffff;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    object-fit: cover;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 90px;
+    color: #ffffff;
+    transition: all 0.4s ease;
+}
+
+.avatar-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 30px 80px rgba(255, 255, 255, 0.2);
+}
+
+/* Geometric corner accents */
+.avatar-container::before,
+.avatar-container::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ffffff;
+    transition: all 0.4s ease;
+}
+
+.avatar-container::before {
+    top: -10px;
+    left: -10px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.avatar-container::after {
+    bottom: -10px;
+    right: -10px;
+    border-left: none;
+    border-top: none;
+}
+
+.avatar-container:hover::before,
+.avatar-container:hover::after {
+    width: 60px;
+    height: 60px;
+}
+
+/* Profile Info */
+.profile-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Large editorial typography */
+.username {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 15px;
+    letter-spacing: -3px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.user-email {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* Stats Grid - Minimalist cards */
+.stats-grid {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    padding: 30px 40px;
+    text-align: left;
+    min-width: 160px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #ffffff;
+    transition: width 0.4s ease;
+    z-index: 0;
+}
+
+.stat-card:hover::before {
+    width: 100%;
+}
+
+.stat-card:hover {
+    border-color: #ffffff;
+}
+
+.stat-card:hover .stat-value,
+.stat-card:hover .stat-label {
+    color: #000000;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-value {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 5px;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Section Container */
+.section-container {
+    margin-bottom: 100px;
+}
+
+.section-header {
+    margin-bottom: 60px;
+    position: relative;
+}
+
+/* Large editorial section titles */
+.section-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+
+
+/* Groups Grid - Minimalist cards */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 40px;
+}
+
+.group-card {
+    background: transparent;
+    border: 1px solid rgb(128, 124, 124);
+    border-radius: 0;
+    padding: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    
+}
+.group-card:hover{
+    border: 1px solid rgb(0, 0, 0);
+}
+
+
+.group-card:hover::before {
+    height: 100%;
+    
+}
+
+
+.group-card:hover .group-name,
+.group-card:hover .group-description,
+.group-card:hover .group-badge {
+    color: #000000;
+}
+
+.group-card:hover .btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+.group-card-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.group-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #000000;
+    margin: 0;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.group-badge {
+    background: transparent;
+    color: rgba(0, 0, 0, 0.7);
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.group-description {
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.8;
+    margin-bottom: 40px;
+    font-size: 1rem;
+    font-weight: 300;
+    transition: color 0.3s ease;
+}
+
+.group-actions {
+    display: flex;
+    gap: 20px;
+}
+
+/* Minimalist buttons */
+.btn-primary,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 36px;
+    border-radius: 0;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #000000;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.btn-primary {
+    background: #ffffff;
+    color: #000000;
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: #000000;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #5c5757;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    border-color: #000000;
+    background: #000000;
+    color: #000000;
+}
+
+.btn-arrow {
+    transition: transform 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.btn-primary:hover .btn-arrow,
+.btn-secondary:hover .btn-arrow {
+    transform: translateX(5px);
+}
+
+/* Minimalist empty state */
+.empty-state {
+    text-align: center;
+    padding: 120px 60px;
+    background: transparent;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+}
+
+.empty-icon {
+    font-size: 6rem;
+    margin-bottom: 30px;
+    opacity: 0.3;
+    filter: grayscale(1);
+}
+
+.empty-text {
+    font-size: 1.8rem;
+    color: rgba(0, 0, 0, 0.8);
+    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+.empty-subtext {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 50px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Medals Grid - Gallery style */
+.medals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.medal-card {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0;
+    padding: 50px;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.medal-card:hover::before {
+    transform: scaleY(1);
+    transform-origin: top;
+}
+
+.medal-image-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.medal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(1) contrast(1.2);
+    transition: all 0.4s ease;
+    mix-blend-mode: lighten;
+}
+
+.medal-card:hover .medal-image {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.1);
+}
+
+.Perfil_user_dashboard {
+    width: 100%;
+    height: 240px;
+    border: 1px solid rgb(128, 124, 124);
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.Perfil_user_dashboard .Puntos_valor {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 3.5rem;
+    font-weight: 900;
+    transition: all 0.3s ease;
+}
+
+.Perfil_user_dashboard .Puntos:hover {
+    background-color: rgb(0, 0, 0);
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.Perfil_user_dashboard .Puntos {
+    aspect-ratio: 1 / 1;
+    height: 90%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 30%;
+    margin: 10px;
+    max-width: 200px;
+}
+
+/* 📱 Ajuste para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+    .Perfil_user_dashboard {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        padding: 20px 0;
+    }
+
+    .Perfil_user_dashboard .Puntos {
+        width: 90%;
+        aspect-ratio: 1 / 1;
+        max-width: none;
+        height: auto;
+    }
+
+    .Perfil_user_dashboard .Puntos_valor {
+        font-size: 5.5rem;
+    }
+}

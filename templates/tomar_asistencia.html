@@ -3,45 +3,290 @@
 {% block title %}Tomar Asistencia{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h3 class="mb-0"><i class="bi bi-check-circle"></i> Tomar Asistencia</h3>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="mb-4">
-                        <label for="fecha" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="fecha" name="fecha" value="{{ fecha_hoy }}" required>
-                    </div>
-                    
-                    <h5 class="mb-3">Marcar Asistentes</h5>
-                    <div class="list-group">
-                        {% for miembro in miembros %}
-                            <label class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <input class="form-check-input me-3" type="checkbox" 
-                                           name="asistentes" value="{{ miembro.id }}"
-                                           {% if miembro.id in asistentes_hoy %}checked{% endif %}>
-                                    <strong>{{ miembro.nombre }}</strong>
-                                </div>
-                                <div>
-                                    <span class="badge bg-primary">{{ miembro.puntos }} pts</span>
-                                    <span class="badge bg-danger ms-2">
-                                        <i class="bi bi-fire"></i> {{ miembro.racha }}
-                                    </span>
-                                </div>
-                            </label>
-                        {% endfor %}
-                    </div>
-                    
-                    <button type="submit" class="btn btn-success w-100 mt-4">
-                        <i class="bi bi-save"></i> Guardar Asistencia
-                    </button>
-                </form>
-            </div>
-        </div>
+<style>
+  .attendance-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  .attendance-card {
+    background: white;
+    border: 2px solid #000;
+    padding: 2.5rem;
+  }
+
+  .attendance-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #000;
+  }
+
+  .attendance-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem 0;
+    color: #000;
+    text-transform: uppercase;
+  }
+
+  .attendance-header p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .date-group {
+    margin-bottom: 2.5rem;
+  }
+
+  .date-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #000;
+    margin-bottom: 0.75rem;
+  }
+
+  .date-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #000;
+    background: white;
+    color: #000;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .date-input:focus {
+    background: #000;
+    color: white;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1.5rem 0;
+    color: #000;
+  }
+
+  .members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border: 2px solid #000;
+    background: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .member-item.checked {
+    background: #000;
+    color: white;
+  }
+
+  .member-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #000;
+    background: white;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .member-item.checked .checkbox-custom {
+    background: #000;
+    border-color: #000;
+  }
+
+  .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 12px;
+    height: 12px;
+    background: white;
+    transition: transform 0.3s ease;
+  }
+
+  .member-item.checked .checkbox-custom::after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .checkbox-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .member-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .member-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .stat-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    border: 2px solid #000;
+    background: white;
+    color: #000;
+    white-space: nowrap;
+  }
+
+  .member-item.checked .stat-badge {
+    background: #000;
+    color: white;
+    border-color: white;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: #000;
+    color: white;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background: white;
+    color: #000;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .attendance-container { padding: 2rem 1rem; }
+    .attendance-card { padding: 1.5rem; }
+    .attendance-header h1 { font-size: 1.5rem; }
+    .member-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .member-stats { width: 100%; justify-content: flex-start; }
+    .stat-badge { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+  }
+
+  @media (max-width: 480px) {
+    .attendance-container { padding: 1rem 0.5rem; }
+    .attendance-card { padding: 1rem; }
+    .date-input { max-width: 100%; }
+    .member-stats { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .stat-badge { width: 100%; text-align: center; }
+  }
+</style>
+
+<div class="attendance-container">
+  <div class="attendance-card">
+    <div class="attendance-header">
+      <h1>Tomar Asistencia</h1>
+      <p>Marca los miembros presentes</p>
     </div>
+
+    <form method="POST">
+      <div class="date-group">
+        <label for="fecha" class="date-label">Fecha</label>
+        <input type="date" class="date-input" id="fecha" name="fecha" value="{{ fecha_hoy }}" required>
+      </div>
+
+      <h2 class="section-title">Marcar Asistentes</h2>
+      
+      <div class="members-list">
+        {% for miembro in miembros %}
+          <label class="member-item">
+            <div class="member-left">
+              <div class="checkbox-custom"></div>
+              <input class="checkbox-input" type="checkbox" 
+                     name="asistentes" value="{{ miembro.id }}"
+                     {% if miembro.id in asistentes_hoy %}checked{% endif %}>
+              <span class="member-name">{{ miembro.nombre }}</span>
+            </div>
+            <div class="member-stats">
+              <span class="stat-badge">{{ miembro.puntos }} PTS</span>
+              <span class="stat-badge">{{ miembro.racha }} RACHA</span>
+            </div>
+          </label>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="submit-btn">Guardar Asistencia</button>
+    </form>
+  </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  // Animaciones
+  anime({
+    targets: '.attendance-card',
+    opacity: [0, 1],
+    translateY: [30, 0],
+    duration: 800,
+    easing: 'easeOutCubic'
+  });
+
+  anime({
+    targets: '.member-item',
+    opacity: [0, 1],
+    translateX: [-20, 0],
+    duration: 600,
+    delay: anime.stagger(50, {start: 300}),
+    easing: 'easeOutCubic'
+  });
+
+  // Manejo correcto de checkbox personalizado
+  document.querySelectorAll('.checkbox-input').forEach(checkbox => {
+    const item = checkbox.closest('.member-item');
+
+    // Inicializar estado
+    if (checkbox.checked) item.classList.add('checked');
+
+    // Escuchar cambios
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        item.classList.add('checked');
+      } else {
+        item.classList.remove('checked');
+      }
+    });
+  });
+</script>
 {% endblock %}

@@ -3,12 +3,23 @@ from pymysql.cursors import DictCursor
 import os
 from datetime import datetime
 
+"""
 # Configuración de la base de datos
 DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'localhost'),
     'user': os.getenv('DB_USER', 'root'),
     'password': os.getenv('DB_PASSWORD', ''),
     'database': os.getenv('DB_NAME', 'asistencias_db'),
+    'charset': 'utf8mb4',
+    'cursorclass': DictCursor
+}
+
+"""
+DB_CONFIG = {
+    'host': 'nioyfp.mysql.pythonanywhere-services.com',
+    'user': 'nioyfp',
+    'password': 'Jz@#589&<python>',  # 🔒 tu contraseña real
+    'database': 'nioyfp$asistencias_db',
     'charset': 'utf8mb4',
     'cursorclass': DictCursor
 }

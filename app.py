@@ -464,10 +464,20 @@ def gestionar_medallas():
             # Obtener todos los usuarios
             cursor.execute("SELECT id, nombre, email FROM usuarios ORDER BY nombre")
             usuarios = cursor.fetchall()
+
+            # 🖼️ Obtener imágenes del directorio static/medallas
+            medallas_path = os.path.join(app.root_path, 'static', 'medallas')
+            imagenes = [f for f in os.listdir(medallas_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg'))]
             
-            return render_template('gestionar_medallas.html', medallas=medallas, usuarios=usuarios)
+            return render_template(
+                'gestionar_medallas.html',
+                medallas=medallas,
+                usuarios=usuarios,
+                imagenes=imagenes
+            )
     finally:
         connection.close()
+
 
 @app.route('/perfil')
 @login_required
@@ -529,6 +539,22 @@ def ranking_global():
             return render_template('ranking.html', ranking=ranking)
     finally:
         connection.close()
+
+@app.route('/subir_imagen_medalla', methods=['POST'])
+def subir_imagen_medalla():
+    imagen = request.files.get('imagen')
+    nombre_imagen = request.form.get('nombre_imagen')
+    if not imagen or not nombre_imagen:
+        return "Error: faltan datos", 400
+    # Obtener extensión original (.png, .jpg, etc.)
+    extension = os.path.splitext(imagen.filename)[1]
+    nuevo_nombre = f"{nombre_imagen}{extension}"
+    ruta_carpeta = os.path.join(app.static_folder, 'medallas')
+    os.makedirs(ruta_carpeta, exist_ok=True)
+    ruta_archivo = os.path.join(ruta_carpeta, nuevo_nombre)
+    imagen.save(ruta_archivo)
+    return redirect(url_for('gestionar_medallas'))
+
 
 if __name__ == '__main__':
     # Inicializar base de datos
