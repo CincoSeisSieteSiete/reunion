@@ -11,6 +11,13 @@ from FUNCIONES.Decoradores import login_required, admin_required, lideres_requir
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
+# Configuración de la aplicación
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+
 
 
 @app.errorhandler(404)
