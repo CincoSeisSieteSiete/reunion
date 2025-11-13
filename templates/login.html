@@ -7,20 +7,17 @@
 
 <div class="auth-container">
   <div class="auth-card">
-    <div class="auth-header">
-      <h1>Iniciar Sesión</h1>
-      <p>Accede a tu cuenta</p>
-    </div>
-
     <form method="POST">
       <div class="auth-form-group">
         <label for="email" class="auth-label">Email</label>
         <input type="email" class="auth-input" id="email" name="email" required>
+        <p class="Ejm">Ejemplo: tu-correo@gmail.com</p>
       </div>
 
       <div class="auth-form-group">
         <label for="password" class="auth-label">Contraseña</label>
         <input type="password" class="auth-input" id="password" name="password" minlength="8" required>
+        <p class="Ejm">Mínimo 8 caracteres</p>
       </div>
 
       <button type="submit" class="auth-submit">Iniciar Sesión</button>

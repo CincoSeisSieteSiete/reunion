@@ -2,12 +2,19 @@
   navigation: auto;
 }
 
+.Ejm{
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.25rem;
+}
+
 .auth-container {
-  min-height: calc(100vh - 80px);
+  min-height: 70vh;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+
  
 }
 

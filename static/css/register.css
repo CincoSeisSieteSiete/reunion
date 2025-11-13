@@ -1,9 +1,11 @@
 .auth-container {
-  min-height: calc(100vh - 80px);
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .auth-card {
@@ -165,4 +167,10 @@
 
 @view-transition {
   navigation: auto;
+}
+
+.Ejm {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.25rem;
 }

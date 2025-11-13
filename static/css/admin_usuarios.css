@@ -1,0 +1,167 @@
+/* Contenedor principal (reemplaza a 'main') */
+.admin-container {
+    width: 100%;
+}
+
+/* --- Estilos de Tabla --- */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+.user-table th, 
+.user-table td {
+    padding: 0.75rem 0.8rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.user-table th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+/* Se aplica solo a las filas del cuerpo de la tabla */
+.user-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+/* --- Estilos de Formularios y Acciones --- */
+
+/* Contenedor para formularios de acción */
+.acciones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Clase para los formularios dentro del contenedor */
+.action-form {
+    display: block;
+    margin: 0;
+}
+
+/* Clases para inputs y selects */
+.form-input,
+.form-select {
+    padding: 0.4rem 0.6rem;
+    margin-right: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    max-width: 150px;
+}
+
+/* --- Estilos de Botones (Base y Modificadores) --- */
+
+/* Clase base para botones */
+.btn {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+    color: white; /* Color de texto blanco por defecto */
+}
+
+/* Modificador para botones primarios (azul) */
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Modificador para botones de token (verde) */
+.btn-token {
+    background-color: #28a745;
+}
+
+.btn-token:hover {
+    background-color: #1e7e34;
+}
+
+/* Estilo para CUALQUIER botón con clase .btn que esté deshabilitado */
+.btn:disabled,
+.btn[disabled] {
+    background-color: #ccc;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+/* --- Estilos Responsivos para Móviles --- */
+@media (max-width: 768px) {
+    .user-table, 
+    .user-table thead, 
+    .user-table tbody, 
+    .user-table th, 
+    .user-table td, 
+    .user-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .user-table thead {
+        display: none;
+    }
+
+    .user-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 0.5rem;
+        background: #fff;
+    }
+
+    .user-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0.5rem;
+        border: none;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .user-table td:last-child {
+        border-bottom: none;
+    }
+
+    .user-table td[data-label]::before {
+        content: attr(data-label);
+        font-weight: 600;
+        width: 40%;
+        color: #333;
+        padding-right: 1rem;
+    }
+    
+    .user-table td > * {
+       flex-basis: 60%;
+    }
+    
+    /* Inputs, selects y botones ocupan todo el ancho en móvil */
+    .form-input, 
+    .form-select, 
+    .btn {
+        width: 100%;
+        max-width: 100%;
+        margin: 0.3rem 0;
+        box-sizing: border-box;
+    }
+    
+    .acciones-container {
+        width: 100%;
+        flex-basis: 100% !important;
+    }
+    
+     .user-table td[data-label="Acciones"] {
+        flex-wrap: wrap;
+     }
+}

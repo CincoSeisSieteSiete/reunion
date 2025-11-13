@@ -15,8 +15,8 @@
 }
 
 .grupo-header {
-    background: var(--dark-gray);
-    color: var(--white);
+    background: var(--white);
+    color: var(--dark-gray);
     padding: 4rem 3rem;
     margin: -2rem -2rem 3rem;
     border-radius: 12px;

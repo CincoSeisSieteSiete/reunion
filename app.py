@@ -6,45 +6,115 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
+from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
 
-# Decorador para requerir login
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Debes iniciar sesión para acceder a esta página', 'warning')
-            return redirect(url_for('login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# Decorador para requerir rol de admin
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Debes iniciar sesión', 'warning')
-            return redirect(url_for('login'))
-        
-        connection = db.get_connection()
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT rol FROM usuarios WHERE id = %s", (session['user_id'],))
-                user = cursor.fetchone()
-                if not user or user['rol'] != 'admin':
-                    flash('No tienes permisos de administrador', 'danger')
-                    return redirect(url_for('index'))
-        finally:
-            connection.close()
-        
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+# Admin Apartados ==========================================================================
+
+@app.route('/admin/usuarios')
+@login_required
+@admin_required
+def admin_usuarios():
+    conn = db.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.email, u.puntos, u.racha, u.fecha_nacimiento,
+                       u.fecha_registro, u.rol_id, r.nombre AS rol
+                FROM usuarios u
+                LEFT JOIN roles r ON u.rol_id = r.id
+                ORDER BY u.id DESC
+            """)
+            usuarios = cursor.fetchall()
+    finally:
+        conn.close()
+    return render_template('admin/usuarios.html', usuarios=usuarios)
+
+@app.route('/admin/usuario/<int:usuario_id>/cambiar_rol', methods=['POST'])
+@login_required
+@admin_required
+def admin_cambiar_rol(usuario_id):
+    nuevo_rol_id = request.form.get('rol_id')
+    conn = db.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            # Verificar que el rol existe
+            cursor.execute("SELECT nombre FROM roles WHERE id = %s", (nuevo_rol_id,))
+            rol = cursor.fetchone()
+            if not rol:
+                flash('Rol inválido', 'danger')
+                return redirect(url_for('admin_usuarios'))
+
+            # Actualizar rol del usuario
+            cursor.execute("UPDATE usuarios SET rol_id = %s WHERE id = %s", (nuevo_rol_id, usuario_id))
+
+            # Registrar acción en admin_logs
+            cursor.execute("""
+                INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle)
+                VALUES (%s, %s, %s, %s)
+            """, (session['user_id'], 'cambiar_rol', usuario_id, f'nuevo_rol={rol["nombre"]}'))
+
+            conn.commit()
+            flash(f'Rol actualizado a {rol["nombre"]}', 'success')
+    finally:
+        conn.close()
+    return redirect(url_for('admin_usuarios'))
+
+
+@app.route('/admin/usuario/<int:usuario_id>/set_password', methods=['POST'])
+@login_required
+@admin_required
+def admin_set_password(usuario_id):
+    nueva_pass = request.form.get('new_password')
+    if not nueva_pass or len(nueva_pass) < 6:
+        flash('Contraseña inválida (mínimo 6 caracteres)', 'danger')
+        return redirect(url_for('admin_usuarios'))
+
+    hashed = generate_password_hash(nueva_pass)
+    conn = db.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("UPDATE usuarios SET password = %s WHERE id = %s", (hashed, usuario_id))
+            cursor.execute("INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle) VALUES (%s, %s, %s, %s)",
+                           (session['user_id'], 'set_password', usuario_id, 'admin_set_password'))
+            conn.commit()
+        flash('Contraseña actualizada correctamente (temporal)', 'success')
+    finally:
+        conn.close()
+    return redirect(url_for('admin_usuarios'))
+
+@app.route('/admin/usuario/<int:usuario_id>/reset_token', methods=['POST'])
+@login_required
+@admin_required
+def admin_reset_token(usuario_id):
+    token = secrets.token_urlsafe(32)
+    conn = db.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("UPDATE usuarios SET reset_token = %s, reset_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE id = %s",
+                           (token, usuario_id))
+            cursor.execute("INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle) VALUES (%s, %s, %s, %s)",
+                           (session['user_id'], 'generar_reset_token', usuario_id, f'token={token}'))
+            conn.commit()
+        # Aquí debes enviar el email con el token — ejemplo: /reset_password/<token>
+        flash('Token de recuperación generado. Envía el enlace al usuario.', 'info')
+    finally:
+        conn.close()
+    return redirect(url_for('admin_usuarios'))
+
+
+# ==========================================================================================
+
+
+
 
 @app.route('/')
 def index():
@@ -58,7 +128,7 @@ def register():
         nombre = request.form.get('nombre')
         email = request.form.get('email')
         password = request.form.get('password')
-        fecha_nacimiento = request.form.get('fecha_nacimiento')  # <- nuevo
+        fecha_nacimiento = request.form.get('fecha_nacimiento')
 
         if not nombre or not email or not password or not fecha_nacimiento:
             flash('Todos los campos son obligatorios', 'danger')
@@ -73,11 +143,16 @@ def register():
                     flash('El email ya está registrado', 'danger')
                     return redirect(url_for('register'))
                 
-                # Crear usuario
+                # Crear usuario con rol por defecto 'usuario'
                 hashed_password = generate_password_hash(password)
+                # Obtenemos el id del rol 'usuario'
+                cursor.execute("SELECT id FROM roles WHERE nombre = 'usuario'")
+                rol = cursor.fetchone()
+                rol_id = rol['id'] if rol else 2  # fallback si no existe
+
                 cursor.execute(
-                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento) VALUES (%s, %s, %s, %s)",
-                    (nombre, email, hashed_password, fecha_nacimiento)
+                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento, rol_id) VALUES (%s, %s, %s, %s, %s)",
+                    (nombre, email, hashed_password, fecha_nacimiento, rol_id)
                 )
                 connection.commit()
                 flash('Registro exitoso. Ahora puedes iniciar sesión', 'success')
@@ -97,13 +172,19 @@ def login():
         connection = db.get_connection()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+                # Traer usuario con el nombre del rol
+                cursor.execute("""
+                    SELECT u.*, r.nombre AS rol
+                    FROM usuarios u
+                    LEFT JOIN roles r ON u.rol_id = r.id
+                    WHERE u.email = %s
+                """, (email,))
                 user = cursor.fetchone()
                 
                 if user and check_password_hash(user['password'], password):
                     session['user_id'] = user['id']
                     session['user_name'] = user['nombre']
-                    session['user_rol'] = user['rol']
+                    session['user_rol'] = user['rol']  # ahora sí existe
                     flash(f'Bienvenido, {user["nombre"]}!', 'success')
                     return redirect(url_for('dashboard'))
                 else:
@@ -112,6 +193,7 @@ def login():
             connection.close()
     
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -237,6 +319,7 @@ def ver_grupo(grupo_id):
 
 @app.route('/admin/crear-grupo', methods=['GET', 'POST'])
 @login_required
+@lideres_required
 def crear_grupo():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
@@ -321,6 +404,7 @@ def unirse_grupo():
 
 @app.route('/admin/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
+@lideres_required
 def tomar_asistencia(grupo_id):
     connection = db.get_connection()
     try:
@@ -415,6 +499,7 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
+@lideres_required
 def gestionar_puntos(grupo_id):
     connection = db.get_connection()
     try:

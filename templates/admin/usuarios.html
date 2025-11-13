@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Admin - Usuarios{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_usuarios.css') }}">
+
+<main class="admin-container">
+
+    <h1>Panel Admin - Usuarios</h1>
+
+    <input type="text" id="userSearch" placeholder="Buscar por nombre o email..." style="padding:0.5rem; width: 100%; margin-bottom:1rem; font-size:1rem; box-sizing: border-box;">
+
+    <table id="usuariosTable" class="user-table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Fecha registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr data-searchable="{{ u.nombre.lower() }} {{ u.email.lower() }}">
+                
+                <td data-label="Nombre">{{ u.nombre }}</td>
+                <td data-label="Email">{{ u.email }}</td>
+                <td data-label="Rol">
+                    <form class="action-form" method="POST" action="{{ url_for('admin_cambiar_rol', usuario_id=u.id) }}">
+                        <select name="rol_id" class="form-select">
+                            {% for rid, rname in [(1,'admin'),(2,'usuario'),(3,'lider')] %}
+                            <option value="{{ rid }}" {% if u.rol_id == rid %}selected{% endif %}>{{ rname }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </form>
+                </td>
+                <td data-label="Fecha registro">{{ u.fecha_registro.strftime('%Y-%m-%d') if u.fecha_registro else 'N/A' }}</td>
+                <td data-label="Acciones">
+                    <div class="acciones-container">
+                        <form class="action-form" method="POST" action="{{ url_for('admin_set_password', usuario_id=u.id) }}" onsubmit="return confirm('¿Estás seguro de cambiar la contraseña?');">
+                            <input type="password" name="new_password" class="form-input" placeholder="Nueva contraseña" required>
+                            <button type="submit" class="btn btn-primary">Setear</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</main> {% endblock %}
+
+{% block scripts %}
+{{ super() if super }} 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // El JS no cambia, ya que usa IDs que siguen presentes
+    const searchInput = document.getElementById('userSearch');
+    const table = document.getElementById('usuariosTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase().trim();
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const searchableText = row.getAttribute('data-searchable');
+            
+            if (searchableText && searchableText.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
