@@ -162,3 +162,7 @@
     margin-bottom: 1.5rem;
   }
 }
+
+@view-transition {
+  navigation: auto;
+}

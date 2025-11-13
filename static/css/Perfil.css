@@ -326,3 +326,7 @@
         grid-template-columns: 1fr;
     }
 }
+
+@view-transition {
+  navigation: auto;
+}

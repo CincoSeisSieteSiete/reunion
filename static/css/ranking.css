@@ -198,3 +198,7 @@
         color: var(--white);
     }
 }
+
+@view-transition {
+  navigation: auto;
+}

@@ -1,3 +1,8 @@
+
+@view-transition {
+  navigation: auto;
+}
+
 .form-container {
     max-width: 600px;
     margin: 4rem auto;

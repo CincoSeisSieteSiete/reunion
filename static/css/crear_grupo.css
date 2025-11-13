@@ -1,27 +1,23 @@
-@view-transition {
-  navigation: auto;
-}
-
-.auth-container {
+.create-group-container {
   min-height: calc(100vh - 80px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
- 
+  
 }
 
-.auth-card {
+.create-group-card {
   background: white;
-  border: 2px solid grey;
-  max-width: 500px;
+  border: 2px solid #000;
+  max-width: 600px;
   width: 100%;
   padding: 3rem;
   position: relative;
   overflow: hidden;
 }
 
-.auth-card::before {
+.create-group-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -31,12 +27,12 @@
   background: linear-gradient(90deg, #000 0%, #666 50%, #000 100%);
 }
 
-.auth-header {
+.form-header {
   text-align: center;
   margin-bottom: 2.5rem;
 }
 
-.auth-header h1 {
+.form-header h1 {
   font-size: 2rem;
   font-weight: 900;
   letter-spacing: -0.02em;
@@ -45,17 +41,18 @@
   text-transform: uppercase;
 }
 
-.auth-header p {
+.form-header p {
   font-size: 0.95rem;
   color: #666;
   margin: 0;
+  letter-spacing: 0.02em;
 }
 
-.auth-form-group {
-  margin-bottom: 1.75rem;
+.form-group {
+  margin-bottom: 2rem;
 }
 
-.auth-label {
+.form-label {
   display: block;
   font-size: 0.75rem;
   font-weight: 700;
@@ -65,7 +62,8 @@
   margin-bottom: 0.75rem;
 }
 
-.auth-input {
+.form-input,
+.form-textarea {
   width: 100%;
   padding: 1rem;
   font-size: 1rem;
@@ -75,16 +73,27 @@
   font-family: 'Courier New', monospace;
   transition: all 0.3s ease;
   outline: none;
-  border-radius: 4px;
 }
 
-.auth-input:focus {
-  background: rgb(224, 224, 224);
-  color: rgb(0, 0, 0);
-  border-color: black;
+.form-input:focus,
+.form-textarea:focus {
+  background: #000;
+  color: white;
+  border-color: #000;
 }
 
-.auth-submit {
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #999;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: 'Courier New', monospace;
+}
+
+.submit-btn {
   width: 100%;
   padding: 1.25rem;
   font-size: 0.9rem;
@@ -96,74 +105,35 @@
   border: 2px solid #000;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.auth-submit:hover {
+.submit-btn:hover {
   background: white;
   color: #000;
   transform: translateY(-2px);
 }
 
-.auth-submit:active {
+.submit-btn:active {
   transform: translateY(0);
 }
 
-.auth-footer {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e0e0e0;
-}
-
-.auth-footer p {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
-}
-
-.auth-footer a {
-  color: #000;
-  font-weight: 700;
-  text-decoration: none;
-  border-bottom: 2px solid #000;
-  transition: opacity 0.3s ease;
-}
-
-.auth-footer a:hover {
-  opacity: 0.6;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .auth-card {
-    padding: 2rem 1.5rem;
-  }
-
-  .auth-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .auth-input {
-    padding: 0.875rem;
-    font-size: 0.95rem;
-  }
-
-  .auth-submit {
-    padding: 1rem;
-    font-size: 0.85rem;
-  }
+  .create-group-card { padding: 2rem 1.5rem; }
+  .form-header h1 { font-size: 1.5rem; }
+  .form-header p { font-size: 0.85rem; }
+  .form-input, .form-textarea { padding: 0.875rem; font-size: 0.95rem; }
+  .submit-btn { padding: 1rem; font-size: 0.85rem; }
 }
 
 @media (max-width: 480px) {
-  .auth-container {
-    padding: 1rem 0.5rem;
-  }
+  .create-group-container { padding: 1rem 0.5rem; }
+  .create-group-card { padding: 1.5rem 1rem; }
+  .form-group { margin-bottom: 1.5rem; }
+}
 
-  .auth-card {
-    padding: 1.5rem 1rem;
-  }
-
-  .auth-form-group {
-    margin-bottom: 1.5rem;
-  }
+@view-transition {
+  navigation: auto;
 }

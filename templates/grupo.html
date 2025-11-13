@@ -11,13 +11,17 @@
     <h1 class="grupo-title">{{ grupo.nombre }}</h1>
     <p class="grupo-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
     <p class="grupo-admin">Administrador: {{ grupo.admin_nombre }}</p>
+
+    <!-- Botón de salir -->
     
     {% if es_admin %}
     <div class="grupo-actions">
         <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn">Tomar Asistencia</a>
         <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn">Gestionar Puntos</a>
+        
     </div>
     {% endif %}
+
     
     <div class="codigo-container">
         <div class="codigo-label">Código de Invitación</div>
@@ -60,6 +64,13 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="exit-container">
+  <form method="POST" action="{{ url_for('salir_reunion', reunion_id=grupo_id) }}">
+      <button type="submit" class="btn-exit">Salir de la Reunión</button>
+  </form>
+</div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>

@@ -185,4 +185,49 @@
     .grupo-description { font-size: 1rem; }
     .grupo-actions { flex-direction: column; }
     .btn { width: 100%; text-align: center; }
+    .leaderboard-header, .leaderboard-table th, .leaderboard-table td { padding: 1rem; }
+     
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Botón de salir de la reunión */
+.btn-exit {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background-color: #e74c3c; /* rojo */
+  border: 2px solid #c0392b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+    margin-top: 1rem;
+}
+
+.btn-exit:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+.btn-exit:active {
+  transform: translateY(0);
+}
+
+.btn-exit:disabled {
+  background-color: #aaa;
+  border-color: #888;
+  cursor: not-allowed;
+}
+
+/* Centrar botón en un contenedor si lo deseas */
+.exit-container {
+  text-align: center;
+  margin-top: 2rem;
+  display: none;
 }

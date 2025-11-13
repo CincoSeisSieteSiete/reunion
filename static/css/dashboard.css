@@ -536,3 +536,7 @@
         font-size: 5.5rem;
     }
 }
+
+@view-transition {
+  navigation: auto;
+}

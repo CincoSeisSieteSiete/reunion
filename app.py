@@ -230,12 +230,13 @@ def ver_grupo(grupo_id):
             # Verificar si el usuario es admin del grupo
             es_admin = grupo['admin_id'] == session['user_id']
             
-            return render_template('grupo.html', grupo=grupo, ranking=ranking, es_admin=es_admin)
+            return render_template('grupo.html', grupo=grupo, grupo_id=grupo_id, ranking=ranking, es_admin=es_admin)
     finally:
         connection.close()
 
+
 @app.route('/admin/crear-grupo', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def crear_grupo():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
@@ -319,7 +320,7 @@ def unirse_grupo():
     return render_template('unirse_grupo.html')
 
 @app.route('/admin/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def tomar_asistencia(grupo_id):
     connection = db.get_connection()
     try:
@@ -413,7 +414,7 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
         cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def gestionar_puntos(grupo_id):
     connection = db.get_connection()
     try:
@@ -453,6 +454,24 @@ def gestionar_puntos(grupo_id):
             return render_template('gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
     finally:
         connection.close()
+
+@app.route('/salir_reunion/<int:reunion_id>', methods=['POST'])
+@login_required
+def salir_reunion(reunion_id):
+    connection = db.get_connection()
+    try:
+        with connection.cursor() as cursor:
+            # Elimina al usuario de la reunión
+            cursor.execute("""
+                DELETE FROM reunion_miembros
+                WHERE reunion_id = %s AND usuario_id = %s
+            """, (reunion_id, session['user_id']))
+            connection.commit()
+        flash("Has salido de la reunión", "success")
+        return redirect(url_for('dashboard'))
+    finally:
+        connection.close()
+
 
 @app.route('/admin/medallas', methods=['GET', 'POST'])
 @admin_required
