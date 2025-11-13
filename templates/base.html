@@ -10,6 +10,34 @@
     {% block header %}{% endblock %}
 </head>
 <body>
+
+    {% if mostrar_panel_cumple %}
+<div id="cumpleModal" class="modal">
+    <div class="modal-content">
+        <h3>¡Agrega tu fecha de nacimiento!</h3>
+        <p class="parro">Para personalizar tu experiencia, por favor ingresa tu fecha de nacimiento.</p>
+        <form method="POST">
+            <input type="date" name="fecha_nacimiento" required>
+            <button type="submit" class="btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Evitar que el modal se cierre al hacer click fuera
+document.getElementById('cumpleModal').addEventListener('click', function(e) {
+    e.stopPropagation();
+});
+
+// Evitar que se cierre con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") {
+        e.preventDefault();
+    }
+});
+</script>
+{% endif %}
+
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Asistencias</a>
@@ -20,12 +48,13 @@
                     <li><a href="{{ url_for('perfil') }}">Perfil</a></li>
                     <li><a href="{{ url_for('ranking_global') }}">Ranking</a></li>
                     <li><a href="{{ url_for('unirse_grupo') }}">Unirse</a></li>
+                    <li><a href="/cumples">Cumpleaños</a></li>
                     {% if session.user_rol == 'admin' %}
                         <li class="dropdown">
                             <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url_for('crear_grupo') }}">Crear Grupo</a></li>
-                                <li><a href="{{ url_for('gestionar_medallas') }}">Medallas</a></li>
+                                <li><a href="/admin/medallas">Medallas</a></li>
                             </ul>
                         </li>
                     {% endif %}

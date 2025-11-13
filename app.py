@@ -4,6 +4,7 @@ from functools import wraps
 import db
 import secrets
 from datetime import datetime, timedelta
+from datetime import date
 import os
 
 app = Flask(__name__)
@@ -53,8 +54,9 @@ def register():
         nombre = request.form.get('nombre')
         email = request.form.get('email')
         password = request.form.get('password')
-        
-        if not nombre or not email or not password:
+        fecha_nacimiento = request.form.get('fecha_nacimiento')  # <- nuevo
+
+        if not nombre or not email or not password or not fecha_nacimiento:
             flash('Todos los campos son obligatorios', 'danger')
             return redirect(url_for('register'))
         
@@ -70,8 +72,8 @@ def register():
                 # Crear usuario
                 hashed_password = generate_password_hash(password)
                 cursor.execute(
-                    "INSERT INTO usuarios (nombre, email, password) VALUES (%s, %s, %s)",
-                    (nombre, email, hashed_password)
+                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento) VALUES (%s, %s, %s, %s)",
+                    (nombre, email, hashed_password, fecha_nacimiento)
                 )
                 connection.commit()
                 flash('Registro exitoso. Ahora puedes iniciar sesión', 'success')
@@ -80,6 +82,7 @@ def register():
             connection.close()
     
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -112,13 +115,14 @@ def logout():
     flash('Sesión cerrada exitosamente', 'info')
     return redirect(url_for('login'))
 
-@app.route('/dashboard')
+
+@app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     connection = db.get_connection()
     try:
         with connection.cursor() as cursor:
-            # Obtener información del usuario
+            # Usuario
             cursor.execute("""
                 SELECT u.*, 
                        (SELECT COUNT(*) FROM usuarios_medallas WHERE usuario_id = u.id) as total_medallas
@@ -127,7 +131,19 @@ def dashboard():
             """, (session['user_id'],))
             user = cursor.fetchone()
             
-            # Obtener grupos del usuario
+            # Mostrar panel si no tiene fecha de nacimiento
+            mostrar_panel_cumple = not user['fecha_nacimiento']
+
+            # Guardar fecha si viene del form
+            if request.method == 'POST' and 'fecha_nacimiento' in request.form:
+                nueva_fecha = request.form['fecha_nacimiento']
+                cursor.execute("UPDATE usuarios SET fecha_nacimiento = %s WHERE id = %s",
+                               (nueva_fecha, session['user_id']))
+                connection.commit()
+                user['fecha_nacimiento'] = nueva_fecha
+                mostrar_panel_cumple = False
+
+            # Grupos
             cursor.execute("""
                 SELECT g.*, 
                        (SELECT COUNT(*) FROM grupo_miembros WHERE grupo_id = g.id) as total_miembros
@@ -137,8 +153,8 @@ def dashboard():
                 ORDER BY g.fecha_creacion DESC
             """, (session['user_id'],))
             grupos = cursor.fetchall()
-            
-            # Obtener medallas del usuario
+
+            # Medallas
             cursor.execute("""
                 SELECT m.* 
                 FROM medallas m
@@ -147,8 +163,25 @@ def dashboard():
                 ORDER BY um.fecha_obtencion DESC
             """, (session['user_id'],))
             medallas = cursor.fetchall()
+
+            # Cumpleaños del mes de los miembros de los grupos del usuario
+            mes_actual = date.today().month
+            cursor.execute("""
+                SELECT u.nombre, u.fecha_nacimiento, g.nombre AS grupo
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON gm.usuario_id = u.id
+                INNER JOIN grupos g ON g.id = gm.grupo_id
+                WHERE gm.grupo_id IN (
+                    SELECT grupo_id FROM grupo_miembros WHERE usuario_id = %s
+                )
+                AND MONTH(u.fecha_nacimiento) = %s
+                ORDER BY DAY(u.fecha_nacimiento) ASC
+            """, (session['user_id'], mes_actual))
+            cumpleanos_mes = cursor.fetchall()
             
-            return render_template('dashboard.html', user=user, grupos=grupos, medallas=medallas)
+            return render_template('dashboard.html', user=user, grupos=grupos, medallas=medallas,
+                                   mostrar_panel_cumple=mostrar_panel_cumple,
+                                   cumpleanos_mes=cumpleanos_mes)
     finally:
         connection.close()
 
@@ -477,6 +510,36 @@ def gestionar_medallas():
             )
     finally:
         connection.close()
+
+@app.route('/cumples')
+def cumpleanos():
+    hoy = datetime.today()
+    mes_actual = hoy.month
+    dia_actual = hoy.day
+
+    connection = db.get_connection()
+    try:
+        with connection.cursor() as cursor:
+            # Usuarios que cumplen años este mes
+            cursor.execute("""
+                SELECT nombre, fecha_nacimiento
+                FROM usuarios
+                WHERE MONTH(fecha_nacimiento) = %s
+                ORDER BY DAY(fecha_nacimiento)
+            """, (mes_actual,))
+            cumple_mes = cursor.fetchall()
+
+            # Usuarios que cumplen hoy
+            cursor.execute("""
+                SELECT nombre
+                FROM usuarios
+                WHERE MONTH(fecha_nacimiento) = %s AND DAY(fecha_nacimiento) = %s
+            """, (mes_actual, dia_actual))
+            cumple_hoy = cursor.fetchall()
+    finally:
+        connection.close()
+
+    return render_template('cumpleanos.html', cumple_mes=cumple_mes, cumple_hoy=cumple_hoy, hoy=hoy)
 
 
 @app.route('/perfil')

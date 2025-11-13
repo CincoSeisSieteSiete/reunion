@@ -481,6 +481,41 @@
     max-width: 200px;
 }
 
+.cumple-panel {
+    background: #f0f8ff;
+    border: 1px solid #a3c2f0;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.cumple-panel h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.cumple-panel input[type="date"] {
+    padding: 0.5rem 1rem;
+    border: 1px solid #a3c2f0;
+    border-radius: 6px;
+    margin-right: 0.5rem;
+}
+
+.cumple-panel button {
+    padding: 0.5rem 1rem;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cumple-panel button:hover {
+    background: #357ab8;
+}
+
+
 /* 📱 Ajuste para pantallas pequeñas */
 @media screen and (max-width: 768px) {
     .Perfil_user_dashboard {
