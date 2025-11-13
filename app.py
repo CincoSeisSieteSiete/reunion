@@ -37,7 +37,7 @@ def admin_usuarios():
             usuarios = cursor.fetchall()
     finally:
         conn.close()
-    return render_template('admin/usuarios.html', usuarios=usuarios)
+    return render_template('usuarios.html', usuarios=usuarios)
 
 @app.route('/admin/usuario/<int:usuario_id>/cambiar_rol', methods=['POST'])
 @login_required
