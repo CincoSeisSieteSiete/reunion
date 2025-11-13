@@ -42,6 +42,10 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/')
 def index():
     if 'user_id' in session:
