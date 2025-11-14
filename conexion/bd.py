@@ -1,51 +1,79 @@
 import pymysql
 from pymysql.cursors import DictCursor
 import os
-from datetime import datetime
+from typing import Optional, Dict, List, Any
+from dotenv import load_dotenv
 
-"""
-# Configuración de la base de datos
-DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'localhost'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', ''),
-    'database': os.getenv('DB_NAME', 'asistencias_db'),
-    'charset': 'utf8mb4',
-    'cursorclass': DictCursor
-}
-"""
-DB_CONFIG = {
-    'host': 'nioyfp.mysql.pythonanywhere-services.com',
-    'user': 'nioyfp',
-    'password': 'Jz@#589&<python>',  # 🔒 tu contraseña real
-    'database': 'nioyfp$asistencias_db',
+load_dotenv()
+
+CONFIGURACION_BD: Dict[str, str] = {
+    'host': 'localhost',#os.getenv('BD_HOST', 'localhost'),
+    'user': 'root',#os.getenv('BD_USUARIO', 'root'),
+    'password': '',#os.getenv('BD_CONTRASEÑA', ''),
+    'database': 'asistencia_db',#os.getenv('BD_NOMBRE', 'asistencias_db'),
     'charset': 'utf8mb4',
     'cursorclass': DictCursor
 }
 
 
-def get_connection():
+def obtener_conexion() -> pymysql.Connection:
     """Obtiene una conexión a la base de datos"""
-    return pymysql.connect(**DB_CONFIG)
+    return pymysql.connect(**CONFIGURACION_BD)
 
-def init_db():
-    """Crea las tablas si no existen y agrega fecha_nacimiento"""
-    # Primero conectar sin especificar la base de datos
-    config_without_db = DB_CONFIG.copy()
-    db_name = config_without_db.pop('database')
-    
-    connection = pymysql.connect(**config_without_db)
+
+def obtener_cursor(conexion: pymysql.Connection) -> pymysql.cursors.Cursor:
+    """Obtiene un cursor de la conexión"""
+    return conexion.cursor()
+
+
+def ejecutar_consulta(sql: str, parametros: tuple = ()) -> Optional[List[Dict[str, Any]]]:
+    """Ejecuta una consulta SELECT y retorna los resultados"""
+    conexion = obtener_conexion()
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
-        connection.commit()
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, parametros)
+            return cursor.fetchall()
     finally:
-        connection.close()
-    
-    # Conectar a la base de datos
-    connection = get_connection()
+        conexion.close()
+
+
+def obtener_uno(sql: str, parametros: tuple = ()) -> Optional[Dict[str, Any]]:
+    """Ejecuta una consulta SELECT y retorna un solo resultado"""
+    conexion = obtener_conexion()
     try:
-        with connection.cursor() as cursor:
+        with conexion.cursor() as cursor:
+            cursor.execute(sql, parametros)
+            return cursor.fetchone()
+    finally:
+        conexion.close()
+
+
+def inicializar_bd() -> None:
+    """Crea las tablas si no existen"""
+    config_sin_bd = CONFIGURACION_BD.copy()
+    nombre_bd = config_sin_bd.pop('database')
+    
+    conexion = pymysql.connect(**config_sin_bd)
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {nombre_bd} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+        conexion.commit()
+    finally:
+        conexion.close()
+    
+    conexion = obtener_conexion()
+    try:
+        with conexion.cursor() as cursor:
+            # Tabla de roles
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS roles (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nombre VARCHAR(50) UNIQUE NOT NULL,
+                    descripcion TEXT,
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            """)
+
             # Tabla de usuarios
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS usuarios (
@@ -56,8 +84,11 @@ def init_db():
                     fecha_nacimiento DATE,
                     puntos INT DEFAULT 0,
                     racha INT DEFAULT 0,
-                    rol ENUM('admin', 'usuario') DEFAULT 'usuario',
+                    rol_id INT DEFAULT 2,
                     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    reset_token VARCHAR(255),
+                    reset_expires DATETIME,
+                    FOREIGN KEY (rol_id) REFERENCES roles(id),
                     INDEX idx_email (email),
                     INDEX idx_puntos (puntos DESC)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
@@ -73,7 +104,7 @@ def init_db():
                     codigo_invitacion VARCHAR(20) UNIQUE NOT NULL,
                     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (admin_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-                    INDEX idx_codigo (codigo)
+                    INDEX idx_codigo (codigo_invitacion)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             """)
 
@@ -144,13 +175,31 @@ def init_db():
                     INDEX idx_codigo (codigo)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             """)
-        connection.commit()
-        print("✅ Base de datos inicializada correctamente")
-    except Exception as e:
-        print(f"❌ Error al inicializar la base de datos: {e}")
-        connection.rollback()
-    finally:
-        connection.close()
 
-if __name__ == '__main__':
-    init_db()
+            # Tabla de logs de admin
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS admin_logs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    admin_id INT NOT NULL,
+                    accion VARCHAR(100) NOT NULL,
+                    objetivo_id INT,
+                    detalle TEXT,
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (admin_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                    INDEX idx_fecha (fecha_creacion)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            """)
+
+            # Insertar roles por defecto
+            cursor.execute("SELECT COUNT(*) as count FROM roles")
+            if cursor.fetchone()['count'] == 0:
+                cursor.execute("INSERT INTO roles (nombre, descripcion) VALUES ('usuario', 'Usuario estándar')")
+                cursor.execute("INSERT INTO roles (nombre, descripcion) VALUES ('lider', 'Líder de grupo')")
+                cursor.execute("INSERT INTO roles (nombre, descripcion) VALUES ('admin', 'Administrador')")
+
+        conexion.commit()
+    except Exception as e:
+        conexion.rollback()
+        raise e
+    finally:
+        conexion.close()
