@@ -2,7 +2,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date, timedelta
 from typing import Optional, Dict, Any, Tuple
 from conexion import obtener_conexion
+from conexion.querys import *
 
+"""Se esta trabajando para las querys en conexion/querys.py y no en este archivo
+   por lo que algunas funciones pueden estar duplicadas temporalmente."""
 
 def generar_codigo_invitacion() -> str:
     """Genera un código de invitación único"""
@@ -22,34 +25,12 @@ def verificar_contraseña(hash_contraseña: str, contraseña: str) -> bool:
 
 def obtener_usuario_por_email(email: str) -> Optional[Dict[str, Any]]:
     """Obtiene un usuario por email"""
-    conexion = obtener_conexion()
-    try:
-        with conexion.cursor() as cursor:
-            cursor.execute("""
-                SELECT u.*, r.nombre AS rol
-                FROM usuarios u
-                LEFT JOIN roles r ON u.rol_id = r.id
-                WHERE u.email = %s
-            """, (email,))
-            return cursor.fetchone()
-    finally:
-        conexion.close()
+    return query_obtener_usuario_por_email(email)
 
 
 def obtener_usuario_por_id(usuario_id: int) -> Optional[Dict[str, Any]]:
     """Obtiene un usuario por id"""
-    conexion = obtener_conexion()
-    try:
-        with conexion.cursor() as cursor:
-            cursor.execute("""
-                SELECT u.*, r.nombre AS rol
-                FROM usuarios u
-                LEFT JOIN roles r ON u.rol_id = r.id
-                WHERE u.id = %s
-            """, (usuario_id,))
-            return cursor.fetchone()
-    finally:
-        conexion.close()
+    return query_encontrar_usuario_por_id(usuario_id)
 
 
 def crear_usuario(nombre: str, email: str, contraseña: str, fecha_nacimiento: str) -> Tuple[bool, str]:
