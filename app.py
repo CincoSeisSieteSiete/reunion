@@ -1,13 +1,8 @@
-import re
-from unittest import result
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
-from RUTAS import register_ruta
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash
 import db
 import secrets
-from datetime import datetime, timedelta
-from datetime import date
+from datetime import datetime
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
 
@@ -76,6 +71,7 @@ def unirse_grupo():
     return unirse_grupo_rutas()
 
 @app.route('/cumples')
+@login_required
 def cumpleanos():
     return cumpleanos_rutas()
 

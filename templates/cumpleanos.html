@@ -3,7 +3,6 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/cumple.css') }}">
 
-<h1 class="text-2xl font-bold mb-4">Calendario de Cumpleaños - {{ mes_actual }}/{{ year_actual }}</h1>
 
 {# NAV: Mes anterior / Mes siguiente #}
 {% set mes_anterior = mes_actual - 1 %}
@@ -20,9 +19,17 @@
     {% set year_siguiente = year_actual + 1 %}
 {% endif %}
 
-<div class="mb-6">
-    <a href="?mes={{ mes_anterior }}&year={{ year_anterior }}" class="btn btn-secondary">← Mes anterior</a>
-    <a href="?mes={{ mes_siguiente }}&year={{ year_siguiente }}" class="btn btn-secondary">Mes siguiente →</a>
+<div class="calendar-nav">
+    <span class="current-month-year">
+    {{ ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][mes_actual - 1] }}
+    - 
+    {{ year_actual }}
+</span>
+
+    <div class="Botones-fecha">
+        <a href="?mes={{ mes_anterior }}&year={{ year_anterior }}" class="btn btn-secondary"><img src="{{ url_for('static', filename='iconos/izquierda.svg')}}" alt=""></a>
+        <a href="?mes={{ mes_siguiente }}&year={{ year_siguiente }}" class="btn btn-secondary"><img src="{{ url_for('static', filename='iconos/derecha.svg')}}" alt=""></a>
+    </div>
 </div>
 
 {# CALENDARIO #}
@@ -53,6 +60,24 @@
             {% endfor %}
         </div>
     {% endfor %}
+</div>
+
+<div class="Lista-Cumpleaños-mes">
+    <h2>Lista de cumpleañeros</h2>
+    <ul>
+        {% for user in cumpleanos_data %}
+            {% if user.mes == mes_actual %}
+                <li>
+                    <div class="Dia-cumple">
+                        {{ user.dia }}
+                    </div>
+                    <div class="Nombre-cumple">
+                        {{ user.nombre }}
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}

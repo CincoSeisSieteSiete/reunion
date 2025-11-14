@@ -32,7 +32,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    <li ><a style="color: red;" class="EXIT" href="{{ url_for('logout') }}">Salir</a></li>
+                    <li ><a href="{{ url_for('logout') }}"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
                 {% else %}
                     <li class="login"><a href="{{ url_for('login') }}">Iniciar Sesión</a></li>
                     <li class="register"><a href="{{ url_for('register') }}">Registrarse</a></li>
@@ -98,7 +98,7 @@
     {% block extra_js %}{% endblock %}
 
      <section class="footer">
-        <hr style="width: 90%; margin: -50px auto; ;">
+
       <div class="footer-container">
         <div class="div1">
             Sistema de Asistencias - Niozex Studio
