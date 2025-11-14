@@ -6,6 +6,7 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
+from QUERYS.querysRegistro import *
 
 def register_rutas():
     if request.method == 'POST':
@@ -20,27 +21,21 @@ def register_rutas():
         
         connection = db.get_connection()
         try:
-            with connection.cursor() as cursor:
-                # Verificar si el email ya existe
-                cursor.execute("SELECT id FROM usuarios WHERE email = %s", (email,))
-                if cursor.fetchone():
-                    flash('El email ya está registrado', 'danger')
-                    return redirect(url_for('register'))
-                
-                # Crear usuario con rol por defecto 'usuario'
-                hashed_password = generate_password_hash(password)
-                # Obtenemos el id del rol 'usuario'
-                cursor.execute("SELECT id FROM roles WHERE nombre = 'usuario'")
-                rol = cursor.fetchone()
-                rol_id = rol['id'] if rol else 2  # fallback si no existe
+            exists = user_exists(email)
+            if exists:
+                flash('El email ya está registrado', 'danger')
+                return redirect(url_for('register'))
+                            
+            # Crear usuario con rol por defecto 'usuario'
+            hashed_password = generate_password_hash(password)
+            # Obtenemos el id del rol 'usuario'
+            rol_id = get_default_role_id()
 
-                cursor.execute(
-                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento, rol_id) VALUES (%s, %s, %s, %s, %s)",
-                    (nombre, email, hashed_password, fecha_nacimiento, rol_id)
-                )
-                connection.commit()
-                flash('Registro exitoso. Ahora puedes iniciar sesión', 'success')
-                return redirect(url_for('login'))
+            if not rol_id:
+                flash('Error al asignar el rol por defecto', 'danger')
+                return redirect(url_for('register'))
+            flash('Registro exitoso. Ahora puedes iniciar sesión', 'success')
+            return redirect(url_for('login'))
         finally:
             connection.close()
     

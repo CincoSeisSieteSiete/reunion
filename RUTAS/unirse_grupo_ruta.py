@@ -7,6 +7,7 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
+from QUERYS.querysUnirGrupo import *
 
 def unirse_grupo_rutas():
     if request.method == 'POST':
@@ -14,40 +15,31 @@ def unirse_grupo_rutas():
         
         connection = db.get_connection()
         try:
-            with connection.cursor() as cursor:
-                # Buscar grupo por código
-                cursor.execute("SELECT id FROM grupos WHERE codigo_invitacion = %s", (codigo,))
-                grupo = cursor.fetchone()
+            # Buscar grupo por código
+            grupo = get_grupo_code(codigo)
                 
-                if not grupo:
-                    flash('Código de invitación inválido', 'danger')
-                    return redirect(url_for('unirse_grupo'))
+            if not grupo:
+                flash('Código de invitación inválido', 'danger')
+                return redirect(url_for('unirse_grupo'))
                 
-                # Verificar si ya es miembro
-                cursor.execute(
-                    "SELECT id FROM grupo_miembros WHERE grupo_id = %s AND usuario_id = %s",
-                    (grupo['id'], session['user_id'])
-                )
+            # Verificar si ya es miembro
+            isMember = IsMember(grupo['id'], session['user_id'])  
+            if isMember:
+                flash('Ya eres miembro de este grupo', 'info')
+                return redirect(url_for('ver_grupo', grupo_id=grupo['id']))
                 
-                if cursor.fetchone():
-                    flash('Ya eres miembro de este grupo', 'info')
-                    return redirect(url_for('ver_grupo', grupo_id=grupo['id']))
-                
-                # Agregar como miembro
-                cursor.execute(
-                    "INSERT INTO grupo_miembros (grupo_id, usuario_id) VALUES (%s, %s)",
-                    (grupo['id'], session['user_id'])
-                )
+            # Agregar como miembro
+            if not add_member_to_group(grupo['id'], session['user_id']):
+                flash('Error al unirse al grupo', 'danger')
+                return redirect(url_for('unirse_grupo'))
                 
                 # Registrar uso de invitación
-                cursor.execute(
-                    "INSERT INTO invitaciones (codigo, grupo_id, usado_por, fecha_uso) VALUES (%s, %s, %s, NOW())",
-                    (codigo, grupo['id'], session['user_id'])
-                )
+            if not register_invitation_use(codigo, grupo['id'], session['user_id']):
+                flash('Error al registrar el uso de la invitación', 'danger')
+                return redirect(url_for('unirse_grupo'))
                 
-                connection.commit()
-                flash('Te has unido al grupo exitosamente', 'success')
-                return redirect(url_for('ver_grupo', grupo_id=grupo['id']))
+            flash('Te has unido al grupo exitosamente', 'success')
+            return redirect(url_for('ver_grupo', grupo_id=grupo['id']))
         finally:
             connection.close()
     

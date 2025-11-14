@@ -7,6 +7,7 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
+from QUERYS.queryLogin import *
 
 def login_rutas():
     if request.method == 'POST':
@@ -15,24 +16,16 @@ def login_rutas():
         
         connection = db.get_connection()
         try:
-            with connection.cursor() as cursor:
-                # Traer usuario con el nombre del rol
-                cursor.execute("""
-                    SELECT u.*, r.nombre AS rol
-                    FROM usuarios u
-                    LEFT JOIN roles r ON u.rol_id = r.id
-                    WHERE u.email = %s
-                """, (email,))
-                user = cursor.fetchone()
+            user = get_usuario(email)
                 
-                if user and check_password_hash(user['password'], password):
-                    session['user_id'] = user['id']
-                    session['user_name'] = user['nombre']
-                    session['user_rol'] = user['rol']  # ahora sí existe
-                    flash(f'Bienvenido, {user["nombre"]}!', 'success')
-                    return redirect(url_for('dashboard'))
-                else:
-                    flash('Email o contraseña incorrectos', 'danger')
+            if user and check_password_hash(user['password'], password):
+                session['user_id'] = user['id']
+                session['user_name'] = user['nombre']
+                session['user_rol'] = user['rol']  # ahora sí existe
+                flash(f'Bienvenido, {user["nombre"]}!', 'success')
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Email o contraseña incorrectos', 'danger')
         finally:
             connection.close()
     

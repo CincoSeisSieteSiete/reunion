@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-import db
-from QUERYS.querysRaking import *
+from DB.conexion import get_connection
+from MODELS.Grupo import *
+import logging
 
-
-def ranking_global_rutas():
-    connection = db.get_connection()
+def get_50_posiciones_raking():
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -15,8 +14,10 @@ def ranking_global_rutas():
                 ORDER BY u.puntos DESC, u.racha DESC
                 LIMIT 50
             """)
-            ranking = get_50_posiciones_raking()
-            
-            return render_template('ranking.html', ranking=ranking)
+            ranking = cursor.fetchall()
+            return ranking
+    except Exception as e:
+        logging.error(f"Error fetching ranking data: {e}")
+        return []
     finally:
         connection.close()
