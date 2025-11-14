@@ -44,18 +44,18 @@ document.addEventListener('keydown', function(e) {
             <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
             <ul class="navbar-menu" id="navbarMenu">
                 {% if session.user_id %}
-                    <li class="Menu-urls"><a href="{{ url_for('dashboard') }}">Inicio</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('perfil') }}">Perfil</a></li>
-                    <li class="Menu-urls"><a href="/ranking">Ranking</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('unirse_grupo') }}">Unirse</a></li>
-                    <li class="Menu-urls"><a href="/cumples">Cumpleaños</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('crear_grupo') }}">Crear Grupo</a></li>
+                    <li class="Menu-urls"><a href="/dashboard"> <img class="iconos" src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
+                    <li class="Menu-urls"><a href="{{ url_for('perfil') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/user.svg')}}" alt="">  Perfil</a></li>
+                    <li class="Menu-urls"><a href="/ranking"> <img class="iconos" src="{{url_for('static', filename='iconos/list.svg')}}" alt="">  Ranking</a></li>
+                    <li class="Menu-urls"><a href="{{ url_for('unirse_grupo') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/123.svg')}}" alt="">  Unirse</a></li>
+                    <li class="Menu-urls"><a href="/cumples"> <img class="iconos" src="{{url_for('static', filename='iconos/calendario.svg')}}" alt="">  Cumpleaños</a></li>
+                    <li class="Menu-urls"><a href="{{ url_for('crear_grupo') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
                     {% if session.user_rol == 'admin' %}
                         <li class="dropdown">
                             <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
                             <ul class="dropdown-menu">
-                                <li><a href="/admin/medallas">Medallas</a></li>
-                                <li><a href="/admin/usuarios">Usuarios</a></li>
+                                <li><a href="/admin/medallas"> <img class="iconos" src="{{url_for('static', filename='iconos/medalla.svg')}}" alt="">  Medallas</a></li>
+                                <li><a href="/admin/usuarios"> <img class="iconos" src="{{url_for('static', filename='iconos/users.svg')}}" alt="">  Usuarios</a></li>
                             </ul>
                         </li>
                     {% endif %}
