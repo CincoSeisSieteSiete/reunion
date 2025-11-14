@@ -1,0 +1,39 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+from RUTAS import register_ruta
+import db
+import secrets
+from datetime import datetime, timedelta
+from datetime import date
+import os
+
+def login_rutas():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        connection = db.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                # Traer usuario con el nombre del rol
+                cursor.execute("""
+                    SELECT u.*, r.nombre AS rol
+                    FROM usuarios u
+                    LEFT JOIN roles r ON u.rol_id = r.id
+                    WHERE u.email = %s
+                """, (email,))
+                user = cursor.fetchone()
+                
+                if user and check_password_hash(user['password'], password):
+                    session['user_id'] = user['id']
+                    session['user_name'] = user['nombre']
+                    session['user_rol'] = user['rol']  # ahora sí existe
+                    flash(f'Bienvenido, {user["nombre"]}!', 'success')
+                    return redirect(url_for('dashboard'))
+                else:
+                    flash('Email o contraseña incorrectos', 'danger')
+        finally:
+            connection.close()
+    
+    return render_template('login.html')

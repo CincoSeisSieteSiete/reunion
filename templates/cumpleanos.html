@@ -1,44 +1,58 @@
 {% extends "base.html" %}
 
-{% block title %}Cumpleaños{% endblock %}
-
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/cumpleanos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cumple.css') }}">
 
-<h2>Cumpleaños de {{ hoy.strftime('%B %Y') }}</h2>
+<h1 class="text-2xl font-bold mb-4">Calendario de Cumpleaños - {{ mes_actual }}/{{ year_actual }}</h1>
 
-<div class="calendar">
-    {% set dias_mes = hoy.replace(day=1).replace(month=hoy.month) %}
-    {% set total_dias = (hoy.replace(month=hoy.month%12+1, day=1) - hoy.replace(day=1)).days %}
-    
-    {% for dia in range(1, total_dias + 1) %}
+{# NAV: Mes anterior / Mes siguiente #}
+{% set mes_anterior = mes_actual - 1 %}
+{% set year_anterior = year_actual %}
+{% if mes_anterior == 0 %}
+    {% set mes_anterior = 12 %}
+    {% set year_anterior = year_actual - 1 %}
+{% endif %}
+
+{% set mes_siguiente = mes_actual + 1 %}
+{% set year_siguiente = year_actual %}
+{% if mes_siguiente == 13 %}
+    {% set mes_siguiente = 1 %}
+    {% set year_siguiente = year_actual + 1 %}
+{% endif %}
+
+<div class="mb-6">
+    <a href="?mes={{ mes_anterior }}&year={{ year_anterior }}" class="btn btn-secondary">← Mes anterior</a>
+    <a href="?mes={{ mes_siguiente }}&year={{ year_siguiente }}" class="btn btn-secondary">Mes siguiente →</a>
+</div>
+
+{# CALENDARIO #}
+<div class="calendar-grid">
+    {% set dias_semana = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'] %}
+    {% for dia in dias_semana %}
+        <div class="day-header">{{ dia }}</div>
+    {% endfor %}
+
+    {# Calcular primer día de la semana para el mes actual #}
+    {% set primer_dia_semana = fecha_inicio_mes.weekday() %} {# Lunes=0 #}
+    {% for i in range(primer_dia_semana) %}
+        <div class="calendar-day inactive"></div>
+    {% endfor %}
+
+    {# Días del mes #}
+    {% for dia in range(1, dias_mes + 1) %}
         {% set cumple_dia = [] %}
-        {% for user in cumple_mes %}
-            {% if user.fecha_nacimiento.day == dia %}
+        {% for user in cumpleanos_data %}
+            {% if user.mes == mes_actual and user.dia == dia %}
                 {% set _ = cumple_dia.append(user.nombre) %}
             {% endif %}
         {% endfor %}
-        
-        <div class="calendar-day {% if dia == hoy.day %}today{% endif %}">
+        <div class="calendar-day {% if cumple_dia %}has-birthday{% endif %} {% if dia == hoy_real.day and mes_actual == hoy_real.month %}today{% endif %}">
             <span class="day-number">{{ dia }}</span>
             {% for nombre in cumple_dia %}
-                <div class="cumple">{{ nombre }}</div>
+                <div class="cumple" title="{{ nombre }}">{{ nombre }}</div>
             {% endfor %}
         </div>
     {% endfor %}
 </div>
 
-<script>
-    // Opcional: animaciones o alertas al pasar el mouse
-document.querySelectorAll('.cumple').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        el.style.transform = 'scale(1.1)';
-        el.style.transition = 'transform 0.2s';
-    });
-    el.addEventListener('mouseleave', () => {
-        el.style.transform = 'scale(1)';
-    });
-});
-
-</script>
 {% endblock %}

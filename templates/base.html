@@ -46,7 +46,7 @@ document.addEventListener('keydown', function(e) {
                 {% if session.user_id %}
                     <li class="Menu-urls"><a href="{{ url_for('dashboard') }}">Inicio</a></li>
                     <li class="Menu-urls"><a href="{{ url_for('perfil') }}">Perfil</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('ranking_global') }}">Ranking</a></li>
+                    <li class="Menu-urls"><a href="/ranking">Ranking</a></li>
                     <li class="Menu-urls"><a href="{{ url_for('unirse_grupo') }}">Unirse</a></li>
                     <li class="Menu-urls"><a href="/cumples">Cumpleaños</a></li>
                     <li class="Menu-urls"><a href="{{ url_for('crear_grupo') }}">Crear Grupo</a></li>

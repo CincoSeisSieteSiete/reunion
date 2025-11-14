@@ -1,5 +1,6 @@
 .auth-container {
-  height: 100vh;
+  height: 150vh;
+  min-height: 150vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +13,7 @@
   background: white;
   border: 2px solid grey;
   max-width: 500px;
-  width: 100%;
+  width: 100vh;
   padding: 3rem;
   position: relative;
   overflow: hidden;
