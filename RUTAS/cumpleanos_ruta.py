@@ -2,6 +2,7 @@ from flask import render_template, request
 import db
 from datetime import datetime, date
 from calendar import monthrange
+from QUERYS.querysCumpleanos import *
 
 def cumpleanos_rutas():
     connection = db.get_connection()
@@ -23,26 +24,23 @@ def cumpleanos_rutas():
         fecha_contexto = date.today()
         mes_solicitado = fecha_contexto.month
         year_solicitado = fecha_contexto.year
+        
+    
 
     try:
-        with connection.cursor() as cursor:
-
-            cursor.execute("""
-                SELECT id, nombre, fecha_nacimiento
-                FROM usuarios
-                WHERE fecha_nacimiento IS NOT NULL
-                ORDER BY DAY(fecha_nacimiento)
-            """)
-            cumpleanos_todos = cursor.fetchall()
-
-            # Convertir strings → date y filtrar fechas inválidas
-            for u in cumpleanos_todos:
-                fecha = u['fecha_nacimiento']
-                if not fecha or fecha == '0000-00-00':
-                    u['fecha_nacimiento'] = None
-                    continue
-                if isinstance(fecha, str):
-                    u['fecha_nacimiento'] = datetime.strptime(fecha, "%Y-%m-%d").date()
+        cumpleanos_todos = get_cumpleanos()
+        
+        if(not cumpleanos_todos):
+            raise Exception("No se pudieron obtener los cumpleaños")
+        
+        # Convertir strings → date y filtrar fechas inválidas
+        for u in cumpleanos_todos:
+            fecha = u['fecha_nacimiento']
+            if not fecha or fecha == '0000-00-00':
+                u['fecha_nacimiento'] = None
+                continue
+            if isinstance(fecha, str):
+                u['fecha_nacimiento'] = datetime.strptime(fecha, "%Y-%m-%d").date()
 
             hoy_real = date.today()
 
@@ -62,9 +60,10 @@ def cumpleanos_rutas():
                         "mes": u["fecha_nacimiento"].month,
                         "dia": u["fecha_nacimiento"].day
                     })
-
-    finally:
-        connection.close()
+    except Exception as e:
+        print(f"Error al obtener cumpleaños: {e}")
+        cumpleanos_json = []
+        cumple_hoy = []
 
     # Datos para el calendario
     dias_mes = monthrange(year_solicitado, mes_solicitado)[1]

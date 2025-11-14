@@ -7,6 +7,8 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
+from MODELS.Grupo import Grupo
+from QUERYS.querysGrupo import *
 
 def crear_grupo_rutas():
     if request.method == 'POST':
@@ -20,25 +22,18 @@ def crear_grupo_rutas():
         # Generar código de invitación único
         codigo = secrets.token_urlsafe(8)
         
-        connection = db.get_connection()
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO grupos (nombre, descripcion, admin_id, codigo_invitacion) VALUES (%s, %s, %s, %s)",
-                    (nombre, descripcion, session['user_id'], codigo)
-                )
-                grupo_id = cursor.lastrowid
-                
-                # Agregar al admin como miembro del grupo
-                cursor.execute(
-                    "INSERT INTO grupo_miembros (grupo_id, usuario_id) VALUES (%s, %s)",
-                    (grupo_id, session['user_id'])
-                )
-                
-                connection.commit()
-                flash(f'Grupo creado exitosamente. Código de invitación: {codigo}', 'success')
-                return redirect(url_for('ver_grupo', grupo_id=grupo_id))
-        finally:
-            connection.close()
+        #Crear el grupo 
+        grupo = Grupo(nombre, descripcion, session['user_id'], codigo)
+        grupo_id = querys_crear_grupo(grupo)
+        
+        if grupo_id == -1:
+            flash('Error al crear el grupo', 'danger')
+            return redirect(url_for('crear_grupo'))
+        
+        # Agregar al admin como miembro del grupo
+        miembro = GrupoMiembro(grupo_id, session['user_id'])
+        querys_agregar_admin(miembro)
+        flash(f'Grupo creado exitosamente. Código de invitación: {codigo}', 'success')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
     
     return render_template('crear_grupo.html')

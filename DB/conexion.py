@@ -1,15 +1,8 @@
-
-""""
-/*********************************************/
-/*                                           */
-/*    Archivo suprimido: db.py               */
-/*                                           */
-/*********************************************/
-"""
 import pymysql
 from pymysql.cursors import DictCursor
 import os
 from datetime import datetime
+import logging
 
 # Configuración de la base de datos
 DB_CONFIG = {
@@ -32,9 +25,14 @@ DB_CONFIG = {
 }
 """
 
+
 def get_connection():
     """Obtiene una conexión a la base de datos"""
     return pymysql.connect(**DB_CONFIG)
+
+def get_cursor(connection):
+    """Obtiene un cursor de la conexión"""
+    return connection.cursor()  # Usa el cursor por defecto (DictCursor ya está configurado)
 
 def init_db():
     """Crea las tablas si no existen y agrega fecha_nacimiento"""
