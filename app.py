@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from RUTAS import register_ruta
-from RUTAS.ranking_ruta import ranking_global_rutas
 import db
 import secrets
 from datetime import datetime, timedelta
@@ -20,8 +19,6 @@ from RUTAS.login_ruta import login_rutas
 from RUTAS.crear_grupo_ruta import crear_grupo_rutas
 from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
-from RUTAS.ajustar_puntos_ruta import ajustar_puntos_rutas
-from RUTAS.ranking_ruta import ranking_global_rutas
 
 
 app = Flask(__name__)
@@ -82,16 +79,6 @@ def unirse_grupo():
 def cumpleanos():
     return cumpleanos_rutas()
 
-@app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
-@login_required
-@lideres_required
-def ajustar_puntos(grupo_id):
-    return ajustar_puntos_rutas(grupo_id)
-
-@app.route('/ranking')
-@login_required
-def ranking():
-    return ranking_global_rutas()
 
 
 # ===============================================================================================
@@ -288,6 +275,48 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
         # Primera asistencia
         cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
 
+@app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
+@login_required
+@lideres_required
+def gestionar_puntos(grupo_id):
+    connection = db.get_connection()
+    try:
+        with connection.cursor() as cursor:
+            # Verificar permisos
+            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
+            grupo = cursor.fetchone()
+            
+            if not grupo or grupo['admin_id'] != session['user_id']:
+                flash('No tienes permisos', 'danger')
+                return redirect(url_for('dashboard'))
+            
+            if request.method == 'POST':
+                usuario_id = request.form.get('usuario_id')
+                puntos = int(request.form.get('puntos', 0))
+                accion = request.form.get('accion')
+                
+                if accion == 'agregar':
+                    cursor.execute("UPDATE usuarios SET puntos = puntos + %s WHERE id = %s", (puntos, usuario_id))
+                elif accion == 'quitar':
+                    cursor.execute("UPDATE usuarios SET puntos = GREATEST(0, puntos - %s) WHERE id = %s", (puntos, usuario_id))
+                
+                connection.commit()
+                flash('Puntos actualizados exitosamente', 'success')
+                return redirect(url_for('gestionar_puntos', grupo_id=grupo_id))
+            
+            # Obtener miembros del grupo
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.puntos, u.racha
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
+                WHERE gm.grupo_id = %s
+                ORDER BY u.nombre
+            """, (grupo_id,))
+            miembros = cursor.fetchall()
+            
+            return render_template('gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
+    finally:
+        connection.close()
 
 @app.route('/salir_reunion/<int:reunion_id>', methods=['POST'])
 @login_required
@@ -409,6 +438,25 @@ def perfil():
     finally:
         connection.close()
 
+@app.route('/ranking')
+@login_required
+def ranking_global():
+    connection = db.get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.puntos, u.racha,
+                       (SELECT COUNT(*) FROM usuarios_medallas WHERE usuario_id = u.id) as total_medallas,
+                       (SELECT COUNT(*) FROM asistencias WHERE usuario_id = u.id AND presente = TRUE) as total_asistencias
+                FROM usuarios u
+                ORDER BY u.puntos DESC, u.racha DESC
+                LIMIT 50
+            """)
+            ranking = cursor.fetchall()
+            
+            return render_template('ranking.html', ranking=ranking)
+    finally:
+        connection.close()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
 def subir_imagen_medalla():
