@@ -15,9 +15,18 @@ body {
     min-height: 100vh;
 }
 
+.iconos{
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
 
 .Menu-urls a{
     color: black;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
 }
 
 .register {
@@ -77,7 +86,6 @@ body:has(main:below(.navbar)) .navbar a {
 .navbar a {
   color: black;
   text-decoration: none;
-  margin: 0 1rem;
   transition: color 0.3s ease;
 }
 
@@ -103,7 +111,8 @@ body:has(main:below(.navbar)) .navbar a {
 .navbar-menu {
     display: flex;
     gap: 2rem;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: flex-end;
     list-style: none;
 }
 
@@ -148,6 +157,9 @@ body:has(main:below(.navbar)) .navbar a {
     color: black;
     font-size: 2rem;
     cursor: pointer;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 20%;
 }
 
 /* Main Content */
