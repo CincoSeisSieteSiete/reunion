@@ -11,33 +11,6 @@
 </head>
 <body>
 
-    {% if mostrar_panel_cumple %}
-<div id="cumpleModal" class="modal">
-    <div class="modal-content">
-        <h3>¡Agrega tu fecha de nacimiento!</h3>
-        <p class="parro">Para personalizar tu experiencia, por favor ingresa tu fecha de nacimiento.</p>
-        <form method="POST">
-            <input type="date" name="fecha_nacimiento" required>
-            <button type="submit" class="btn-primary">Guardar</button>
-        </form>
-    </div>
-</div>
-
-<script>
-// Evitar que el modal se cierre al hacer click fuera
-document.getElementById('cumpleModal').addEventListener('click', function(e) {
-    e.stopPropagation();
-});
-
-// Evitar que se cierre con ESC
-document.addEventListener('keydown', function(e) {
-    if (e.key === "Escape") {
-        e.preventDefault();
-    }
-});
-</script>
-{% endif %}
-
     <nav class="navbar">
         <div class="navbar-container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Asistencias</a>
