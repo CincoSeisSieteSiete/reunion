@@ -1,12 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask_login import login_url
 from werkzeug.security import generate_password_hash
-import db import *
+import db
 import secrets
 from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
-from QUERYS import queryLogin
 
 # ESTA ES LA FORMA CORRECTA
 from RUTAS.dashboard_ruta import dashboard_rutas
