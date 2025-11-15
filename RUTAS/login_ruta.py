@@ -1,12 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
-from RUTAS import register_ruta
 import db
-import secrets
-from datetime import datetime, timedelta
-from datetime import date
-import os
 from QUERYS.queryLogin import *
 
 def login_rutas():
@@ -19,6 +13,7 @@ def login_rutas():
             user = get_usuario(email)
                 
             if user and check_password_hash(user['password'], password):
+                session["logged"] = True
                 session['user_id'] = user['id']
                 session['user_name'] = user['nombre']
                 session['user_rol'] = user['rol']  # ahora sí existe

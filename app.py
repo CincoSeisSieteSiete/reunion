@@ -1,10 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_login import login_url
 from werkzeug.security import generate_password_hash
 import db
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
+from QUERYS import queryLogin
 
 # ESTA ES LA FORMA CORRECTA
 from RUTAS.dashboard_ruta import dashboard_rutas
@@ -18,7 +20,7 @@ from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
-# Configuración de la aplicación
+app.permanent_session_lifetime = timedelta(days=10)
 
 
 @app.errorhandler(404)
@@ -52,6 +54,8 @@ def logout():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    if not session.get("logged"):
+        return redirect("/login")
     return dashboard_rutas(request)
 
 @app.route('/grupo/<int:grupo_id>')

@@ -19,33 +19,28 @@
 }
 
 .ranking-header {
-    background: var(--black);
-    color: var(--white);
-    padding: 4rem 3rem;
-    margin: -2rem -2rem 3rem;
-    border: 2px solid var(--black);
-    text-align: center;
+    padding: 1rem;
+    text-align: flex-start ;
+    
 }
 
 .ranking-header-title {
     font-size: 3.5rem;
-    font-weight: 700;
+    font-weight: 900;
+    color: #000000;
     letter-spacing: -0.03em;
     margin: 0;
-    line-height: 1.1;
+    
     text-transform: uppercase;
 }
 
 .ranking-header-icon {
     font-size: 4rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
     display: block;
 }
 
-.ranking-card {
-    background: var(--white);
-    border: 2px solid var(--black);
-}
+
 
 .ranking-table {
     width: 100%;
@@ -54,7 +49,6 @@
 
 .ranking-table thead {
     background: var(--gray-100);
-    border-bottom: 2px solid var(--black);
 }
 
 .ranking-table th {
@@ -161,7 +155,7 @@
     .ranking-table tr {
         margin-bottom: 1.5rem;
         background: var(--white);
-        border: 2px solid var(--black);
+        border: 1px solid var(--black);
         padding: 1.5rem;
     }
 

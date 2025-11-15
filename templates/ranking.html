@@ -9,7 +9,6 @@
 {% block content %}
 <div class="ranking-container">
     <div class="ranking-header">
-        <span class="ranking-header-icon">★</span>
         <h1 class="ranking-header-title">Ranking Global</h1>
     </div>
     
@@ -20,8 +19,6 @@
                     <th>Posición</th>
                     <th>Nombre</th>
                     <th>Puntos</th>
-                    <th>Racha</th>
-                    <th>Medallas</th>
                     <th>Asistencias</th>
                 </tr>
             </thead>
@@ -36,9 +33,7 @@
                         {% endif %}
                     </td>
                     <td data-label="Nombre"><strong>{{ usuario.nombre }}</strong></td>
-                    <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>
-                    <td data-label="Racha"><span class="badge">{{ usuario.racha }} 🔥</span></td>
-                    <td data-label="Medallas"><span class="badge">{{ usuario.total_medallas }} 🏆</span></td>
+                    <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>    
                     <td data-label="Asistencias">{{ usuario.total_asistencias }}</td>
                 </tr>
                 {% endfor %}
