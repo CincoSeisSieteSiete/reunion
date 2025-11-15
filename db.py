@@ -10,6 +10,7 @@ import pymysql
 from pymysql.cursors import DictCursor
 import os
 from datetime import datetime
+"""
 
 # Configuración de la base de datos
 DB_CONFIG = {
@@ -30,7 +31,6 @@ DB_CONFIG = {
     'charset': 'utf8mb4',
     'cursorclass': DictCursor
 }
-"""
 
 def get_connection():
     """Obtiene una conexión a la base de datos"""
