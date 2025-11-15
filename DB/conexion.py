@@ -3,7 +3,7 @@ from pymysql.cursors import DictCursor
 import os
 from datetime import datetime
 import logging
-
+"""
 # Configuración de la base de datos
 DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'localhost'),
@@ -23,7 +23,7 @@ DB_CONFIG = {
     'charset': 'utf8mb4',
     'cursorclass': DictCursor
 }
-"""
+
 
 
 def get_connection():
