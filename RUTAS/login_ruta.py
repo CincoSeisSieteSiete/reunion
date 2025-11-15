@@ -13,7 +13,6 @@ def login_rutas():
             user = get_usuario(email)
                 
             if user and check_password_hash(user['password'], password):
-                session["logged"] = True
                 session['user_id'] = user['id']
                 session['user_name'] = user['nombre']
                 session['user_rol'] = user['rol']  # ahora sí existe
