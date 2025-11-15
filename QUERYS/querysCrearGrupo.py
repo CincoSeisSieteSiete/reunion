@@ -1,5 +1,5 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import *
+from MODELS.Grupo import Grupo, GrupoMiembro
 import logging
 
 def querys_crear_grupo(grupo : Grupo) -> int:

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import db
-from QUERYS.queryLogin import *
+from QUERYS.queryLogin import get_usuario
 
 def login_rutas():
     if request.method == 'POST':

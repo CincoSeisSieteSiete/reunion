@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 import db
 from datetime import datetime, timedelta
 from datetime import date
-from QUERYS.queryGrupo import *
+from QUERYS.queryGrupo import get_esta_grupo, get_grupo_info, get_raking_grupo
 
 def ver_grupo_ruta(grupo_id):
     """

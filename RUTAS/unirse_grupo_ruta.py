@@ -7,7 +7,7 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
-from QUERYS.querysUnirGrupo import *
+from QUERYS.querysUnirGrupo import get_grupo_code, IsMember, add_member_to_group, register_invitation_use
 
 def unirse_grupo_rutas():
     if request.method == 'POST':

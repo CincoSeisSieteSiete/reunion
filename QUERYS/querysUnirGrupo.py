@@ -1,7 +1,7 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import *
+from MODELS.Grupo import Grupo
 import logging
-from MODELS.Grupo import *
+from MODELS.Grupo import GrupoMiembro
 
 def get_grupo_code(codigo_invitacion : str) -> Grupo | None:
     connection = get_connection()

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import db
-from QUERYS.querysRaking import *
+from QUERYS.querysRaking import get_50_posiciones_raking
 
 
 def ranking_global_rutas():

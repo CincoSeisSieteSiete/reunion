@@ -6,7 +6,7 @@ import secrets
 from datetime import datetime, timedelta
 from datetime import date
 import os
-from QUERYS.querysRegistro import *
+from QUERYS.querysRegistro import user_exists, get_default_role_id
 
 def register_rutas():
     if request.method == 'POST':

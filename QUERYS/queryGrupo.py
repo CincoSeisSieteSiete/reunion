@@ -1,7 +1,7 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import *
+from MODELS.Grupo import Grupo
 import logging
-from MODELS.Grupo import * 
+from MODELS.Grupo import Grupo
 
 def get_esta_grupo(grupo_id, usuario_id) -> bool:
     """

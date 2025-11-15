@@ -2,7 +2,7 @@ from flask import render_template, request
 import db
 from datetime import datetime, date
 from calendar import monthrange
-from QUERYS.querysCumpleanos import *
+from QUERYS.querysCumpleanos import get_cumpleanos
 
 def cumpleanos_rutas():
     connection = db.get_connection()

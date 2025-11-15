@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from datetime import date
 import os
 from MODELS.Grupo import Grupo
-from QUERYS.querysCrearGrupo import *
+from QUERYS.querysCrearGrupo import querys_crear_grupo, querys_agregar_admin, GrupoMiembro
 
 def crear_grupo_rutas():
     if request.method == 'POST':

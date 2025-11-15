@@ -1,5 +1,5 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import *
+from MODELS.Grupo import Grupo
 import logging
 
 def get_usuario(email: str):
