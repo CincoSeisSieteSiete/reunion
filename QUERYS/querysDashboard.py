@@ -1,56 +1,60 @@
-from db import get_connection
+from DB.conexion import get_connection
+from MODELS.Grupo import Grupo, GrupoMiembro
+from datetime import datetime
 import logging
 
-def get_info_usuario(usuario_id: int) -> dict:
+def get_info_usuario(usuario_id) -> dict:
     try:
         connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT 
-                    id,
-                    nombre,
-                    email,
-                    avatar,
-                    fecha_nacimiento,
-                    rol
-                FROM usuarios
-                WHERE id = %s
+                SELECT COUNT(*) AS total_medallas
+                FROM usuarios_medallas
+                WHERE usuario_id = %s
             """, (usuario_id,))
-            return cursor.fetchone()
+            resultado = cursor.fetchone()
+            return resultado
     except Exception as e:
-        logging.error(f"Error al obtener info usuario: {e}")
+        logging.error(f"Error al obtener la cantidad de medallas: {e}")
         return None
     finally:
         connection.close()
-
-
-def get_grupos_usuario(usuario_id: int) -> list:
+        
+def update_fecha_nacimiento(usuario_id: int, nueva_fecha: datetime) -> None:
     try:
         connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT 
-                    g.id,
-                    g.nombre,
-                    g.descripcion,
-                    (
-                        SELECT COUNT(*) 
-                        FROM grupo_miembros 
-                        WHERE grupo_id = g.id
-                    ) AS total_miembros
-                FROM grupos g
-                INNER JOIN grupo_miembros gm ON gm.grupo_id = g.id
+                UPDATE usuarios
+                SET fecha_nacimiento = %s
+                WHERE id = %s
+            """, (nueva_fecha, usuario_id))
+            connection.commit()
+    except Exception as e:
+        logging.error(f"Error al actualizar la fecha de nacimiento: {e}")
+    finally:
+        connection.close()
+        
+def get_grupos_usuario(usuario_id : int) -> dict:
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT gm.*, g.nombre AS nombre_grupo
+                FROM grupo_miembros gm
+                INNER JOIN grupos g ON gm.grupo_id = g.id
                 WHERE gm.usuario_id = %s
             """, (usuario_id,))
-            return cursor.fetchall()
+            resultado = cursor.fetchall()
+            return resultado
     except Exception as e:
-        logging.error(f"Error al obtener los grupos del usuario: {e}")
+        logging.error(f"Error al obtener la información de grupo_miembros: {e}")
         return []
     finally:
         connection.close()
-
-
-def get_medallas_usuario(usuario_id: int) -> list:
+        
+        
+def get_medallas_usuario(usuario_id: int) -> dict:
     try:
         connection = get_connection()
         with connection.cursor() as cursor:
@@ -61,9 +65,34 @@ def get_medallas_usuario(usuario_id: int) -> list:
                 WHERE um.usuario_id = %s
                 ORDER BY um.fecha_obtencion DESC
             """, (usuario_id,))
-            return cursor.fetchall()
+            resultado = cursor.fetchall()
+            return resultado
     except Exception as e:
-        logging.error(f"Error al obtener medallas: {e}")
+        logging.error(f"Error al obtener las medallas del usuario: {e}")
+        return []
+    finally:
+        connection.close()
+        
+        
+def get_cumpleanos_mes(usuario_id: int, mes: int) -> dict:
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.nombre, u.fecha_nacimiento, g.nombre AS grupo
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON gm.usuario_id = u.id
+                INNER JOIN grupos g ON g.id = gm.grupo_id
+                WHERE gm.grupo_id IN (
+                    SELECT grupo_id FROM grupo_miembros WHERE usuario_id = %s
+                )
+                AND MONTH(u.fecha_nacimiento) = %s
+                ORDER BY DAY(u.fecha_nacimiento) ASC
+            """, (usuario_id, mes))
+            resultado = cursor.fetchall()
+            return resultado
+    except Exception as e:
+        logging.error(f"Error al obtener los cumpleaños del mes: {e}")
         return []
     finally:
         connection.close()
