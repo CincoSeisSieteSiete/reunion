@@ -1,5 +1,5 @@
 from flask import render_template, session
-from QUERYS.querysDashboard import *
+from QUERYS.querysDashboard import get_info_usuario, get_grupos_usuario, get_medallas_usuario
 import db
 
 def dashboard_rutas(request):

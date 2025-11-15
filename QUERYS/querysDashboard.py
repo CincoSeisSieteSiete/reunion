@@ -1,4 +1,4 @@
-from DB.conexion import get_connection
+from db import get_connection
 import logging
 
 def get_info_usuario(usuario_id: int) -> dict:
