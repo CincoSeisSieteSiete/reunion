@@ -66,7 +66,7 @@
     </table>
 
     <div class="exit-container">
-  <form method="POST" action="{{ url_for('salir_reunion', reunion_id=grupo_id) }}">
+  <form method="POST" action="/salir_reunion/{{ grupo.id }}" onsubmit="return confirm('¿Estás seguro de que deseas salir de la reunión?');">
       <button type="submit" class="btn-exit">Salir de la Reunión</button>
   </form>
 </div>

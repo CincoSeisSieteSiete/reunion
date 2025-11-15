@@ -13,16 +13,16 @@
 
     <nav class="navbar">
         <div class="navbar-container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Asistencias</a>
+            <a class="navbar-brand" href="/index">Asistencias</a>
             <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
             <ul class="navbar-menu" id="navbarMenu">
                 {% if session.user_id %}
                     <li class="Menu-urls"><a href="/dashboard"> <img class="iconos" src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('perfil') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/user.svg')}}" alt="">  Perfil</a></li>
+                    <li class="Menu-urls"><a href="/perfil"> <img class="iconos" src="{{url_for('static', filename='iconos/user.svg')}}" alt="">  Perfil</a></li>
                     <li class="Menu-urls"><a href="/ranking"> <img class="iconos" src="{{url_for('static', filename='iconos/list.svg')}}" alt="">  Ranking</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('unirse_grupo') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/123.svg')}}" alt="">  Unirse</a></li>
+                    <li class="Menu-urls"><a href="/unirse_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/123.svg')}}" alt="">  Unirse</a></li>
                     <li class="Menu-urls"><a href="/cumples"> <img class="iconos" src="{{url_for('static', filename='iconos/calendario.svg')}}" alt="">  Cumpleaños</a></li>
-                    <li class="Menu-urls"><a href="{{ url_for('crear_grupo') }}"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
+                    <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
                     {% if session.user_rol == 'admin' %}
                         <li class="dropdown">
                             <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
@@ -32,10 +32,10 @@
                             </ul>
                         </li>
                     {% endif %}
-                    <li ><a href="{{ url_for('logout') }}"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
+                    <li ><a href="/logout"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
                 {% else %}
-                    <li class="login"><a href="{{ url_for('login') }}">Iniciar Sesión</a></li>
-                    <li class="register"><a href="{{ url_for('register') }}">Registrarse</a></li>
+                    <li class="login"><a href="/login">Iniciar Sesión</a></li>
+                    <li class="register"><a href="/register">Registrarse</a></li>
                 {% endif %}
             </ul>
         </div>
