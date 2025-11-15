@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import login_url
 from werkzeug.security import generate_password_hash
-import db
+import db import *
 import secrets
 from datetime import datetime, timedelta
 import os
@@ -79,80 +79,6 @@ def unirse_grupo():
 def cumpleanos():
     return cumpleanos_rutas()
 
-
-
-# ===============================================================================================
-@app.route('/admin/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
-@login_required
-@lideres_required
-def tomar_asistencia(grupo_id):
-    connection = db.get_connection()
-    try:
-        with connection.cursor() as cursor:
-            # Verificar que el usuario es admin del grupo
-            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
-            grupo = cursor.fetchone()
-            
-            if not grupo or grupo['admin_id'] != session['user_id']:
-                flash('No tienes permisos para tomar asistencia en este grupo', 'danger')
-                return redirect(url_for('dashboard'))
-            
-            if request.method == 'POST':
-                fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
-                asistentes = request.form.getlist('asistentes')
-                
-                # Obtener todos los miembros del grupo
-                cursor.execute("""
-                    SELECT usuario_id FROM grupo_miembros WHERE grupo_id = %s
-                """, (grupo_id,))
-                todos_miembros = [m['usuario_id'] for m in cursor.fetchall()]
-                
-                for usuario_id in todos_miembros:
-                    presente = str(usuario_id) in asistentes
-                    
-                    # Insertar o actualizar asistencia
-                    cursor.execute("""
-                        INSERT INTO asistencias (usuario_id, grupo_id, fecha, presente)
-                        VALUES (%s, %s, %s, %s)
-                        ON DUPLICATE KEY UPDATE presente = %s
-                    """, (usuario_id, grupo_id, fecha, presente, presente))
-                    
-                    if presente:
-                        # Actualizar racha y puntos
-                        actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha)
-                
-                connection.commit()
-                flash('Asistencia registrada exitosamente', 'success')
-                return redirect(url_for('ver_grupo', grupo_id=grupo_id))
-            
-            # GET: Mostrar formulario
-            cursor.execute("""
-                SELECT u.id, u.nombre, u.racha, u.puntos
-                FROM usuarios u
-                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
-                WHERE gm.grupo_id = %s
-                ORDER BY u.nombre
-            """, (grupo_id,))
-            miembros = cursor.fetchall()
-            
-            # Obtener asistencia de hoy si existe
-            hoy = datetime.now().strftime('%Y-%m-%d')
-            cursor.execute("""
-                SELECT usuario_id FROM asistencias 
-                WHERE grupo_id = %s AND fecha = %s AND presente = TRUE
-            """, (grupo_id, hoy))
-            asistentes_hoy = [a['usuario_id'] for a in cursor.fetchall()]
-            
-            return render_template('tomar_asistencia.html', 
-                                 grupo_id=grupo_id, 
-                                 miembros=miembros, 
-                                 asistentes_hoy=asistentes_hoy,
-                                 fecha_hoy=hoy)
-    finally:
-        connection.close()
-
-
-# Admin Apartados ==========================================================================
 
 @app.route('/usuarios')
 @login_required
