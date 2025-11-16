@@ -1,4 +1,5 @@
 from DB.conexion import get_connection
+from MODELS.Grupo import Grupo
 import logging
 
 def get_usuario(email: str):
@@ -6,9 +7,10 @@ def get_usuario(email: str):
     try:
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT *
-                FROM usuarios
-                WHERE email = %s
+                SELECT u.*, r.nombre AS rol
+                FROM usuarios u
+                LEFT JOIN roles r ON u.rol_id = r.id
+                WHERE u.email = %s
             """, (email,))
             user = cursor.fetchone()
             return user
