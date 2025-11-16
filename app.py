@@ -61,13 +61,13 @@ def dashboard():
 def ver_grupo(grupo_id):
     return ver_grupo_ruta(grupo_id)
 
-@app.route('/admin/crear-grupo', methods=['GET', 'POST'])
+@app.route('/crear_grupo', methods=['GET', 'POST'])
 @login_required
 @lideres_required
 def crear_grupo():
     return crear_grupo_rutas()
 
-@app.route('/unirse-grupo', methods=['GET', 'POST'])
+@app.route('/unirse_grupo', methods=['GET', 'POST'])
 @login_required
 def unirse_grupo():
     return unirse_grupo_rutas()
@@ -175,29 +175,32 @@ def admin_reset_token(usuario_id):
 
 def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
     """Actualiza la racha y puntos del usuario"""
-    # Obtener última asistencia
+    if isinstance(fecha_actual, datetime):
+        fecha_obj = fecha_actual.date()
+    else:
+        fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
+
+    # Obtener última asistencia antes de la fecha actual
     cursor.execute("""
-        SELECT fecha FROM asistencias 
+        SELECT fecha FROM asistencias
         WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
         ORDER BY fecha DESC LIMIT 1
-    """, (usuario_id, grupo_id, fecha_actual))
-    
+    """, (usuario_id, grupo_id, fecha_obj))
     ultima_asistencia = cursor.fetchone()
-    
-    # Calcular racha
-    fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
-    
+
     if ultima_asistencia:
         ultima_fecha = ultima_asistencia['fecha']
+        if isinstance(ultima_fecha, datetime):
+            ultima_fecha = ultima_fecha.date()
         diferencia = (fecha_obj - ultima_fecha).days
-        
-        if diferencia <= 7:  # Asistencia dentro de la semana
+
+        if diferencia <= 7:
             cursor.execute("UPDATE usuarios SET racha = racha + 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-        else:  # Se rompió la racha
+        else:
             cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
     else:
-        # Primera asistencia
         cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
+
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
@@ -397,10 +400,108 @@ def subir_imagen_medalla():
     imagen.save(ruta_archivo)
     return redirect(url_for('gestionar_medallas'))
 
+@app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
+@login_required
+@lideres_required
+def tomar_asistencia(grupo_id):
+    connection = db.get_connection()
+    try:
+        with connection.cursor() as cursor:
+            # Verificar que el usuario es admin/líder del grupo
+            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
+            grupo = cursor.fetchone()
+            if not grupo or grupo['admin_id'] != session['user_id']:
+                flash('No tienes permisos para tomar asistencia en este grupo', 'danger')
+                return redirect(url_for('dashboard'))
+
+            if request.method == 'POST':
+                fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
+                asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
+
+                # Obtener todos los miembros del grupo
+                cursor.execute("SELECT usuario_id FROM grupo_miembros WHERE grupo_id = %s", (grupo_id,))
+                todos_miembros = [m['usuario_id'] for m in cursor.fetchall()]
+
+                for usuario_id in todos_miembros:
+                    presente = str(usuario_id) in asistentes
+
+                    # Insertar o actualizar asistencia
+                    cursor.execute("""
+                        INSERT INTO asistencias (usuario_id, grupo_id, fecha, presente)
+                        VALUES (%s, %s, %s, %s)
+                        ON DUPLICATE KEY UPDATE presente = %s
+                    """, (usuario_id, grupo_id, fecha, presente, presente))
+
+                    if presente:
+                        # Actualizar racha y puntos
+                        actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha)
+
+                connection.commit()
+                flash('Asistencia registrada exitosamente', 'success')
+                return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+
+            # GET: mostrar formulario de asistencia
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.racha, u.puntos
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
+                WHERE gm.grupo_id = %s
+                ORDER BY u.nombre
+            """, (grupo_id,))
+            miembros = cursor.fetchall()
+
+            # Obtener asistencia de hoy si existe
+            hoy = datetime.now().strftime('%Y-%m-%d')
+            cursor.execute("""
+                SELECT usuario_id FROM asistencias 
+                WHERE grupo_id = %s AND fecha = %s AND presente = TRUE
+            """, (grupo_id, hoy))
+            asistentes_hoy = [a['usuario_id'] for a in cursor.fetchall()]
+
+            return render_template(
+                'tomar_asistencia.html',
+                grupo_id=grupo_id,
+                miembros=miembros,
+                asistentes_hoy=asistentes_hoy,
+                fecha_hoy=hoy
+            )
+    finally:
+        connection.close()
+
+
+def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
+    """
+    Actualiza racha y puntos del usuario según última asistencia.
+    - +10 puntos por asistencia
+    - Racha aumenta si no se rompe la semana
+    """
+    # Convertir fecha_actual a objeto date
+    fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
+
+    # Obtener última asistencia antes de fecha_actual
+    cursor.execute("""
+        SELECT fecha FROM asistencias
+        WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
+        ORDER BY fecha DESC LIMIT 1
+    """, (usuario_id, grupo_id, fecha_actual))
+    ultima_asistencia = cursor.fetchone()
+
+    if ultima_asistencia:
+        ultima_fecha = ultima_asistencia['fecha']
+        if isinstance(ultima_fecha, str):
+            ultima_fecha = datetime.strptime(ultima_fecha, '%Y-%m-%d').date()
+        diferencia = (fecha_obj - ultima_fecha).days
+
+        if diferencia <= 7:  # No se rompe la racha
+            cursor.execute("UPDATE usuarios SET racha = racha + 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
+        else:  # Se rompe la racha
+            cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
+    else:
+        # Primera asistencia
+        cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
+
+
 
 if __name__ == '__main__':
-    # Inicializar base de datos
-    db.init_db()
-    
     # Ejecutar aplicación
     app.run(debug=True, host='0.0.0.0', port=5000)

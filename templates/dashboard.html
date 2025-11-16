@@ -2,19 +2,13 @@
 
 {% block title %}Dashboard{% endblock %}
 
-
 {% block header %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 {% endblock %}
 
-
-
-
 {% block content %}
 
-
 <div class="dashboard-container">
-
     <!-- Groups Section -->
     <section class="section-container">
         <div class="section-header">
@@ -29,7 +23,7 @@
                 <div class="group-card-inner">
                     <div class="group-header">
                         <h3 class="group-name">{{ grupo.nombre }}</h3>
-                        <span class="group-badge"> <img class="iconos" src="{{url_for('static', filename='iconos/users.svg')}}" alt="">{{ grupo.total_miembros }} miembros</span>
+                        <span class="group-badge">{{ grupo.total_miembros }} miembros</span>
                     </div>
                     <p class="group-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
                     <div class="group-actions">
@@ -49,11 +43,11 @@
             <p class="empty-subtext">Únete o crea un grupo para comenzar</p>
             <div class="empty-actions">
                 {% if session.user_rol == 'admin' %}
-                <a href="/crear_grupo" class="btn-primary">
+                <a href="{{ url_for('crear_grupo') }}" class="btn-primary">
                     <span>Crear Grupo</span>
                 </a>
                 {% endif %}
-                <a href="/unirse_grupo" class="btn-secondary">
+                <a href="{{ url_for('unirse_grupo') }}" class="btn-secondary">
                     <span>Unirse a Grupo</span>
                 </a>
             </div>
