@@ -169,6 +169,7 @@ body:has(main:below(.navbar)) .navbar a {
     max-width: 1400px;
     margin: 0 auto;
     padding: 1rem 2rem 4rem;
+    min-height: 100vh;
 }
 
 /* Alert Messages */
@@ -416,8 +417,13 @@ body.modal-open {
     transition: color 0.3s ease;
 }
 
+.footer-container ul li a:after {
+    content: " ↗︎";
+    margin-left: 3px;
+}
 .footer-container ul li a:hover {
     color: #000;
+    
 }
 
 .div1 {

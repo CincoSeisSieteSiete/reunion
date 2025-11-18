@@ -1,3 +1,4 @@
+# Configuración de la base de datos MySQL Local
 """
 data ={
   "host": "localhost",
@@ -9,7 +10,7 @@ data ={
 }
 """
 
-
+# Configuración para despliegue en PythonAnywhere
 data ={
   "host": "nioyfp.mysql.pythonanywhere-services.com",
   "user": "nioyfp",

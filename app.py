@@ -72,10 +72,12 @@ def crear_grupo():
 def unirse_grupo():
     return unirse_grupo_rutas()
 
-@app.route('/cumples')
+
+@app.route('/cumples/<int:id_grupo>')
 @login_required
-def cumpleanos():
-    return cumpleanos_rutas()
+def cumpleanos(id_grupo):
+    return cumpleanos_rutas(id_grupo)
+
 
 
 @app.route('/usuarios')

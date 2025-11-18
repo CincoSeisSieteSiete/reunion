@@ -14,15 +14,19 @@
 
     <!-- Botón de salir -->
     
-    {% if es_admin %}
+    
     <div class="grupo-actions">
-        <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn">Tomar Asistencia</a>
+        {% if es_admin %}
+            <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn">Tomar Asistencia</a>
+            <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn">Gestionar Puntos</a>
 
-        <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn">Gestionar Puntos</a>
+        {% endif %}
+         <a href="{{ url_for('cumpleanos', id_grupo=grupo.id) }}" class="btn">Ver Cumpleaños</a>
 
-        
     </div>
-    {% endif %}
+    
+
+
 
     
     <div class="codigo-container">

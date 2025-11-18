@@ -18,25 +18,32 @@ def register_rutas():
         if not nombre or not email or not password or not fecha_nacimiento:
             flash('Todos los campos son obligatorios', 'danger')
             return redirect(url_for('register'))
-        
+
         connection = db.get_connection()
         try:
-            exists = user_exists(email)
-            if exists:
+            if user_exists(email):
                 flash('El email ya está registrado', 'danger')
                 return redirect(url_for('register'))
-                            
-            # Crear usuario con rol por defecto 'usuario'
+
             hashed_password = generate_password_hash(password)
-            # Obtenemos el id del rol 'usuario'
             rol_id = get_default_role_id()
 
-            if not rol_id:
-                flash('Error al asignar el rol por defecto', 'danger')
-                return redirect(url_for('register'))
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento, rol_id) VALUES (%s, %s, %s, %s, %s)",
+                    (nombre, email, hashed_password, fecha_nacimiento, rol_id)
+                )
+                connection.commit()
+
             flash('Registro exitoso. Ahora puedes iniciar sesión', 'success')
             return redirect(url_for('login'))
+
+        except Exception as e:
+            print(f"Error al registrar usuario: {e}")
+            flash('Error al registrar usuario', 'danger')
+            return redirect(url_for('register'))
         finally:
             connection.close()
-    
+
+    # Si no es POST, solo mostrar formulario
     return render_template('register.html')

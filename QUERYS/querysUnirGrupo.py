@@ -1,81 +1,56 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import Grupo
 import logging
-from MODELS.Grupo import GrupoMiembro
 
-def get_grupo_code(codigo_invitacion : str) -> Grupo | None:
+
+def obtener_grupo_por_codigo(codigo):
+    """ Retorna el grupo si el código existe """
     connection = get_connection()
-    grupo = None
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM grupos WHERE codigo_invitacion = %s", (codigo_invitacion,))
+            cursor.execute("""
+                SELECT * FROM grupos 
+                WHERE codigo_invitacion = %s
+            """, (codigo,))
+            return cursor.fetchone()
+    except Exception as e:
+        logging.error(f"Error obteniendo grupo por código: {e}")
+        return None
+    finally:
+        connection.close()
+
+
+def ya_esta_en_el_grupo(usuario_id, grupo_id):
+    """ Verifica si el usuario ya es miembro """
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT COUNT(*) AS total 
+                FROM grupo_miembros
+                WHERE usuario_id = %s AND grupo_id = %s
+            """, (usuario_id, grupo_id))
             result = cursor.fetchone()
-            if result:
-                grupo = Grupo(
-                    id=result['id'],
-                    nombre=result['nombre'],
-                    descripcion=result['descripcion'],
-                    codigo_invitacion=result['codigo_invitacion'],
-                    creado_por=result['creado_por'],
-                    fecha_creacion=result['fecha_creacion']
-                )
+            return result['total'] > 0
     except Exception as e:
-        logging.error(f"Error al obtener el grupo por código: {e}")
+        logging.error(f"Error revisando membership: {e}")
+        return False
     finally:
         connection.close()
-    return grupo
 
-def IsMember(grupo_id: int, usuario_id: int) -> bool:
+
+def unir_usuario_a_grupo(usuario_id, grupo_id):
+    """ Inserta al usuario dentro del grupo """
     connection = get_connection()
-    is_member = False
     try:
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT id FROM grupo_miembros WHERE grupo_id = %s AND usuario_id = %s",
-                (grupo_id, usuario_id)
-            )
-            if cursor.fetchone():
-                is_member = True
+            cursor.execute("""
+                INSERT INTO grupo_miembros (usuario_id, grupo_id)
+                VALUES (%s, %s)
+            """, (usuario_id, grupo_id))
+        connection.commit()
+        return True
     except Exception as e:
-        logging.error(f"Error al verificar si el usuario es miembro del grupo: {e}")
+        logging.error(f"Error uniendo a grupo: {e}")
+        return False
     finally:
         connection.close()
-    return is_member
-
-def add_member_to_group(grupo_id: int, usuario_id: int) -> bool:
-    connection = get_connection()
-    success = False
-    try:
-        with connection.cursor() as cursor:
-            grupo = GrupoMiembro(
-                grupo_id=grupo_id,
-                usuario_id=usuario_id
-            )
-            cursor.execute(
-                "INSERT INTO grupo_miembros (grupo_id, usuario_id, fecha_union) VALUES (%s, %s, %s)",
-                grupo.to_tuple()
-            )
-            connection.commit()
-            success = True
-    except Exception as e:
-        logging.error(f"Error al agregar miembro al grupo: {e}")
-    finally:
-        connection.close()
-    return success
-
-def register_invitation_use(codigo: str, grupo_id: int, usuario_id: int) -> bool:
-    connection = get_connection()
-    success = False
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO invitaciones (codigo, grupo_id, usado_por, fecha_uso) VALUES (%s, %s, %s, NOW())",
-                (codigo, grupo_id, usuario_id)
-            )
-            connection.commit()
-            success = True
-    except Exception as e:
-        logging.error(f"Error al registrar el uso de la invitación: {e}")
-    finally:
-        connection.close()
-    return success

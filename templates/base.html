@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema de Asistencias{% endblock %}</title>
+    <title>Betania - {% block title %}Home{% endblock %}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{url_for('static', filename='logos/Logo.png')}}" type="image/x-icon">
    
     {% block header %}{% endblock %}
 </head>
@@ -13,7 +14,7 @@
 
     <nav class="navbar">
         <div class="navbar-container">
-            <a class="navbar-brand" href="/">Asistencias</a>
+            <a class="navbar-brand" href="/">Betania</a>
             <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
             <ul class="navbar-menu" id="navbarMenu">
                 {% if session.user_id %}
@@ -21,8 +22,9 @@
                     <li class="Menu-urls"><a href="/perfil"> <img class="iconos" src="{{url_for('static', filename='iconos/user.svg')}}" alt="">  Perfil</a></li>
                     <li class="Menu-urls"><a href="/ranking"> <img class="iconos" src="{{url_for('static', filename='iconos/list.svg')}}" alt="">  Ranking</a></li>
                     <li class="Menu-urls"><a href="/unirse_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/123.svg')}}" alt="">  Unirse</a></li>
-                    <li class="Menu-urls"><a href="/cumples"> <img class="iconos" src="{{url_for('static', filename='iconos/calendario.svg')}}" alt="">  Cumpleaños</a></li>
-                    <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
+                    {% if session.user_rol in ['lider', 'admin'] %}
+                      <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
+                    {% endif %}
                     {% if session.user_rol == 'admin' %}
                         <li class="dropdown">
                             <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
@@ -105,8 +107,8 @@
         </div>
         <div class="div2">
           <ul>
-            <li><a href="">Instagram</a></li>
-            <li><a href="">Facebook</a></li>
+            <li><a href="/404" >Instagram </a></li>
+            <li><a href="https://www.tiktok.com/@cinco67siete" target="_blank">Tik Tok</a></li>
             <li><a  href="https://x.com/NioyDev5677?t=V4GEcLrdJ4TTsC0wtrJh6A&s=09" target="_blank">Twitter - X</a></li>
           </ul>
         </div>
@@ -115,6 +117,7 @@
             <li>Sebastian</li>
             <li>Kevin</li>
             <li>Edgar</li>
+            <li>Ezquiel</li>
           </ul>
         </div>
         <div class="div4">
@@ -140,7 +143,7 @@
             © 2025 - Niozex Studio
           </span>
           <span>
-            S, K, E
+            S, E, K, E
           </span>
         </div>
       </div>

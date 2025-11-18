@@ -27,7 +27,8 @@
                         required
                         autocomplete="off"
                     >
-                    <p class="form-help">Solicita el código al administrador del grupo</p>
+                    <p class="form-help">Solicita el código al administrador del grupo, No usar espacios ni caracteres especiales.</p>
+                    </p>
                 </div>
                 <button type="submit" class="form-button">Unirse al Grupo</button>
             </form>
@@ -35,33 +36,5 @@
     </div>
 </div>
 
-<script>
-// Animate form on load
-anime({
-    targets: '.form-card',
-    opacity: [0, 1],
-    translateY: [50, 0],
-    duration: 1000,
-    easing: 'easeOutExpo'
-});
 
-// Animate input on focus
-document.querySelector('.form-input').addEventListener('focus', function() {
-    anime({
-        targets: this,
-        scale: [1, 1.02],
-        duration: 300,
-        easing: 'easeOutQuad'
-    });
-});
-
-document.querySelector('.form-input').addEventListener('blur', function() {
-    anime({
-        targets: this,
-        scale: [1.02, 1],
-        duration: 300,
-        easing: 'easeOutQuad'
-    });
-});
-</script>
 {% endblock %}
