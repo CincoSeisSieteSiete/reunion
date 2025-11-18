@@ -19,6 +19,7 @@ from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
 app.permanent_session_lifetime = timedelta(days=10)
+app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 
 
 @app.errorhandler(404)
@@ -45,6 +46,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
+    session.permanent = False
     flash('Sesión cerrada exitosamente', 'info')
     return redirect(url_for('login'))
 
@@ -506,4 +508,5 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()
+    #debug=True, host='0.0.0.0', port=5000

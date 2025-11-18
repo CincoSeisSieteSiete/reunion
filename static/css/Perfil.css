@@ -19,6 +19,7 @@
     display: grid;
     grid-template-columns: 350px 1fr;
     gap: 2rem;
+    min-height: 100vh;
 }
 
 /* Profile Card */

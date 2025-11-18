@@ -453,10 +453,12 @@ body.modal-open {
     padding: 0 30px;
 }
 
+
 /* 📱 Versión móvil */
 @media screen and (max-width: 768px) {
     .footer-container {
-        grid-template-columns: 1fr;
+        /* CAMBIO CLAVE: Dos columnas de igual ancho para títulos y contenido */
+        grid-template-columns: repeat(2, 1fr); 
         grid-template-rows: auto;
         gap: 20px;
         text-align: left;
@@ -465,36 +467,99 @@ body.modal-open {
         margin-top: 100px;
     }
 
+    /* Ajustes visuales de tipografía y espaciado (se mantienen) */
     .Titulo_footer {
         font-size: 26px;
-        margin: 10px 0;
+        margin: 0;
     }
 
     .Titulo_footer2 {
         font-size: 18px;
+        margin-top: 0;
+        padding: 0 10px;
     }
 
     .footer-container ul {
         align-items: flex-start;
         gap: 6px;
+        margin-bottom: 0;
+        padding-left: 0;
     }
-
+    
     .footer-container ul li a {
         font-size: 14px;
     }
-
-    .div1, .div2, .div3, .div4, .div5, .div6, .div7, .div8 {
-        margin: 0 auto;
+    
+    /* REORGANIZACIÓN DE ÁREAS (Grid-Area) */
+    
+    /* 1. Fila de Título Principal (Ocupa las 2 columnas) */
+    .div5 {
+        grid-area: 1 / 1 / 2 / 3; /* Ocupa de la Columna 1 a la 3 (toda la fila) */
+        padding: 0 10px;
     }
 
+    /* 2. Fila de Contenido Principal (Ocupa las 2 columnas) */
+    .div1 {
+        grid-area: 2 / 1 / 3 / 3; /* Ocupa de la Columna 1 a la 3 (toda la fila) */
+        padding: 0 10px;
+    }
+
+    /* --- INICIO DE ESTRUCTURA 2x2 --- */
+    
+    /* 3. Título REDES (Columna 1) */
+    .div6 {
+        grid-area: 3 / 1 / 4 / 2; /* Fila 3, Columna 1 */
+        padding: 0 10px;
+    }
+    
+    /* 4. Título EQUIPO (Columna 2, a la par de REDES) */
+    .div7 {
+        grid-area: 3 / 2 / 4 / 3; /* Fila 3, Columna 2 */
+        padding: 0 10px;
+    }
+    
+    /* 5. Contenido REDES (Columna 1, debajo de su título) */
+    .div2 {
+        grid-area: 4 / 1 / 5 / 2; /* Fila 4, Columna 1 */
+        padding: 0 10px;
+    }
+    
+    /* 6. Contenido EQUIPO (Columna 2, debajo de su título) */
+    .div3 {
+        grid-area: 4 / 2 / 5 / 3; /* Fila 4, Columna 2 */
+        padding: 0 10px;
+    }
+
+    /* --- FIN DE ESTRUCTURA 2x2 --- */
+
+    /* 7. Título FEEDBACK (Vuelve a ocupar las 2 columnas, debajo de REDES/EQUIPO) */
+    .div8 {
+        grid-area: 5 / 1 / 6 / 3; /* Fila 5, Ocupa toda la fila */
+        padding: 0 10px;
+    }
+
+    /* 8. Contenido FEEDBACK (Vuelve a ocupar las 2 columnas) */
+    .div4 {
+        grid-area: 6 / 1 / 7 / 3; /* Fila 6, Ocupa toda la fila */
+        padding: 0 10px;
+    }
+    
+    /* 9. Copyright (Al final, ocupa las 2 columnas) */
     .div9 {
+        grid-area: 7 / 1 / 8 / 3; /* Fila 7, Ocupa toda la fila */
         flex-direction: column;
         gap: 10px;
-        padding: 10px;
+        padding: 10px 10px;
+        align-items: flex-start;
+    }
+    
+    /* Limpieza de márgenes y alineación (se mantienen) */
+    .div1, .div2, .div3, .div4, .div5, .div6, .div7, .div8 {
+        /* padding: 0 10px; se aplicó arriba para un control más fino */
     }
 
     .copy-nioy {
         font-size: 13px;
-        margin: 10px 0 0 0;
+        margin: 0;
     }
 }
