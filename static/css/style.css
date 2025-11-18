@@ -309,7 +309,7 @@ body:has(main:below(.navbar)) .navbar a {
     }
 
     .main-content {
-        height: 100vh;
+        min-height: 100vh;
     }
 }
 

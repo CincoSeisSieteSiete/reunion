@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{url_for('static', filename='logos/Logo.png')}}" type="image/x-icon">
-   
+    <meta name="view-transition" content="same-origin">
     {% block header %}{% endblock %}
 </head>
 <body>
@@ -147,5 +147,32 @@
         </div>
       </div>
     </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+    // Escucha todos los clics en los enlaces <a>
+    document.querySelectorAll('a').forEach(anchor => {
+        anchor.addEventListener('click', (event) => {
+            const destinationURL = anchor.href;
+            
+            // Verifica que sea un enlace a otra página del mismo origen
+            if (destinationURL.startsWith(window.location.origin)) {
+                event.preventDefault(); // Detiene la navegación estándar
+
+                // Inicia la transición de vista
+                const transition = document.startViewTransition(() => {
+                    // Navega a la nueva página DENTRO de la transición
+                    window.location.href = destinationURL;
+                });
+
+                // Opcional: Manejar errores o completado
+                transition.finished.then(() => {
+                    console.log('Transición completada.');
+                });
+            }
+        });
+    });
+});
+    </script>
 </body>
 </html>
