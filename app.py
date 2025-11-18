@@ -465,22 +465,9 @@ def tomar_asistencia(grupo_id):
                 asistentes_hoy=asistentes_hoy,
                 fecha_hoy=hoy
             )
-    finally:
-        connection.close()
-
-
-def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
-    """
-    Actualiza racha y puntos del usuario según última asistencia.
-    - +10 puntos por asistencia
-    - Racha aumenta si no se rompe la semana
-    """
-    # Convertir fecha_actual a objeto date
-    fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
-
-    # Obtener última asistencia antes de fecha_actual
-    cursor.execute("""
-        SELECT fecha FROM asistencias
+now()
+        )
+     SELECT fecha FROM asistencias
         WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
         ORDER BY fecha DESC LIMIT 1
     """, (usuario_id, grupo_id, fecha_actual))
