@@ -508,5 +508,5 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=5000)
     #debug=True, host='0.0.0.0', port=5000

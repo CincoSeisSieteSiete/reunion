@@ -1,142 +1,106 @@
 {% extends "base.html" %}
 
-{% block title %}Mi Perfil{% endblock %}
+{% block title %}Perfil{% endblock %}
 
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Perfil.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="perfil-container">
-    <!-- Profile Sidebar -->
-    <div class="profile-card">
-        <div class="profile-icon">{{user.nombre[0]}}</div>
-        <h2 class="profile-name">{{ user.nombre }}</h2>
-        <p class="profile-email">{{ user.email }}</p>
-        <div class="profile-divider"></div>
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-value">{{ user.puntos }}</div>
-                <div class="stat-label">Puntos</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">{{ user.racha }}</div>
-                <div class="stat-label">Racha</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">{{ user.total_medallas }}</div>
-                <div class="stat-label">Medallas</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">{{ user.total_asistencias }}</div>
-                <div class="stat-label">Asistencias</div>
-            </div>
-        </div>
-    </div>
+
+<div class="min-container">
     
-    <!-- Content Area -->
-    <div class="content-area">
-        <!-- Medals Section -->
-        {% if medallas %}
-        <div class="section-card">
-            <div class="section-header">
-                <h3 class="section-title">Mis Medallas</h3>
+    <header class="min-profile-header">
+        <div class="min-avatar">
+            {{ user.nombre[0] | upper }}
+        </div>
+        <h1 class="min-name">{{ user.nombre }}</h1>
+        <p class="min-email">{{ user.email }}</p>
+
+        <div class="min-stats-row">
+            <div class="min-stat">
+                <span class="value">{{ user.puntos }}</span>
+                <span class="label">Puntos</span>
             </div>
-            <div class="section-body">
-                <div class="medals-grid">
-                    {% for medalla in medallas %}
-                    <div class="medal-item">
-                        <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
-                             alt="{{ medalla.nombre }}" 
-                             class="medal-img"
-                             onerror="this.src='https://via.placeholder.com/80?text=🏆'">
-                        <div class="medal-name">{{ medalla.nombre }}</div>
-                        <div class="medal-description">{{ medalla.descripcion }}</div>
-                        <div class="medal-date">{{ medalla.fecha_obtencion.strftime('%d/%m/%Y') }}</div>
-                    </div>
-                    {% endfor %}
-                </div>
+            <div class="separator"></div>
+            <div class="min-stat">
+                <span class="value">{{ user.racha }}</span>
+                <span class="label">Racha</span>
+            </div>
+            <div class="separator"></div>
+            <div class="min-stat">
+                <span class="value">{{ user.total_medallas }}</span>
+                <span class="label">Medallas</span>
             </div>
         </div>
+    </header>
+
+    <div class="min-content-grid">
+        
+        {% if medallas %}
+        <section class="min-card">
+            <h2 class="min-card-title">Medallas Recientes</h2>
+            <div class="min-medals-list">
+                {% for medalla in medallas %}
+                <div class="min-medal-item">
+                    <div class="medal-circle">
+                        <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
+                             alt="Medalla"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="fallback-emoji" style="display:none;">🏆</span>
+                    </div>
+                    <div class="medal-text">
+                        <h4>{{ medalla.nombre }}</h4>
+                        <small>{{ medalla.fecha_obtencion.strftime('%d/%m') }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
         {% endif %}
 
-        <!-- Attendance History Section -->
-        <div class="section-card">
-            <div class="section-header">
-                <h3 class="section-title">Historial de Asistencias</h3>
+        <section class="min-card">
+            <h2 class="min-card-title">Asistencia</h2>
+            
+            {% if historial %}
+            <div class="min-attendance-table">
+                {% for asistencia in historial %}
+                <div class="min-row">
+                    <div class="date-col">
+                        <span class="day">{{ asistencia.fecha.strftime('%d') }}</span>
+                        <span class="month">{{ asistencia.fecha.strftime('%b') }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="group-name">{{ asistencia.grupo_nombre }}</span>
+                    </div>
+                    <div class="status-col">
+                        {% if asistencia.presente %}
+                            <span class="badge success">Presente</span>
+                        {% else %}
+                            <span class="badge error">Ausente</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <div class="section-body">
-                {% if historial %}
-                <table class="attendance-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Grupo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for asistencia in historial %}
-                        <tr>
-                            <td data-label="Fecha">{{ asistencia.fecha.strftime('%d/%m/%Y') }}</td>
-                            <td data-label="Grupo">{{ asistencia.grupo_nombre }}</td>
-                            <td data-label="Estado">
-                                {% if asistencia.presente %}
-                                    <span class="status-badge status-presente">✓ Presente</span>
-                                {% else %}
-                                    <span class="status-badge status-ausente">✗ Ausente</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <div class="empty-state">No hay historial de asistencias</div>
-                {% endif %}
-            </div>
-        </div>
+            {% else %}
+            <div class="empty-msg">Sin registros recientes.</div>
+            {% endif %}
+        </section>
+
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
-// Animate profile card
+// Animación suave de entrada (Fade Up)
 anime({
-    targets: '.profile-card',
+    targets: ['.min-profile-header', '.min-card'],
     opacity: [0, 1],
-    translateY: [-30, 0],
-    duration: 1000,
-    easing: 'easeOutExpo'
-});
-
-// Animate sections
-anime({
-    targets: '.section-card',
-    opacity: [0, 1],
-    translateY: [30, 0],
-    delay: anime.stagger(200, {start: 300}),
+    translateY: [20, 0],
+    delay: anime.stagger(150),
     duration: 800,
-    easing: 'easeOutExpo'
-});
-
-// Animate medals
-anime({
-    targets: '.medal-item',
-    opacity: [0, 1],
-    scale: [0.8, 1],
-    delay: anime.stagger(100, {start: 600}),
-    duration: 600,
-    easing: 'easeOutExpo'
-});
-
-// Animate table rows
-anime({
-    targets: '.attendance-table tbody tr',
-    opacity: [0, 1],
-    translateX: [-20, 0],
-    delay: anime.stagger(80, {start: 700}),
-    duration: 600,
     easing: 'easeOutExpo'
 });
 </script>

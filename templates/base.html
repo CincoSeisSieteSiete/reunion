@@ -88,6 +88,17 @@
             easing: 'easeOutExpo'
         });
 
+        // Animación inicial con Anime.js
+anime({
+    targets: '.navbar',
+    translateY: [-100, 0],
+    opacity: [0, 1],
+    duration: 800,
+    easing: 'easeOutExpo'
+});
+
+
+
         anime({
             targets: '.main-content',
             opacity: [0, 1],

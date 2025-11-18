@@ -4,106 +4,127 @@
 
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/grupo.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="grupo-header">
-    <h1 class="grupo-title">{{ grupo.nombre }}</h1>
-    <p class="grupo-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
-    <p class="grupo-admin">Administrador: {{ grupo.admin_nombre }}</p>
+<main class="ui-container">
 
-    <!-- Botón de salir -->
-    
-    
-    <div class="grupo-actions">
+    <header class="ui-header">
+        <div class="header-meta">
+            <span class="admin-badge">Admin: {{ grupo.admin_nombre }}</span>
+        </div>
+        <h1 class="ui-title">{{ grupo.nombre }}</h1>
+        <p class="ui-desc">{{ grupo.descripcion or 'Sin descripción disponible.' }}</p>
+        
+        <div class="code-component" onclick="copiarCodigo(this, '{{ grupo.codigo_invitacion }}')">
+            <div class="code-label">Código de invitación</div>
+            <div class="code-value">
+                {{ grupo.codigo_invitacion }}
+                <span class="copy-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </span>
+            </div>
+            <div class="toast">¡Copiado!</div>
+        </div>
+    </header>
+
+    <div class="ui-actions">
         {% if es_admin %}
-            <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="btn">Tomar Asistencia</a>
-            <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="btn">Gestionar Puntos</a>
-
+        <a href="{{ url_for('tomar_asistencia', grupo_id=grupo.id) }}" class="action-btn primary">
+            <span>📝</span> Tomar Asistencia
+        </a>
+        <a href="{{ url_for('gestionar_puntos', grupo_id=grupo.id) }}" class="action-btn secondary">
+            <span>⚡</span> Gestionar Puntos
+        </a>
         {% endif %}
-         <a href="{{ url_for('cumpleanos', id_grupo=grupo.id) }}" class="btn">Ver Cumpleaños</a>
-
+        <a href="{{ url_for('cumpleanos', id_grupo=grupo.id) }}" class="action-btn ghost">
+            <span>🎂</span> Cumpleaños
+        </a>
     </div>
-    
 
+    <hr class="ui-divider">
 
+    <section class="ranking-section">
+        <div class="section-header">
+            <h2>Tabla de Clasificación</h2>
+        </div>
 
-    
-    <div class="codigo-container">
-        <div class="codigo-label">Código de Invitación</div>
-        <span class="codigo-value">{{ grupo.codigo_invitacion }}</span>
-        <button class="btn btn-copy" onclick="copiarCodigo('{{ grupo.codigo_invitacion }}')">Copiar</button>
-    </div>
-</div>
+        {% if ranking|length > 0 %}
+        <div class="podium-layout">
+            
+            {% if ranking[0] %}
+            <div class="rank-card gold">
+                <div class="rank-medal">🥇</div>
+                <div class="rank-avatar-lg">{{ ranking[0].nombre[0] | upper }}</div>
+                <div class="rank-info">
+                    <h3>{{ ranking[0].nombre }}</h3>
+                    <div class="rank-score">{{ ranking[0].puntos }} pts</div>
+                </div>
+                <div class="rank-badge">Líder</div>
+            </div>
+            {% endif %}
 
-<div class="leaderboard-card">
-    <div class="leaderboard-header">
-        <h2 class="leaderboard-title">Tabla de Clasificación</h2>
-    </div>
-    <table class="leaderboard-table">
-        <thead>
-            <tr>
-                <th>Posición</th>
-                <th>Nombre</th>
-                <th>Puntos</th>
-                <th>Racha</th>
-                <th>Medallas</th>
-                <th>Asistencias</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in ranking %}
-            <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
-                <td data-label="Posición">
-                    {% if loop.index <= 3 %}
-                        <span class="position-icon">★</span>
-                    {% else %}
-                        {{ loop.index }}
-                    {% endif %}
-                </td>
-                <td data-label="Nombre"><strong>{{ usuario.nombre }}</strong></td>
-                <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>
-                <td data-label="Racha"><span class="badge">{{ usuario.racha }} 🔥</span></td>
-                <td data-label="Medallas"><span class="badge">{{ usuario.total_medallas }} 🏆</span></td>
-                <td data-label="Asistencias">{{ usuario.asistencias_grupo }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <div class="runners-up-list">
+                {% if ranking[1] %}
+                <div class="rank-row-item silver">
+                    <div class="pos-circle">2</div>
+                    <div class="row-avatar">{{ ranking[1].nombre[0] | upper }}</div>
+                    <div class="row-name">{{ ranking[1].nombre }}</div>
+                    <div class="row-points">{{ ranking[1].puntos }} pts</div>
+                </div>
+                {% endif %}
 
-    <div class="exit-container">
-  <form method="POST" action="/salir_reunion/{{ grupo.id }}" onsubmit="return confirm('¿Estás seguro de que deseas salir de la reunión?');">
-      <button type="submit" class="btn-exit">Salir de la Reunión</button>
-  </form>
-</div>
+                {% if ranking[2] %}
+                <div class="rank-row-item bronze">
+                    <div class="pos-circle">3</div>
+                    <div class="row-avatar">{{ ranking[2].nombre[0] | upper }}</div>
+                    <div class="row-name">{{ ranking[2].nombre }}</div>
+                    <div class="row-points">{{ ranking[2].puntos }} pts</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
 
-</div>
+        {% if ranking|length > 3 %}
+        <div class="table-container">
+            <table class="ui-table">
+                <thead>
+                    <tr>
+                        <th width="50">Pos</th>
+                        <th>Estudiante</th>
+                        <th class="text-right">Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in ranking[3:] %}
+                    <tr>
+                        <td><span class="pos-number">{{ loop.index + 3 }}</span></td>
+                        <td>
+                            <div class="user-flex">
+                                <div class="avatar-xs">{{ usuario.nombre[0] | upper }}</div>
+                                <span>{{ usuario.nombre }}</span>
+                            </div>
+                        </td>
+                        <td class="text-right"><strong>{{ usuario.puntos }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    </section>
+
+</main>
+
 <script>
-function copiarCodigo(codigo) {
+function copiarCodigo(element, codigo) {
     navigator.clipboard.writeText(codigo).then(() => {
-        alert('Código copiado al portapapeles!');
+        element.classList.add('copied');
+        setTimeout(() => element.classList.remove('copied'), 2000);
     });
 }
-
-// Animate header
-anime({
-    targets: '.grupo-header',
-    opacity: [0, 1],
-    translateY: [-50, 0],
-    duration: 1000,
-    easing: 'easeOutExpo'
-});
-
-// Animate table rows
-anime({
-    targets: '.leaderboard-table tbody tr',
-    opacity: [0, 1],
-    translateX: [-30, 0],
-    delay: anime.stagger(100, {start: 500}),
-    duration: 800,
-    easing: 'easeOutExpo'
-});
 </script>
 {% endblock %}

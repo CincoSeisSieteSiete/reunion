@@ -1,198 +1,314 @@
 :root {
-    --black: #000000;
-    --white: #ffffff;
-    --gray-100: #f5f5f5;
-    --gray-200: #e5e5e5;
-    --gray-300: #d4d4d4;
-    --gray-400: #a3a3a3;
-    --gray-500: #737373;
-    --gray-600: #525252;
-    --gray-700: #404040;
-    --gray-800: #262626;
-    --gray-900: #171717;
-}
-
-.ranking-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-.ranking-header {
-    padding: 1rem;
-    text-align: flex-start ;
+    --bg-body: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-main: #111111;
+    --text-sec: #6b7280;
+    --border-light: #e5e7eb;
     
+    /* Colores de Ranking */
+    --gold: #fbbf24;
+    --silver: #9ca3af;
+    --bronze: #b45309;
+    --gold-bg: #fffbeb;
+    --silver-bg: #f3f4f6;
+    --bronze-bg: #fff7ed;
 }
 
-.ranking-header-title {
-    font-size: 3.5rem;
-    font-weight: 900;
-    color: #000000;
-    letter-spacing: -0.03em;
+body {
+    background-color: var(--bg-body);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
     margin: 0;
-    
+}
+
+.min-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* --- HEADER --- */
+.ranking-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+    letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+    color: var(--text-sec);
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* --- PODIUM (TOP 3) --- */
+.podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.podium-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 30px 20px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    border: 1px solid var(--border-light);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+/* Alturas Escritorio */
+.podium-card.gold {
+    order: 2;
+    height: 320px;
+    border-color: var(--gold);
+    z-index: 2;
+    background: linear-gradient(to bottom, var(--bg-card), var(--gold-bg));
+}
+
+.podium-card.silver {
+    order: 1;
+    height: 280px;
+    border-top: 4px solid var(--silver);
+}
+
+.podium-card.bronze {
+    order: 3;
+    height: 260px;
+    border-top: 4px solid var(--bronze);
+}
+
+/* Elementos internos */
+.crown-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.podium-rank {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-sec);
+    margin-bottom: 10px;
+    opacity: 0.3;
+}
+
+.podium-avatar {
+    width: 80px;
+    height: 80px;
+    min-width: 40px;
+    min-height: 40px;
+    background: var(--text-main);
+    color: white;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.gold .podium-avatar { background: var(--gold); color: white; }
+.silver .podium-avatar { background: var(--silver); }
+.bronze .podium-avatar { background: var(--bronze); }
+
+.podium-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.podium-points {
+    color: var(--text-sec);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.podium-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.ranking-header-icon {
-    font-size: 4rem;
-    margin-bottom: 0rem;
-    display: block;
+.gold .podium-badge { background: var(--gold); color: white; }
+.silver .podium-badge { background: var(--silver); color: white; }
+.bronze .podium-badge { background: var(--bronze); color: white; }
+
+/* --- LISTA --- */
+.leaderboard-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
 
-
-
-.ranking-table {
+.clean-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.ranking-table thead {
-    background: var(--gray-100);
+.clean-table th {
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    background: #fcfcfc;
+    border-bottom: 1px solid var(--border-light);
 }
 
-.ranking-table th {
-    padding: 1.5rem 1.5rem;
-    text-align: left;
+.clean-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.9rem;
+}
+
+.clean-table tr:last-child td { border-bottom: none; }
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-avatar {
+    width: 30px;
+    height: 30px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.rank-number {
+    background: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--black);
+    color: var(--text-sec);
 }
 
-.ranking-table td {
-    padding: 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--gray-200);
-    font-size: 1rem;
-}
+.text-right { text-align: right; }
 
-.ranking-table tbody tr {
-    transition: background 0.3s ease;
-}
-
-.ranking-table tbody tr:hover {
-    background: var(--gray-100);
-}
-
-.ranking-gold {
-    background: var(--black) !important;
-    color: var(--white);
-    font-weight: 700;
-}
-
-.ranking-gold td {
-    border-bottom: 2px solid var(--gray-800);
-}
-
-.ranking-silver {
-    background: var(--gray-800) !important;
-    color: var(--white);
-    font-weight: 600;
-}
-
-.ranking-bronze {
-    background: var(--gray-700) !important;
-    color: var(--white);
-    font-weight: 600;
-}
-
-.position-icon {
-    font-size: 2rem;
-    display: inline-block;
-}
-
-.badge {
-    padding: 0.5rem 1rem;
-    background: var(--black);
-    color: var(--white);
-    font-size: 0.875rem;
-    font-weight: 600;
-    display: inline-block;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-}
-
-.ranking-gold .badge,
-.ranking-silver .badge,
-.ranking-bronze .badge {
-    background: var(--white);
-    color: var(--black);
-}
-
-/* Mobile responsive design */
+/* =========================================
+   DISEÑO MÓVIL (Solo 1ro Grande)
+   ========================================= */
 @media (max-width: 768px) {
-    .ranking-container {
-        padding: 1rem;
+    .min-container {
+        padding: 30px 15px;
     }
 
-    .ranking-header {
-        padding: 2rem 1.5rem;
-        margin: -1rem -1rem 2rem;
+    .podium-container {
+        flex-direction: column; /* Apilar verticalmente */
+        gap: 10px; /* Menos espacio entre elementos */
+        margin-bottom: 30px;
     }
 
-    .ranking-header-title {
-        font-size: 2rem;
+    /* 1. ESTILO PRIMER LUGAR (ORO) - SE MANTIENE GRANDE */
+    .podium-card.gold {
+        order: 1; /* Poner primero */
+        width: 100%;
+        height: auto;
+        padding: 40px 20px; /* Un poco más de aire */
+        margin-bottom: 15px; /* Separarlo de los otros */
+        box-shadow: 0 15px 30px rgba(251, 191, 36, 0.15); /* Brillo dorado sutil */
     }
 
-    .ranking-header-icon {
-        font-size: 2.5rem;
+    /* 2. ESTILO PLATA Y BRONCE - SE VUELVEN BARRAS COMPACTAS */
+    .podium-card.silver,
+    .podium-card.bronze {
+        order: 2; /* Van debajo del oro */
+        width: 100%;
+        height: auto !important; /* Anular altura fija */
+        
+        /* Cambiar a layout horizontal (Fila) */
+        flex-direction: row; 
+        align-items: center;
+        justify-content: space-between;
+        
+        padding: 15px;
+        border-radius: 12px; /* Menos redondeado */
+        border-top: 1px solid var(--border-light); /* Quitar borde grueso superior */
+        border-left: 4px solid; /* Mover el color al lateral izquierdo */
     }
 
-    /* Transform table into cards on mobile */
-    .ranking-table thead {
+    .podium-card.silver { border-left-color: var(--silver); }
+    .podium-card.bronze { border-left-color: var(--bronze); }
+
+    /* Reajustar Avatar en Plata/Bronce móvil */
+    .podium-card.silver .podium-avatar,
+    .podium-card.bronze .podium-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        margin-bottom: 0; /* Quitar margen inferior */
+        margin-right: 15px; /* Añadir margen derecho */
+        order: 2; /* Controlar posición */
+    }
+
+    /* Reajustar Posición (Número) */
+    .podium-card.silver .podium-rank,
+    .podium-card.bronze .podium-rank {
+        margin-bottom: 0;
+        margin-right: 15px;
+        font-size: 1.2rem;
+        order: 1;
+        width: 20px;
+    }
+
+    /* Reajustar Nombre y Puntos */
+    .podium-card.silver .podium-name,
+    .podium-card.bronze .podium-name {
+        margin-bottom: 0;
+        text-align: left;
+        flex: 1; /* Ocupar espacio disponible */
+        order: 3;
+    }
+
+    .podium-card.silver .podium-points,
+    .podium-card.bronze .podium-points {
+        margin-bottom: 0;
+        font-weight: 700;
+        color: var(--text-main);
+        order: 4;
+    }
+
+    /* Ocultar badge en Plata/Bronce móvil para limpiar */
+    .podium-card.silver .podium-badge,
+    .podium-card.bronze .podium-badge {
         display: none;
     }
 
-    .ranking-table,
-    .ranking-table tbody,
-    .ranking-table tr,
-    .ranking-table td {
-        display: block;
-        width: 100%;
+    /* Tabla general */
+    .clean-table th:nth-child(3), 
+    .clean-table td:nth-child(3) {
+        display: none; /* Ocultar columna asistencias en móvil */
     }
-
-    .ranking-table tr {
-        margin-bottom: 1.5rem;
-        background: var(--white);
-        border: 1px solid var(--black);
-        padding: 1.5rem;
-    }
-
-    .ranking-table td {
-        border: none;
-        padding: 0.75rem 0;
-        text-align: left;
-        position: relative;
-    }
-
-    .ranking-table td::before {
-        content: attr(data-label);
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--gray-500);
-        display: block;
-        font-size: 0.75rem;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.1em;
-    }
-
-    .position-icon {
-        font-size: 1.5rem;
-    }
-
-    .badge {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.8rem;
-    }
-
-    .ranking-gold,
-    .ranking-silver,
-    .ranking-bronze {
-        color: var(--white);
-    }
-}
-
-@view-transition {
-  navigation: auto;
 }

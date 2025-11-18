@@ -57,4 +57,3 @@ def get_info(usuario_id : int) -> Usuario | None:
         return None
     finally:
         connection.close()
- 

@@ -4,62 +4,103 @@
 
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/ranking.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div class="ranking-container">
-    <div class="ranking-header">
-        <h1 class="ranking-header-title">Ranking Global</h1>
-    </div>
+<div class="min-container">
     
-    <div class="ranking-card">
-        <table class="ranking-table">
+    <div class="ranking-header">
+        <h1 class="page-title">Ranking Global</h1>
+        <p class="page-subtitle">Los estudiantes más destacados de la plataforma.</p>
+    </div>
+
+    {% if ranking|length > 0 %}
+    <div class="podium-container">
+        
+        {% if ranking[1] %}
+        <div class="podium-card silver">
+            <div class="podium-rank">2</div>
+            <div class="podium-avatar">{{ ranking[1].nombre[0] | upper }}</div>
+            <div class="podium-name">{{ ranking[1].nombre }}</div>
+            <div class="podium-points">{{ ranking[1].puntos }} pts</div>
+            <div class="podium-badge">🥈 Plata</div>
+        </div>
+        {% endif %}
+
+        {% if ranking[0] %}
+        <div class="podium-card gold">
+            <div class="crown-icon">👑</div>
+            <div class="podium-avatar">{{ ranking[0].nombre[0] | upper }}</div>
+            <div class="podium-name">{{ ranking[0].nombre }}</div>
+            <div class="podium-points">{{ ranking[0].puntos }} pts</div>
+            <div class="podium-badge">🥇 Oro</div>
+        </div>
+        {% endif %}
+
+        {% if ranking[2] %}
+        <div class="podium-card bronze">
+            <div class="podium-rank">3</div>
+            <div class="podium-avatar">{{ ranking[2].nombre[0] | upper }}</div>
+            <div class="podium-name">{{ ranking[2].nombre }}</div>
+            <div class="podium-points">{{ ranking[2].puntos }} pts</div>
+            <div class="podium-badge">🥉 Bronce</div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if ranking|length > 3 %}
+    <div class="leaderboard-card">
+        <table class="clean-table">
             <thead>
                 <tr>
-                    <th>Posición</th>
-                    <th>Nombre</th>
-                    <th>Puntos</th>
-                    <th>Asistencias</th>
+                    <th width="10%">Pos</th>
+                    <th>Estudiante</th>
+                    <th class="text-right">Asistencias</th>
+                    <th class="text-right">Puntos</th>
                 </tr>
             </thead>
             <tbody>
-                {% for usuario in ranking %}
-                <tr class="{% if loop.index == 1 %}ranking-gold{% elif loop.index == 2 %}ranking-silver{% elif loop.index == 3 %}ranking-bronze{% endif %}">
-                    <td data-label="Posición">
-                        {% if loop.index <= 3 %}
-                            <span class="position-icon">★</span>
-                        {% else %}
-                            <strong>{{ loop.index }}</strong>
-                        {% endif %}
+                {% for usuario in ranking[3:] %}
+                <tr class="table-row">
+                    <td><span class="rank-number">#{{ loop.index + 3 }}</span></td>
+                    <td>
+                        <div class="user-cell">
+                            <div class="mini-avatar">{{ usuario.nombre[0] | upper }}</div>
+                            <span class="user-name">{{ usuario.nombre }}</span>
+                        </div>
                     </td>
-                    <td data-label="Nombre"><strong>{{ usuario.nombre }}</strong></td>
-                    <td data-label="Puntos"><span class="badge">{{ usuario.puntos }} PTS</span></td>    
-                    <td data-label="Asistencias">{{ usuario.total_asistencias }}</td>
+                    <td class="text-right faded-text">{{ usuario.total_asistencias }}</td>
+                    <td class="text-right"><strong>{{ usuario.puntos }}</strong></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% endif %}
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
-// Animate header
+// Animación del Podio (Escala y Opacidad)
 anime({
-    targets: '.ranking-header',
+    targets: '.podium-card',
+    scale: [0.8, 1],
     opacity: [0, 1],
-    translateY: [-50, 0],
-    duration: 1000,
-    easing: 'easeOutExpo'
+    delay: anime.stagger(200, {start: 100}), // El primero en aparecer será el 2do, luego 1ro, luego 3ro
+    duration: 800,
+    easing: 'easeOutElastic(1, .6)'
 });
 
-// Animate table rows
+// Animación de la lista
 anime({
-    targets: '.ranking-table tbody tr',
+    targets: '.table-row',
+    translateY: [20, 0],
     opacity: [0, 1],
-    translateX: [-30, 0],
-    delay: anime.stagger(100, {start: 500}),
-    duration: 800,
+    delay: anime.stagger(50, {start: 800}),
+    duration: 600,
     easing: 'easeOutExpo'
 });
 </script>
