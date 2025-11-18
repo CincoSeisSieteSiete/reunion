@@ -411,18 +411,12 @@ def tomar_asistencia(grupo_id):
     connection = db.get_connection()
     try:
         with connection.cursor() as cursor:
-            # Verificar que el usuario es admin/líder del grupo
-            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
-            grupo = cursor.fetchone()
-            if not grupo or grupo['admin_id'] != session['user_id']:
-                flash('No tienes permisos para tomar asistencia en este grupo', 'danger')
-                return redirect(url_for('dashboard'))
-
             if request.method == 'POST':
                 fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
                 asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
 
                 # Obtener todos los miembros del grupo
+                # un json para retornar solo los usarios id, nombres, recha y puntos
                 cursor.execute("SELECT usuario_id FROM grupo_miembros WHERE grupo_id = %s", (grupo_id,))
                 todos_miembros = [m['usuario_id'] for m in cursor.fetchall()]
 
@@ -445,6 +439,7 @@ def tomar_asistencia(grupo_id):
                 return redirect(url_for('ver_grupo', grupo_id=grupo_id))
 
             # GET: mostrar formulario de asistencia
+            # muestra datos de racha y puntos actuales
             cursor.execute("""
                 SELECT u.id, u.nombre, u.racha, u.puntos
                 FROM usuarios u
@@ -455,6 +450,7 @@ def tomar_asistencia(grupo_id):
             miembros = cursor.fetchall()
 
             # Obtener asistencia de hoy si existe
+            # para saber si el usario ya marcó presente
             hoy = datetime.now().strftime('%Y-%m-%d')
             cursor.execute("""
                 SELECT usuario_id FROM asistencias 
