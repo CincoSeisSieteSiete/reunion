@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import session, redirect, url_for, flash
-import db
+from DB.conexion import get_connection
 
 def login_required(f):
     @wraps(f)
@@ -18,7 +18,7 @@ def lideres_required(f):
             flash('Debes iniciar sesión', 'warning')
             return redirect(url_for('login'))
 
-        connection = db.get_connection()
+        connection = get_connection()
         try:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT rol_id FROM usuarios WHERE id = %s", (session['user_id'],))
@@ -45,7 +45,7 @@ def admin_required(f):
             flash('Debes iniciar sesión', 'warning')
             return redirect(url_for('login'))
 
-        connection = db.get_connection()
+        connection = get_connection()
         try:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT rol_id FROM usuarios WHERE id = %s", (session['user_id'],))

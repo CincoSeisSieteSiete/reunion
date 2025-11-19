@@ -3,6 +3,8 @@ from datetime import datetime, date
 from calendar import monthrange
 from QUERYS.querysCumpleanos import get_cumpleanos
 
+from DB.conexion import get_connection
+
 def cumpleanos_rutas(id_grupo: int):
     # Fecha actual
     hoy_real = date.today()
@@ -54,7 +56,7 @@ def cumpleanos_rutas(id_grupo: int):
     dias_mes = monthrange(year_solicitado, mes_solicitado)[1]
 
     return render_template(
-        'cumpleanos.html',
+        'user_view/cumpleanos.html',
         cumpleanos_data=cumpleanos_json,
         cumple_hoy=cumple_hoy,
         mes_actual=mes_solicitado,

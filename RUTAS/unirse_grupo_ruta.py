@@ -28,4 +28,4 @@ def unirse_grupo_rutas():
             flash("Error al unirte al grupo.", "error")
             return redirect(url_for('unirse_grupo'))
 
-    return render_template('unirse_grupo.html')
+    return render_template('user_view/unirse_grupo.html')

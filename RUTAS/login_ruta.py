@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-import db
+from DB.conexion import get_connection
 from QUERYS.queryLogin import get_usuario
 
 def login_rutas():
@@ -8,7 +8,7 @@ def login_rutas():
         email = request.form.get('email')
         password = request.form.get('password')
         
-        connection = db.get_connection()
+        connection = get_connection()
         try:
             user = get_usuario(email)
                 
@@ -25,4 +25,4 @@ def login_rutas():
         finally:
             connection.close()
     
-    return render_template('login.html')
+    return render_template('inicio/login.html')

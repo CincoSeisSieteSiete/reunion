@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-import db
+from DB.conexion import get_connection
 from QUERYS.querysRaking import get_50_posiciones_raking
 
 
 def ranking_global_rutas():
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -17,6 +17,6 @@ def ranking_global_rutas():
             """)
             ranking = get_50_posiciones_raking()
             
-            return render_template('ranking.html', ranking=ranking)
+            return render_template('user_view/ranking.html', ranking=ranking)
     finally:
         connection.close()

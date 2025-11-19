@@ -1,9 +1,9 @@
 from flask import render_template, session
 from QUERYS.querysDashboard import get_info_usuario, get_grupos_usuario, get_medallas_usuario
-import db
+from DB.conexion import get_connection
 
 def dashboard_rutas(request):
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         user_id = session['user_id']
 
@@ -12,7 +12,7 @@ def dashboard_rutas(request):
         medallas = get_medallas_usuario(user_id)
 
         return render_template(
-            "dashboard.html",
+            "user_view/dashboard.html",
             user=user,
             grupos=grupos,
             medallas=medallas

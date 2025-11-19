@@ -2,13 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from RUTAS import register_ruta
-import db
 import secrets
 from datetime import datetime, timedelta
 from datetime import date
-import os
+
+from DB.conexion import get_connection
+
 from MODELS.Grupo import Grupo
 from QUERYS.querysCrearGrupo import querys_crear_grupo, querys_agregar_admin, GrupoMiembro
+
 
 def crear_grupo_rutas():
     if request.method == 'POST':
@@ -36,4 +38,4 @@ def crear_grupo_rutas():
         flash(f'Grupo creado exitosamente. Código de invitación: {codigo}', 'success')
         return redirect(url_for('ver_grupo', grupo_id=grupo_id))
     
-    return render_template('crear_grupo.html')
+    return render_template('creador/crear_grupo.html')

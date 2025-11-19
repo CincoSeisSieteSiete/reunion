@@ -27,4 +27,4 @@ def ver_grupo_ruta(grupo_id):
     # Verificar si el usuario es admin del grupo
     es_admin = grupo['admin_id'] == session['user_id']
         
-    return render_template('grupo.html', grupo=grupo, grupo_id=grupo_id, ranking=ranking, es_admin=es_admin)
+    return render_template('user_view/grupo.html', grupo=grupo, grupo_id=grupo_id, ranking=ranking, es_admin=es_admin)

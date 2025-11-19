@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-import db
-import secrets
 from datetime import datetime, timedelta
 from datetime import date
-import os
+from DB.conexion import get_connection
 from QUERYS.querysRegistro import user_exists, get_default_role_id
 
 def register_rutas():
@@ -19,7 +17,7 @@ def register_rutas():
             flash('Todos los campos son obligatorios', 'danger')
             return redirect(url_for('register'))
 
-        connection = db.get_connection()
+        connection = get_connection()
         try:
             if user_exists(email):
                 flash('El email ya está registrado', 'danger')
@@ -46,4 +44,4 @@ def register_rutas():
             connection.close()
 
     # Si no es POST, solo mostrar formulario
-    return render_template('register.html')
+    return render_template('inicio/register.html')

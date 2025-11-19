@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash
-import db
 import secrets
 from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
+from DB.conexion import get_connection
 
 # ESTA ES LA FORMA CORRECTA
 from RUTAS.dashboard_ruta import dashboard_rutas
@@ -86,7 +86,7 @@ def cumpleanos(id_grupo):
 @login_required
 @admin_required
 def admin_usuarios():
-    conn = db.get_connection()
+    conn = get_connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("""
@@ -106,7 +106,7 @@ def admin_usuarios():
 @admin_required
 def admin_cambiar_rol(usuario_id):
     nuevo_rol_id = request.form.get('rol_id')
-    conn = db.get_connection()
+    conn = get_connection()
     try:
         with conn.cursor() as cursor:
             # Verificar que el rol existe
@@ -142,7 +142,7 @@ def admin_set_password(usuario_id):
         return redirect(url_for('admin_usuarios'))
 
     hashed = generate_password_hash(nueva_pass)
-    conn = db.get_connection()
+    conn = get_connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("UPDATE usuarios SET password = %s WHERE id = %s", (hashed, usuario_id))
@@ -159,7 +159,7 @@ def admin_set_password(usuario_id):
 @admin_required
 def admin_reset_token(usuario_id):
     token = secrets.token_urlsafe(32)
-    conn = db.get_connection()
+    conn = get_connection()
     try:
         with conn.cursor() as cursor:
             cursor.execute("UPDATE usuarios SET reset_token = %s, reset_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE id = %s",
@@ -210,7 +210,7 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
 @login_required
 @lideres_required
 def gestionar_puntos(grupo_id):
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             # Verificar permisos
@@ -245,14 +245,14 @@ def gestionar_puntos(grupo_id):
             """, (grupo_id,))
             miembros = cursor.fetchall()
             
-            return render_template('gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
+            return render_template('gestionar/gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
     finally:
         connection.close()
 
 @app.route('/salir_reunion/<int:reunion_id>', methods=['POST'])
 @login_required
 def salir_reunion(reunion_id):
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             # Elimina al usuario de la reunión
@@ -270,7 +270,7 @@ def salir_reunion(reunion_id):
 @app.route('/admin/medallas', methods=['GET', 'POST'])
 @admin_required
 def gestionar_medallas():
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             if request.method == 'POST':
@@ -320,7 +320,7 @@ def gestionar_medallas():
             imagenes = [f for f in os.listdir(medallas_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg'))]
             
             return render_template(
-                'gestionar_medallas.html',
+                'gestionar/gestionar_medallas.html',
                 medallas=medallas,
                 usuarios=usuarios,
                 imagenes=imagenes
@@ -331,7 +331,7 @@ def gestionar_medallas():
 @app.route('/perfil')
 @login_required
 def perfil():
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             # Información del usuario
@@ -365,14 +365,14 @@ def perfil():
             """, (session['user_id'],))
             historial = cursor.fetchall()
             
-            return render_template('perfil.html', user=user, medallas=medallas, historial=historial)
+            return render_template('user_view/perfil.html', user=user, medallas=medallas, historial=historial)
     finally:
         connection.close()
 
 @app.route('/ranking')
 @login_required
 def ranking_global():
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("""
@@ -385,7 +385,7 @@ def ranking_global():
             """)
             ranking = cursor.fetchall()
             
-            return render_template('ranking.html', ranking=ranking)
+            return render_template('user_view/ranking.html', ranking=ranking)
     finally:
         connection.close()
 
@@ -402,13 +402,13 @@ def subir_imagen_medalla():
     os.makedirs(ruta_carpeta, exist_ok=True)
     ruta_archivo = os.path.join(ruta_carpeta, nuevo_nombre)
     imagen.save(ruta_archivo)
-    return redirect(url_for('gestionar_medallas'))
+    return redirect(url_for('gestionar/gestionar_medallas'))
 
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
 @lideres_required
 def tomar_asistencia(grupo_id):
-    connection = db.get_connection()
+    connection = get_connection()
     try:
         with connection.cursor() as cursor:
             if request.method == 'POST':
@@ -459,7 +459,7 @@ def tomar_asistencia(grupo_id):
             asistentes_hoy = [a['usuario_id'] for a in cursor.fetchall()]
 
             return render_template(
-                'tomar_asistencia.html',
+                'gestionar/tomar_asistencia.html',
                 grupo_id=grupo_id,
                 miembros=miembros,
                 asistentes_hoy=asistentes_hoy,
@@ -508,5 +508,5 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=5000)
     #debug=True, host='0.0.0.0', port=5000
