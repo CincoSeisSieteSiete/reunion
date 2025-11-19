@@ -80,102 +80,7 @@ def unirse_grupo():
 def cumpleanos(id_grupo):
     return cumpleanos_rutas(id_grupo)
 
-
-
-@app.route('/usuarios')
-@login_required
-@admin_required
-def admin_usuarios():
-    conn = get_connection()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("""
-                SELECT u.id, u.nombre, u.email, u.puntos, u.racha, u.fecha_nacimiento,
-                       u.fecha_registro, u.rol_id, r.nombre AS rol
-                FROM usuarios u
-                LEFT JOIN roles r ON u.rol_id = r.id
-                ORDER BY u.id DESC
-            """)
-            usuarios = cursor.fetchall()
-    finally:
-        conn.close()
-    return render_template('usuarios.html', usuarios=usuarios)
-
-@app.route('/admin/usuario/<int:usuario_id>/cambiar_rol', methods=['POST'])
-@login_required
-@admin_required
-def admin_cambiar_rol(usuario_id):
-    nuevo_rol_id = request.form.get('rol_id')
-    conn = get_connection()
-    try:
-        with conn.cursor() as cursor:
-            # Verificar que el rol existe
-            cursor.execute("SELECT nombre FROM roles WHERE id = %s", (nuevo_rol_id,))
-            rol = cursor.fetchone()
-            if not rol:
-                flash('Rol inválido', 'danger')
-                return redirect(url_for('admin_usuarios'))
-
-            # Actualizar rol del usuario
-            cursor.execute("UPDATE usuarios SET rol_id = %s WHERE id = %s", (nuevo_rol_id, usuario_id))
-
-            # Registrar acción en admin_logs
-            cursor.execute("""
-                INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle)
-                VALUES (%s, %s, %s, %s)
-            """, (session['user_id'], 'cambiar_rol', usuario_id, f'nuevo_rol={rol["nombre"]}'))
-
-            conn.commit()
-            flash(f'Rol actualizado a {rol["nombre"]}', 'success')
-    finally:
-        conn.close()
-    return redirect(url_for('admin_usuarios'))
-
-
-@app.route('/admin/usuario/<int:usuario_id>/set_password', methods=['POST'])
-@login_required
-@admin_required
-def admin_set_password(usuario_id):
-    nueva_pass = request.form.get('new_password')
-    if not nueva_pass or len(nueva_pass) < 6:
-        flash('Contraseña inválida (mínimo 6 caracteres)', 'danger')
-        return redirect(url_for('admin_usuarios'))
-
-    hashed = generate_password_hash(nueva_pass)
-    conn = get_connection()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("UPDATE usuarios SET password = %s WHERE id = %s", (hashed, usuario_id))
-            cursor.execute("INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle) VALUES (%s, %s, %s, %s)",
-                           (session['user_id'], 'set_password', usuario_id, 'admin_set_password'))
-            conn.commit()
-        flash('Contraseña actualizada correctamente (temporal)', 'success')
-    finally:
-        conn.close()
-    return redirect(url_for('admin_usuarios'))
-
-@app.route('/admin/usuario/<int:usuario_id>/reset_token', methods=['POST'])
-@login_required
-@admin_required
-def admin_reset_token(usuario_id):
-    token = secrets.token_urlsafe(32)
-    conn = get_connection()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("UPDATE usuarios SET reset_token = %s, reset_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE id = %s",
-                           (token, usuario_id))
-            cursor.execute("INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle) VALUES (%s, %s, %s, %s)",
-                           (session['user_id'], 'generar_reset_token', usuario_id, f'token={token}'))
-            conn.commit()
-        # Aquí debes enviar el email con el token — ejemplo: /reset_password/<token>
-        flash('Token de recuperación generado. Envía el enlace al usuario.', 'info')
-    finally:
-        conn.close()
-    return redirect(url_for('admin_usuarios'))
-
-
 # ==========================================================================================
-
 
 def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
     """Actualiza la racha y puntos del usuario"""
@@ -249,22 +154,6 @@ def gestionar_puntos(grupo_id):
     finally:
         connection.close()
 
-@app.route('/salir_reunion/<int:reunion_id>', methods=['POST'])
-@login_required
-def salir_reunion(reunion_id):
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            # Elimina al usuario de la reunión
-            cursor.execute("""
-                DELETE FROM reunion_miembros
-                WHERE reunion_id = %s AND usuario_id = %s
-            """, (reunion_id, session['user_id']))
-            connection.commit()
-        flash("Has salido de la reunión", "success")
-        return redirect(url_for('dashboard'))
-    finally:
-        connection.close()
 
 
 @app.route('/admin/medallas', methods=['GET', 'POST'])
