@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block header %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <!-- Groups Section -->
+    <section class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Mis Grupos</h2>
+            <div class="section-line"></div>
+        </div>
+        
+        {% if grupos %}
+        <div class="groups-grid">
+            {% for grupo in grupos %}
+            <div class="group-card">
+                <div class="group-card-inner">
+                    <div class="group-header">
+                        <h3 class="group-name">{{ grupo.nombre }}</h3>
+                        <span class="group-badge"> 
+                            <img class="iconos"  src="{{ url_for('static', filename='iconos/users.svg') }}" alt="Miembros"> 
+                            {{ grupo.total_miembros }} miembros</span>
+                    </div>
+                    <p class="group-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
+                    <div class="group-actions">
+                        <a href="{{ url_for('ver_grupo', grupo_id=grupo.id) }}" class="btn-primary">
+                            <span>Ver Grupo</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">👥</div>
+            <p class="empty-text">No estás en ningún grupo</p>
+            <p class="empty-subtext">Únete o crea un grupo para comenzar</p>
+            <div class="empty-actions">
+                {% if session.user_rol == 'admin' %}
+                <a href="{{ url_for('crear_grupo') }}" class="btn-primary">
+                    <span>Crear Grupo</span>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('unirse_grupo') }}" class="btn-secondary">
+                    <span>Unirse a Grupo</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Medals Section -->
+    {% if medallas %}
+    <section class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Mis Medallas</h2>
+            <div class="section-line"></div>
+        </div>
+        
+        <div class="medals-grid">
+            {% for medalla in medallas %}
+            <div class="medal-card">
+                <div class="medal-image-container">
+                    <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
+                         alt="{{ medalla.nombre }}" 
+                         class="medal-image">
+                </div>
+                <h3 class="medal-name">{{ medalla.nombre }}</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<!-- Anime.js Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+    anime({
+        targets: '.stat-card',
+        translateY: [40, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(100, {start: 700}),
+        duration: 300,
+        easing: 'easeOutExpo'
+    });
+
+    anime({
+        targets: '.section-title',
+        translateX: [-80, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(200, {start: 900}),
+        duration: 300,
+        easing: 'easeOutExpo'
+    });
+
+    anime({
+        targets: '.section-line',
+        scaleX: [0, 1],
+        delay: anime.stagger(200, {start: 1000}),
+        duration: 300,
+        easing: 'easeOutExpo'
+    });
+
+    anime({
+        targets: '.group-card',
+        translateY: [70, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(160, {start: 1100}),
+        duration: 300,
+        easing: 'easeOutExpo'
+    });
+
+    anime({
+        targets: '.medal-card',
+        scale: [0.9, 1],
+        opacity: [0, 1],
+        delay: anime.stagger(160, {start: 1200}),
+        duration: 300,
+        easing: 'easeOutExpo'
+    });
+
+    document.querySelectorAll('.medal-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            anime({
+                targets: this.querySelector('.medal-image'),
+                rotate: [0, 360],
+                scale: [1, 1.15],
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            anime({
+                targets: this.querySelector('.medal-image'),
+                rotate: 360,
+                scale: 1,
+                duration: 600,
+                easing: 'easeOutExpo'
+            });
+        });
+    });
+
+    document.querySelectorAll('.avatar-container').forEach(container => {
+        container.addEventListener('mouseenter', function() {
+            anime({
+                targets: [this.querySelector('::before'), this.querySelector('::after')],
+                duration: 400,
+                easing: 'easeOutExpo'
+            });
+        });
+    });
+</script>
+{% endblock %}

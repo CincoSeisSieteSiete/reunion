@@ -6,6 +6,8 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px 40px;
+    width: 100%;
+    min-height: 100vh;
 }
 
 /* Section Container */
@@ -38,16 +40,22 @@
 
 .group-card {
     background: transparent;
-    border: 1px solid rgb(128, 124, 124);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 0;
     padding: 50px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.952);
+    transition: all 0.3s ease;
     
 }
 .group-card:hover{
     border: 1px solid rgb(0, 0, 0);
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.382);
+    transition: all 0.3s ease;
 }
 
 
@@ -335,25 +343,49 @@
 
 /* 📱 Ajuste para pantallas pequeñas */
 @media screen and (max-width: 768px) {
-    .Perfil_user_dashboard {
+    .dashboard-container {
+        padding: 15px 20px;
+        width: 100%;
+    }
+    .section-title {
+        font-size: 2rem; /* ajustado para móvil */
+        margin-bottom: 30px;
+        letter-spacing: -1px;
+    }
+
+    .group-card {
+        width: 100%;
+        margin: 0 auto;
+        padding: 35px; /* menos padding para móvil */
+    }
+
+    .groups-grid {
+        gap: 20px;
+        grid-template-columns: 1fr; /* solo 1 columna en móvil */
+        display: flex;
         flex-direction: column;
-        align-items: center;
-        height: auto;
-        padding: 20px 0;
+    }
+    .group-header{
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .Perfil_user_dashboard .Puntos {
-        width: 90%;
-        aspect-ratio: 1 / 1;
-        max-width: none;
-        height: auto;
+    .main_container {
+        margin: 0;
+        width: 100%;
     }
 
-    .Perfil_user_dashboard .Puntos_valor {
-        font-size: 5.5rem;
+    .cumple-panel {
+        padding: 1rem;
+    }
+
+    .cumple-panel input[type="date"],
+    .cumple-panel button {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
 
 @view-transition {
-  navigation: auto;
+    navigation: auto;
 }

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Perfil.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="min-container">
+    
+    <header class="min-profile-header">
+        <div class="min-avatar">
+            {{ user.nombre[0] | upper }}
+        </div>
+        <h1 class="min-name">{{ user.nombre }}</h1>
+        <p class="min-email">{{ user.email }}</p>
+
+        <div class="min-stats-row">
+            <div class="min-stat">
+                <span class="value">{{ user.puntos }}</span>
+                <span class="label">Puntos</span>
+            </div>
+            <div class="separator"></div>
+            <div class="min-stat">
+                <span class="value">{{ user.racha }}</span>
+                <span class="label">Racha</span>
+            </div>
+            <div class="separator"></div>
+            <div class="min-stat">
+                <span class="value">{{ user.total_medallas }}</span>
+                <span class="label">Medallas</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="min-content-grid">
+        
+        {% if medallas %}
+        <section class="min-card">
+            <h2 class="min-card-title">Medallas Recientes</h2>
+            <div class="min-medals-list">
+                {% for medalla in medallas %}
+                <div class="min-medal-item">
+                    <div class="medal-circle">
+                        <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" 
+                             alt="Medalla"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="fallback-emoji" style="display:none;">🏆</span>
+                    </div>
+                    <div class="medal-text">
+                        <h4>{{ medalla.nombre }}</h4>
+                        <small>{{ medalla.fecha_obtencion.strftime('%d/%m') }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="min-card">
+            <h2 class="min-card-title">Asistencia</h2>
+            
+            {% if historial %}
+            <div class="min-attendance-table">
+                {% for asistencia in historial %}
+                <div class="min-row">
+                    <div class="date-col">
+                        <span class="day">{{ asistencia.fecha.strftime('%d') }}</span>
+                        <span class="month">{{ asistencia.fecha.strftime('%b') }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="group-name">{{ asistencia.grupo_nombre }}</span>
+                    </div>
+                    <div class="status-col">
+                        {% if asistencia.presente %}
+                            <span class="badge success">Presente</span>
+                        {% else %}
+                            <span class="badge error">Ausente</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-msg">Sin registros recientes.</div>
+            {% endif %}
+        </section>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+// Animación suave de entrada (Fade Up)
+anime({
+    targets: ['.min-profile-header', '.min-card'],
+    opacity: [0, 1],
+    translateY: [20, 0],
+    delay: anime.stagger(150),
+    duration: 800,
+    easing: 'easeOutExpo'
+});
+</script>
+{% endblock %}

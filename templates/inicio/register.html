@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+
+<div class="auth-container">
+  <div class="auth-card">
+    <form method="POST">
+      <div class="auth-form-group">
+        <label for="nombre" class="auth-label">Nombre Completo</label>
+        <input type="text" class="auth-input" id="nombre" name="nombre" minlength="8" required>
+        <p class="Ejm">Ejemplo: Jairo Sebastian</p>
+      </div>
+
+      <div class="auth-form-group">
+        <label for="email" class="auth-label">Email</label>
+        <input type="email" class="auth-input" id="email" name="email" required>
+        <p class="Ejm">Ejemplo: tu-correo@gmail.com</p>
+      </div>
+
+      <div class="auth-form-group">
+        <label for="password" class="auth-label">Contraseña</label>
+        <input type="password" class="auth-input" id="password" name="password" minlength="8" required>
+        <p class="Ejm">Mínimo 8 caracteres</p>
+      </div>
+
+      <div class="auth-form-group">
+  <label for="fecha_nacimiento" class="auth-label">Fecha de Nacimiento</label>
+  <input type="date" class="auth-input" id="fecha_nacimiento" name="fecha_nacimiento" required>
+  <p class="Ejm">Ejemplo: 01/01/2000</p>
+</div>
+
+
+      <button type="submit" class="auth-submit">Registrarse</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  anime({
+    targets: '.auth-card',
+    opacity: [0, 1],
+    translateY: [30, 0],
+    duration: 800,
+    easing: 'easeOutCubic'
+  });
+
+  anime({
+    targets: '.auth-form-group',
+    opacity: [0, 1],
+    translateX: [-20, 0],
+    duration: 600,
+    delay: anime.stagger(100, {start: 300}),
+    easing: 'easeOutCubic'
+  });
+</script>
+{% endblock %}

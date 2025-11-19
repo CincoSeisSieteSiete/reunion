@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Unirse a Grupo{% endblock %}
+
+
+{% block header %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/Unirse.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1 class="form-title">Unirse a un Grupo</h1>
+        </div>
+        <div class="form-body">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="codigo" class="form-label">Código de Invitación</label>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="codigo" 
+                        name="codigo" 
+                        placeholder="INGRESA EL CÓDIGO" 
+                        required
+                        autocomplete="off"
+                    >
+                    <p class="form-help">Solicita el código al administrador del grupo, No usar espacios ni caracteres especiales.</p>
+                    </p>
+                </div>
+                <button type="submit" class="form-button">Unirse al Grupo</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
