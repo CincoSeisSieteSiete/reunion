@@ -3,8 +3,15 @@
 {% block title %}Perfil{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/Perfil.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/perfil/base.css') }}">
+
+{% if session.get('tema', 0) == 0 %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil/light.css') }}">
+{% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil/dark.css') }}">
+{% endif %}
+
+
 {% endblock %}
 
 {% block content %}

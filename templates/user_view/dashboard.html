@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}Dashboard{% endblock %}
-
+    
 {% block header %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/base.css') }}">
+    {% if session.get('tema', 0) == 0 %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/light.css') }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dark.css') }}">
+    {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1,0 +1,70 @@
+/* ========================================================================= */
+/* COLORES DEL TEMA CLARO - Aplicación Directa de Colores */
+/* ========================================================================= */
+
+body {
+    background-color: #f0f0f0;
+    color: #000000;
+}
+
+.dashboard-container {
+    color: #000000;
+}
+
+.section-title {
+    color: #000000;
+}
+
+/* Grupos y Tarjetas */
+.group-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 6px rgba(0, 0, 0, 0.2);
+}
+.group-card:hover {
+    border: 1px solid #000000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.382);
+}
+
+/* Texto de Tarjeta */
+.group-name { color: #000000; }
+.group-description { color: rgba(0, 0, 0, 0.6); }
+.group-badge { 
+    color: rgba(0, 0, 0, 0.7); 
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Hover de Texto */
+.group-card:hover .group-name,
+.group-card:hover .group-description,
+.group-card:hover .group-badge {
+    color: #000000;
+}
+
+/* Botones Primarios */
+.btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+.btn-primary:hover {
+    color: #000000;
+    border-color: #000000;
+}
+
+/* Botones Secundarios */
+.btn-secondary {
+    color: #5c5757;
+    border-color: #5c5757;
+}
+.btn-secondary:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+/* Medallas */
+.medal-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}

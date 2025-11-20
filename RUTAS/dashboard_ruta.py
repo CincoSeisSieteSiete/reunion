@@ -15,7 +15,8 @@ def dashboard_rutas(request):
             "user_view/dashboard.html",
             user=user,
             grupos=grupos,
-            medallas=medallas
+            medallas=medallas,
+            tema=1
         )
 
     finally:

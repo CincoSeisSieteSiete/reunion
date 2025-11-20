@@ -1,0 +1,203 @@
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+}
+
+.min-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+/* --- HEADER PERFIL --- */
+.min-profile-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.min-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.min-name {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+    letter-spacing: -0.5px;
+}
+
+.min-email {
+    margin: 0 0 30px 0;
+    font-size: 0.95rem;
+}
+
+/* Stats Row */
+.min-stats-row {
+    display: inline-flex;
+    align-items: center;
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.min-stat {
+    text-align: center;
+    padding: 0 15px;
+}
+
+.min-stat .value {
+    display: block;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.min-stat .label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.separator {
+    width: 1px;
+    height: 25px;
+}
+
+/* --- GRID --- */
+.min-content-grid {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+}
+
+.min-card {
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+}
+
+.min-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 25px 0;
+    padding-bottom: 15px;
+}
+
+/* Medallas */
+.min-medals-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.min-medal-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.medal-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.medal-circle img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.medal-text h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.medal-text small {
+    font-size: 0.8rem;
+}
+
+/* Historial */
+.min-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+}
+
+.min-row:last-child {
+    border-bottom: none;
+}
+
+.date-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 15px;
+    min-width: 40px;
+}
+
+.date-col .day {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.date-col .month {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.info-col {
+    flex: 1;
+}
+
+.group-name {
+    font-size: 0.9rem;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.empty-msg {
+    text-align: center;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .min-content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .min-container {
+        padding: 30px 15px;
+    }
+
+    .min-stats-row {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

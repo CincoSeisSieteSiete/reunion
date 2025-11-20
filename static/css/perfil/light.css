@@ -1,0 +1,59 @@
+:root {
+    --bg-body: #ffffff;
+    --bg-card: #ffffff;
+    --text-main: #111111;
+    --text-sec: #6b7280;
+    --accent: #000000;
+    --border-light: #e5e7eb;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+}
+
+.min-avatar {
+    background-color: var(--text-main);
+    color: var(--bg-card);
+}
+
+.min-email,
+.min-stat .label,
+.date-col .month,
+.medal-text small,
+.empty-msg {
+    color: var(--text-sec);
+}
+
+.min-stats-row,
+.min-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+}
+
+.separator {
+    background-color: var(--border-light);
+}
+
+.min-card-title {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.min-row {
+    border-bottom: 1px dashed var(--border-light);
+}
+
+/* Badges */
+.badge.success {
+    background-color: #e6fffa;
+    color: #047857;
+}
+
+.badge.error {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.medal-circle {
+    background-color: #f3f4f6;
+}

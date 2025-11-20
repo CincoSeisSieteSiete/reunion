@@ -3,7 +3,16 @@
 {% block title %}Crear Grupo{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/crear_grupo.css') }}">
+  <!-- Base CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/crear_grupo/base.css') }}">
+
+<!-- Tema según session -->
+{% if session.get('tema', 0) == 0 %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/crear_grupo/light.css') }}">
+{% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/crear_grupo/dark.css') }}">
+{% endif %}
+
 {% endblock %}
 
 {% block content %}

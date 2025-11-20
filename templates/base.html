@@ -1,190 +1,206 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betania - {% block title %}Home{% endblock %}</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="shortcut icon" href="{{url_for('static', filename='logos/Logo.png')}}">
-    <meta name="view-transition" content="same-origin">
-    <meta name="description" content="Sistema de gestión de asistencias y participación para grupos y comunidades.">
-    {% block header %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Betania - {% block title %}Home{% endblock %}</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <link rel="shortcut icon" href="{{url_for('static', filename='logos/Logo.png')}}">
+  <meta name="view-transition" content="same-origin">
+  <meta name="description" content="Sistema de gestión de asistencias y participación para grupos y comunidades.">
+  {% block header %}{% endblock %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
+  {% if session.get('tema', 0) == 0 %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/light.css') }}">
+  {% else %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/dark.css') }}">
+  {% endif %}
+
 </head>
+
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a class="navbar-brand" href="/">Betania</a>
-            <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
-            <ul class="navbar-menu" id="navbarMenu">
-                {% if session.user_id %}
-                    <li class="Menu-urls"><a href="/dashboard"> <img class="iconos" src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
-                    <li class="Menu-urls"><a href="/perfil"> <img class="iconos" src="{{url_for('static', filename='iconos/user.svg')}}" alt="">  Perfil</a></li>
-                    <li class="Menu-urls"><a href="/ranking"> <img class="iconos" src="{{url_for('static', filename='iconos/list.svg')}}" alt="">  Ranking</a></li>
-                    <li class="Menu-urls"><a href="/unirse_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/123.svg')}}" alt="">  Unirse</a></li>
-                    {% if session.user_rol in ['lider', 'admin'] %}
-                      <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos" src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
-                    {% endif %}
-                    {% if session.user_rol == 'admin' %}
-                        <li class="dropdown">
-                            <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
-                            <ul class="dropdown-menu">
-                                <li><a href="/admin/medallas"> <img class="iconos" src="{{url_for('static', filename='iconos/medalla.svg')}}" alt="">  Medallas</a></li>
-                                <li><a href="/admin/usuarios"> <img class="iconos" src="{{url_for('static', filename='iconos/users.svg')}}" alt="">  Usuarios</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                    <li ><a href="/logout"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
-                {% else %}
-                    <li class="login"><a href="/login">Iniciar Sesión</a></li>
-                    <li class="register"><a href="/register">Registrarse</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-
-    <div class="main-content">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                        <button class="alert-close" onclick="this.parentElement.remove()">×</button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        {% block content %}{% endblock %}
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a class="navbar-brand" href="/">Betania</a>
+      <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
+      <ul class="navbar-menu" id="navbarMenu">
+        {% if session.user_id %}
+        <li class="Menu-urls"><a href="/dashboard"> <img class="iconos"
+              src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
+        <li class="Menu-urls"><a href="/perfil"> <img class="iconos"
+              src="{{url_for('static', filename='iconos/user.svg')}}" alt=""> Perfil</a></li>
+        <li class="Menu-urls"><a href="/ranking"> <img class="iconos"
+              src="{{url_for('static', filename='iconos/list.svg')}}" alt=""> Ranking</a></li>
+        <li class="Menu-urls"><a href="/unirse_grupo"> <img class="iconos"
+              src="{{url_for('static', filename='iconos/123.svg')}}" alt=""> Unirse</a></li>
+        {% if session.user_rol in ['lider', 'admin'] %}
+        <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos"
+              src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
+        {% endif %}
+        {% if session.user_rol == 'admin' %}
+        <li class="dropdown">
+          <button class="dropdown-toggle" onclick="toggleDropdown(event)">Admin ▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/admin/medallas"> <img class="iconos"
+                  src="{{url_for('static', filename='iconos/medalla.svg')}}" alt=""> Medallas</a></li>
+            <li><a href="/admin/usuarios"> <img class="iconos" src="{{url_for('static', filename='iconos/users.svg')}}"
+                  alt=""> Usuarios</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        <li><a href="/logout"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
+        {% else %}
+        <li class="login"><a href="/login">Iniciar Sesión</a></li>
+        <li class="register"><a href="/register">Registrarse</a></li>
+        {% endif %}
+      </ul>
     </div>
+  </nav>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('navbarMenu');
-            menu.classList.toggle('active');
-        }
+  <div class="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">
+      {{ message }}
+      <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
-        function toggleDropdown(event) {
-            event.stopPropagation();
-            const dropdown = event.target.closest('.dropdown');
-            dropdown.classList.toggle('open');
+    {% block content %}{% endblock %}
+  </div>
 
-            // Cierra otros dropdowns
-            document.querySelectorAll('.dropdown').forEach(d => {
-                if (d !== dropdown) d.classList.remove('open');
-            });
-        }
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('navbarMenu');
+      menu.classList.toggle('active');
+    }
 
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
-        });
+    function toggleDropdown(event) {
+      event.stopPropagation();
+      const dropdown = event.target.closest('.dropdown');
+      dropdown.classList.toggle('open');
 
-        // Animaciones
-        anime({
-            targets: '.navbar',
-            translateY: [-100, 0],
-            opacity: [0, 1],
-            duration: 800,
-            easing: 'easeOutExpo'
-        });
+      // Cierra otros dropdowns
+      document.querySelectorAll('.dropdown').forEach(d => {
+        if (d !== dropdown) d.classList.remove('open');
+      });
+    }
 
-        // Animación inicial con Anime.js
-anime({
-    targets: '.navbar',
-    translateY: [-100, 0],
-    opacity: [0, 1],
-    duration: 800,
-    easing: 'easeOutExpo'
-});
-
-
-
-        anime({
-            targets: '.main-content',
-            opacity: [0, 1],
-            translateY: [30, 0],
-            duration: 1000,
-            delay: 200,
-            easing: 'easeOutExpo'
-        });
-    </script>
-    {% block extra_js %}{% endblock %}
-
-    <section class="footer">
-      <div class="footer-container">
-        <div class="div1">
-            Sistema de Asistencias - Niozex Studio
-        </div>
-        <div class="div2">
-          <ul>
-            <li><a href="/404" >Instagram </a></li>
-            <li><a href="https://www.tiktok.com/@cinco67siete" target="_blank">Tik Tok</a></li>
-            <li><a  href="https://x.com/NioyDev5677?t=V4GEcLrdJ4TTsC0wtrJh6A&s=09" target="_blank">Twitter - X</a></li>
-          </ul>
-        </div>
-        <div class="div3">
-          <ul>
-            <li>Sebastian</li>
-            <li>Kevin</li>
-            <li>Edgar</li>
-            <li>Ezquiel</li>
-          </ul>
-        </div>
-        <div class="div4">
-          <ul>
-            <li><a href="">Contacto</a></li>
-            <li><a href="">Soporte</a></li>
-            <li><a href="">Ayuda</a></li>
-            <li><a href="">Política de privacidad</a></li>
-            <li><a href="">Términos de servicio</a></li>
-          </ul>
-
-        </div>
-        <div class="div5">
-          <span class="Titulo_footer">
-            BETANIA
-          </span>
-        </div>
-        <div class="div6"><span class="Titulo_footer2">REDES</span></div>
-        <div class="div7"><span class="Titulo_footer2">EQUIPO</span></div>
-        <div class="div8"><span class="Titulo_footer2">FEEDBACK</span></div>
-        <div class="div9">
-          <span class="copy-nioy">
-            © 2025 - Niozex Studio
-          </span>
-          <span>
-            S, E, K, E
-          </span>
-        </div>
-      </div>
-    </section>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-    // Escucha todos los clics en los enlaces <a>
-    document.querySelectorAll('a').forEach(anchor => {
-        anchor.addEventListener('click', (event) => {
-            const destinationURL = anchor.href;
-            
-            // Verifica que sea un enlace a otra página del mismo origen
-            if (destinationURL.startsWith(window.location.origin)) {
-                event.preventDefault(); // Detiene la navegación estándar
-
-                // Inicia la transición de vista
-                const transition = document.startViewTransition(() => {
-                    // Navega a la nueva página DENTRO de la transición
-                    window.location.href = destinationURL;
-                });
-
-                // Opcional: Manejar errores o completado
-                transition.finished.then(() => {
-                    console.log('Transición completada.');
-                });
-            }
-        });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
     });
-});
-    </script>
+
+    // Animaciones
+    anime({
+      targets: '.navbar',
+      translateY: [-100, 0],
+      opacity: [0, 1],
+      duration: 800,
+      easing: 'easeOutExpo'
+    });
+
+    // Animación inicial con Anime.js
+    anime({
+      targets: '.navbar',
+      translateY: [-100, 0],
+      opacity: [0, 1],
+      duration: 800,
+      easing: 'easeOutExpo'
+    });
+
+
+
+    anime({
+      targets: '.main-content',
+      opacity: [0, 1],
+      translateY: [30, 0],
+      duration: 1000,
+      delay: 200,
+      easing: 'easeOutExpo'
+    });
+  </script>
+  {% block extra_js %}{% endblock %}
+
+  <section class="footer">
+    <div class="footer-container">
+      <div class="div1">
+        Sistema de Asistencias - Niozex Studio
+      </div>
+      <div class="div2">
+        <ul>
+          <li><a href="/404">Instagram </a></li>
+          <li><a href="https://www.tiktok.com/@cinco67siete" target="_blank">Tik Tok</a></li>
+          <li><a href="https://x.com/NioyDev5677?t=V4GEcLrdJ4TTsC0wtrJh6A&s=09" target="_blank">Twitter - X</a></li>
+        </ul>
+      </div>
+      <div class="div3">
+        <ul>
+          <li>Sebastian</li>
+          <li>Kevin</li>
+          <li>Edgar</li>
+          <li>Ezquiel</li>
+        </ul>
+      </div>
+      <div class="div4">
+        <ul>
+          <li><a href="">Contacto</a></li>
+          <li><a href="">Soporte</a></li>
+          <li><a href="">Ayuda</a></li>
+          <li><a href="">Política de privacidad</a></li>
+          <li><a href="">Términos de servicio</a></li>
+        </ul>
+
+      </div>
+      <div class="div5">
+        <span class="Titulo_footer">
+          BETANIA
+        </span>
+      </div>
+      <div class="div6"><span class="Titulo_footer2">REDES</span></div>
+      <div class="div7"><span class="Titulo_footer2">EQUIPO</span></div>
+      <div class="div8"><span class="Titulo_footer2">FEEDBACK</span></div>
+      <div class="div9">
+        <span class="copy-nioy">
+          © 2025 - Niozex Studio
+        </span>
+        <span>
+          S, E, K, E
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Escucha todos los clics en los enlaces <a>
+      document.querySelectorAll('a').forEach(anchor => {
+        anchor.addEventListener('click', (event) => {
+          const destinationURL = anchor.href;
+
+          // Verifica que sea un enlace a otra página del mismo origen
+          if (destinationURL.startsWith(window.location.origin)) {
+            event.preventDefault(); // Detiene la navegación estándar
+
+            // Inicia la transición de vista
+            const transition = document.startViewTransition(() => {
+              // Navega a la nueva página DENTRO de la transición
+              window.location.href = destinationURL;
+            });
+
+            // Opcional: Manejar errores o completado
+            transition.finished.then(() => {
+              console.log('Transición completada.');
+            });
+          }
+        });
+      });
+    });
+  </script>
 </body>
+
 </html>

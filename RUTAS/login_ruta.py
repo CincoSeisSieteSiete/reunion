@@ -17,7 +17,8 @@ def login_rutas():
                 session["logged"] = True
                 session['user_id'] = user['id']
                 session['user_name'] = user['nombre']
-                session['user_rol'] = user['rol']  # ahora sí existe
+                session['tema'] = 1 if user['tema'] == b'\x01' else 0
+                session['user_rol'] = user['rol']
                 flash(f'Bienvenido, {user["nombre"]}!', 'success')
                 return redirect(url_for('dashboard'))
             else:

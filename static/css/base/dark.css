@@ -1,0 +1,20 @@
+:root {
+    --bg-body: #0d0f12;
+    --bg-card: #1a1d21;
+    --text-main: #f1f1f1;
+    --text-sec: #a4a8b3;
+    --accent: #ffffff;
+    --white: #f1f1f1;
+    --black: #0d0f12;
+    --gray-800: #444444;
+    --gray-700: #666666;
+}
+
+/* Aplicación de variables */
+body { background: var(--bg-body); color: var(--text-main); }
+.navbar { background: var(--bg-body); }
+.navbar a { color: var(--text-main); }
+.modal { background-color: var(--bg-body); }
+.modal-content { background: var(--bg-card); color: var(--text-main); }
+.alert { background: var(--bg-card); border-color: var(--accent); }
+.alert-close { color: var(--text-main); }

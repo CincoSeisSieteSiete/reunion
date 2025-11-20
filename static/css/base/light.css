@@ -1,0 +1,20 @@
+:root {
+    --bg-body: #ffffff;
+    --bg-card: #ffffff;
+    --text-main: #000000;
+    --text-sec: #666666;
+    --accent: #000000;
+    --white: #ffffff;
+    --black: #000000;
+    --gray-800: #333333;
+    --gray-700: #666666;
+}
+
+/* Aplicación de variables */
+body { background: var(--bg-body); color: var(--text-main); }
+.navbar { background: var(--bg-body); }
+.navbar a { color: var(--text-main); }
+.modal { background-color: var(--bg-body); }
+.modal-content { background: var(--bg-card); color: var(--text-main); }
+.alert { background: var(--bg-card); border-color: var(--black); }
+.alert-close { color: var(--black); }

@@ -1,0 +1,564 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*
+Global Styles
+Base.html
+*/
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: white;
+    min-height: 100vh;
+
+}
+
+.iconos{
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.Menu-urls a{
+    color: black;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.register {
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid grey;
+}
+
+.register a{
+    color: rgb(255, 255, 255);
+}
+
+.login a{
+    color: black;   
+}
+
+
+@view-transition {
+  navigation: auto;
+}
+/* Navigation */
+.navbar {
+  background: rgb(255, 255, 255);
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Línea decorativa */
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: black;
+    opacity: 0.1;
+}
+
+/* 🔥 Cambio de color al hacer scroll */
+body:has(main:below(.navbar)) .navbar {
+  background: black;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body:has(main:below(.navbar)) .navbar a {
+  color: white;
+}
+
+/* Enlaces dentro de la navbar */
+.navbar a {
+  color: black;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    text-transform: uppercase;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-end;
+    justify-content: flex-end;
+    list-style: none;
+}
+
+.navbar-menu a {
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+    position: relative;
+}
+
+.navbar-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: black;
+    transition: width 0.3s ease;
+}
+
+.navbar-menu a:hover::after {
+    width: 100%;
+}
+
+.navbar-user {
+    padding: 0.5rem 1rem;
+    background: white;
+    color: black;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.navbar-toggle {
+    display: none;
+    background: rgb(255, 255, 255);
+    border: none;
+    color: black;
+    font-size: 2rem;
+    cursor: pointer;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 20%;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 1rem 2rem 4rem;
+    min-height: 100vh;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    border: 2px solid var(--black);
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--black);
+}
+
+.alert-success::before {
+    background: var(--black);
+}
+
+.alert-error::before {
+    background: var(--gray-800);
+}
+
+.alert-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--black);
+    line-height: 1;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    background: white;
+    border: 1px solid black;
+    padding: 0.5rem 1rem;
+    color: black;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    background: white;
+    color: black;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: white;
+    border: 1px solid rgb(0, 0, 0);
+    min-width: 200px;
+    list-style: none;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 1001;
+    padding: 10px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--gray-800);
+}
+
+.dropdown-menu a:hover {
+    background: white;
+    color: var(--black);
+}
+
+.dropdown.open .dropdown-menu {
+    display: block;
+}
+
+
+
+.EXIT{
+    width: 30px;
+    height: 30px;
+    
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 2rem;
+        border-top: 1px solid white;
+        height: 150vh;
+    }
+    .navbar-menu.active li{
+        width: 100%;
+        
+    }
+    .navbar-menu.active a{
+        width: 100%;
+        padding: 10px;
+        display: block;
+    }
+
+    .navbar-menu.active {
+        display: flex;
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+
+    .main-content {
+        min-height: 100vh;
+    }
+}
+
+
+
+/* Modal obligatorio de cumpleaños */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.parro{
+    color: grey;
+    margin: 10px;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content h3 {
+    margin-bottom: 1.5rem;
+}
+
+.modal-content input[type="date"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.modal-content button {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+    background: var(--gray-700);
+}
+
+/* Evitar scroll del body cuando modal está abierto */
+body.modal-open {
+    overflow: hidden;
+}
+
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 120px;
+    padding: 20px 0;
+    
+}
+
+.Titulo_footer {
+    font-size: 34px;
+    font-weight: bold;
+    color: #333;
+    margin: 20px 20px;
+}
+
+.Titulo_footer2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.footer-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.footer-container ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
+
+.footer-container ul li a:after {
+    content: " ↗︎";
+    margin-left: 3px;
+}
+.footer-container ul li a:hover {
+    color: #000;
+    
+}
+
+.div1 {
+    margin: 20px;
+    grid-area: 2 / 1 / 3 / 4;
+}
+
+.copy-nioy {
+    margin: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.div2 { grid-area: 2 / 4 / 3 / 5; }
+.div3 { grid-area: 2 / 5 / 3 / 6; }
+.div4 { grid-area: 2 / 6 / 3 / 7; }
+.div5 { grid-area: 1 / 1 / 2 / 4; }
+.div6 { grid-area: 1 / 4 / 2 / 5; }
+.div7 { grid-area: 1 / 5 / 2 / 6; }
+.div8 { grid-area: 1 / 6 / 2 / 7; }
+
+.div9 {
+    grid-area: 4 / 1 / 4 / 7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+
+/* 📱 Versión móvil */
+@media screen and (max-width: 768px) {
+    .footer-container {
+        /* CAMBIO CLAVE: Dos columnas de igual ancho para títulos y contenido */
+        grid-template-columns: repeat(2, 1fr); 
+        grid-template-rows: auto;
+        gap: 20px;
+        text-align: left;
+        height: auto;
+        padding: 30px 10px;
+        margin-top: 100px;
+    }
+
+    /* Ajustes visuales de tipografía y espaciado (se mantienen) */
+    .Titulo_footer {
+        font-size: 26px;
+        margin: 0;
+    }
+
+    .Titulo_footer2 {
+        font-size: 18px;
+        margin-top: 0;
+        padding: 0 10px;
+    }
+
+    .footer-container ul {
+        align-items: flex-start;
+        gap: 6px;
+        margin-bottom: 0;
+        padding-left: 0;
+    }
+    
+    .footer-container ul li a {
+        font-size: 14px;
+    }
+    
+    /* REORGANIZACIÓN DE ÁREAS (Grid-Area) */
+    
+    /* 1. Fila de Título Principal (Ocupa las 2 columnas) */
+    .div5 {
+        grid-area: 1 / 1 / 2 / 3; /* Ocupa de la Columna 1 a la 3 (toda la fila) */
+        padding: 0 10px;
+    }
+
+    /* 2. Fila de Contenido Principal (Ocupa las 2 columnas) */
+    .div1 {
+        grid-area: 2 / 1 / 3 / 3; /* Ocupa de la Columna 1 a la 3 (toda la fila) */
+        padding: 0 10px;
+    }
+
+    /* --- INICIO DE ESTRUCTURA 2x2 --- */
+    
+    /* 3. Título REDES (Columna 1) */
+    .div6 {
+        grid-area: 3 / 1 / 4 / 2; /* Fila 3, Columna 1 */
+        padding: 0 10px;
+    }
+    
+    /* 4. Título EQUIPO (Columna 2, a la par de REDES) */
+    .div7 {
+        grid-area: 3 / 2 / 4 / 3; /* Fila 3, Columna 2 */
+        padding: 0 10px;
+    }
+    
+    /* 5. Contenido REDES (Columna 1, debajo de su título) */
+    .div2 {
+        grid-area: 4 / 1 / 5 / 2; /* Fila 4, Columna 1 */
+        padding: 0 10px;
+    }
+    
+    /* 6. Contenido EQUIPO (Columna 2, debajo de su título) */
+    .div3 {
+        grid-area: 4 / 2 / 5 / 3; /* Fila 4, Columna 2 */
+        padding: 0 10px;
+    }
+
+    /* --- FIN DE ESTRUCTURA 2x2 --- */
+
+    /* 7. Título FEEDBACK (Vuelve a ocupar las 2 columnas, debajo de REDES/EQUIPO) */
+    .div8 {
+        grid-area: 5 / 1 / 6 / 3; /* Fila 5, Ocupa toda la fila */
+        padding: 0 10px;
+    }
+
+    /* 8. Contenido FEEDBACK (Vuelve a ocupar las 2 columnas) */
+    .div4 {
+        grid-area: 6 / 1 / 7 / 3; /* Fila 6, Ocupa toda la fila */
+        padding: 0 10px;
+    }
+    
+    /* 9. Copyright (Al final, ocupa las 2 columnas) */
+    .div9 {
+        grid-area: 7 / 1 / 8 / 3; /* Fila 7, Ocupa toda la fila */
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 10px;
+        align-items: flex-start;
+    }
+    
+    /* Limpieza de márgenes y alineación (se mantienen) */
+    .div1, .div2, .div3, .div4, .div5, .div6, .div7, .div8 {
+        /* padding: 0 10px; se aplicó arriba para un control más fino */
+    }
+
+    .copy-nioy {
+        font-size: 13px;
+        margin: 0;
+    }
+}

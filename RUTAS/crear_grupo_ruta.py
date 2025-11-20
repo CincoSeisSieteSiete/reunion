@@ -36,6 +36,6 @@ def crear_grupo_rutas():
         miembro = GrupoMiembro(grupo_id, session['user_id'])
         querys_agregar_admin(miembro)
         flash(f'Grupo creado exitosamente. Código de invitación: {codigo}', 'success')
-        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id, tema=1))
     
     return render_template('creador/crear_grupo.html')
