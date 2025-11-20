@@ -1,38 +1,32 @@
 from DB.conexion import get_connection
 import logging
 from MODELS.Usuario import UsuarioDict as UD
+from typing import Tuple
 
-def modificar_rangos_usuario_grupo(id_grupo: int, id_usuario: int, nuevo_rango : int) -> bool:
+def modificar_rangos_usuario_grupo(usuario_id: int, rol_id: int, admin_id: int) -> Tuple[bool, str]:
+    conexion = get_connection()
     try:
-        connection = get_connection()
-        with connection.cursor() as cursor:
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT nombre FROM roles WHERE id = %s", (rol_id,))
+            rol = cursor.fetchone()
+            
+            if not rol:
+                return [False, "Rol inválido"]
+            
+            cursor.execute("UPDATE usuarios SET rol_id = %s WHERE id = %s", (rol_id, usuario_id))
+            conexion.commit()
             
             cursor.execute("""
-            SELECT * FROM grupo_miembros
-            WHERE grupo_id = %s AND usuario_id = %s
-            """, (id_grupo, id_usuario))
+                INSERT INTO admin_logs (admin_id, accion, objetivo_id, detalle)
+                VALUES (%s, %s, %s, %s)
+            """, (admin_id, 'cambiar_rol', usuario_id, f'nuevo_rol={rol["nombre"]}'))
             
-            usuario = cursor.fetchone()
-            if not usuario:
-                logging.warning(f"El usuario {id_usuario} no es miembro del grupo {id_grupo}.")
-                return False
+            conexion.commit()
             
-            #string magico donde debemos agregarlo en una clase para no repetir codigo y evitar errores
-            usuario[UD.rol_id] = nuevo_rango
-            
-            cursor.execute("""
-                           uppdate usuario set rol_id = %s
-                           WHERE id = %s
-                           """, (nuevo_rango, id_usuario))
-
-            connection.commit()
-            
-            return True
-
+            return [True, f"Rol actualizado a {rol['nombre']}"]
     except Exception as e:
-        logging.error(f"Error al modificar rangos del usuario en el grupo: {e}")
-        return False
+        logging.error(f"error en admin modificar roles: {e}")
+        conexion.rollback()
+        return [False, "Error al modificar el rol"]
     finally:
-        connection.close()
-
-    return True
+        conexion.close()

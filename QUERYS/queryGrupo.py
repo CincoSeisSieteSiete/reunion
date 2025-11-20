@@ -68,3 +68,22 @@ def get_raking_grupo(grupo_id) -> list:
         return []
     finally:
         connection.close()
+        
+def get_miembros_grupo(grupo_id : int) -> list:
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.email, u.puntos, u.racha, u.fecha_nacimiento
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
+                WHERE gm.grupo_id = %s
+                ORDER BY u.nombre
+            """, (grupo_id,))
+            usuarios = cursor.fetchall()
+            return usuarios
+    except Exception as e:
+        logging.error(f"Error fetching group ranking: {e}")
+        return []
+    finally:
+        connection.close()

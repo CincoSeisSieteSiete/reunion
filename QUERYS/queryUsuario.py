@@ -6,17 +6,45 @@ def Update_info(usuario : UsuarioConfigurable, usuario_id : int) -> bool:
     try:
         connection = get_connection()
         with connection.cursor() as cursor:
+            # Construir dinámicamente la consulta SQL solo con los campos que no son None
+            campos_actualizar = []
+            valores = []
             
-            cursor.execute("""
+            if usuario.nombre is not None:
+                campos_actualizar.append("nombre = %s")
+                valores.append(usuario.nombre)
+            
+            if usuario.email is not None:
+                campos_actualizar.append("email = %s")
+                valores.append(usuario.email)
+            
+            if usuario.password is not None:
+                campos_actualizar.append("password = %s")
+                valores.append(usuario.password)
+            
+            if usuario.fecha_nacimiento is not None:
+                campos_actualizar.append("fecha_nacimiento = %s")
+                valores.append(usuario.fecha_nacimiento)
+            
+            # Si no hay campos para actualizar, retornar False
+            if not campos_actualizar:
+                logging.warning(f"No hay campos para actualizar en el usuario {usuario_id}")
+                return False
+            
+            # Agregar el ID al final de los valores
+            valores.append(usuario_id)
+            
+            # Construir la consulta dinámicamente
+            sql = f"""
             UPDATE usuarios
-            SET nombre = %s,
-                email = %s,
-                password = %s,
-                fecha_nacimiento = %s,
+            SET {', '.join(campos_actualizar)}
             WHERE id = %s
-            """, usuario.to_tuple() + (usuario_id,))
-
+            """
+            
+            cursor.execute(sql, tuple(valores))
             connection.commit()
+            
+            
             
             return True
 
@@ -25,8 +53,6 @@ def Update_info(usuario : UsuarioConfigurable, usuario_id : int) -> bool:
         return False
     finally:
         connection.close()
-
-    return True
 
 def get_info(usuario_id : int) -> Usuario | None:
     try:

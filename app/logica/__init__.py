@@ -15,7 +15,6 @@ from .negocio import (
     obtener_miembros_grupo,
     obtener_ranking_global,
     obtener_medallas_usuario,
-    obtener_usuarios_para_admin,
     cambiar_rol_usuario,
     cambiar_contraseña_usuario,
     obtener_cumpleaños_proximos
@@ -38,7 +37,6 @@ __all__ = [
     'obtener_miembros_grupo',
     'obtener_ranking_global',
     'obtener_medallas_usuario',
-    'obtener_usuarios_para_admin',
     'cambiar_rol_usuario',
     'cambiar_contraseña_usuario',
     'obtener_cumpleaños_proximos'

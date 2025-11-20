@@ -1,6 +1,4 @@
 from app import crear_aplicacion
-from conexion import inicializar_bd
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,11 +6,6 @@ load_dotenv()
 
 def main() -> None:
     """Punto de entrada de la aplicación"""
-    try:
-        inicializar_bd()
-        print("Base de datos inicializada correctamente")
-    except Exception as e:
-        print(f"Error al inicializar base de datos: {e}")
     
     aplicacion = crear_aplicacion()
     

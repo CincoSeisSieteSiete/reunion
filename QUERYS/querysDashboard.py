@@ -57,12 +57,12 @@ def get_grupos_usuario(usuario_id: int) -> list:
         connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT g.id, g.nombre, g.descripcion, g.admin_id,
-                       (SELECT COUNT(*) FROM grupo_miembros WHERE grupo_id = g.id) AS total_miembros
-                FROM grupo_miembros gm
-                INNER JOIN grupos g ON gm.grupo_id = g.id
+                SELECT g.*, u.nombre AS nombre_admin
+                FROM grupos g
+                LEFT JOIN usuarios u ON g.admin_id = u.id
+                INNER JOIN grupo_miembros gm ON g.id = gm.grupo_id
                 WHERE gm.usuario_id = %s
-                ORDER BY g.nombre ASC
+                ORDER BY g.fecha_creacion DESC
             """, (usuario_id,))
             resultado = cursor.fetchall()
             return resultado
@@ -79,13 +79,14 @@ def get_medallas_usuario(usuario_id: int) -> list:
         connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT m.id, m.nombre, m.descripcion, m.imagen, um.fecha_obtencion
+                SELECT m.* 
                 FROM medallas m
                 INNER JOIN usuarios_medallas um ON m.id = um.medalla_id
                 WHERE um.usuario_id = %s
-                ORDER BY um.fecha_obtencion DESC
             """, (usuario_id,))
+            
             return cursor.fetchall()
+        
     except Exception as e:
         logging.error(f"Error al obtener las medallas del usuario: {e}")
         return []

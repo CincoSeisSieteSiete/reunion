@@ -9,7 +9,6 @@ from app.logica import (
     crear_usuario,
     obtener_usuario_por_id,
     obtener_grupos_usuario,
-    obtener_todos_los_grupos,
     unirse_a_grupo,
     obtener_grupo_por_id,
     generar_codigo_invitacion,
@@ -23,7 +22,6 @@ from app.logica import (
     cambiar_contraseña_usuario,
     obtener_cumpleaños_proximos
 )
-from conexion import obtener_conexion
 
 
 def registrar_rutas(aplicacion: Flask) -> None:
@@ -340,13 +338,6 @@ def registrar_rutas(aplicacion: Flask) -> None:
     def ranking_global():
         ranking = obtener_ranking_global()
         return render_template('ranking.html', ranking=ranking)
-
-    @aplicacion.route('/admin/usuarios')
-    @requiere_login
-    @requiere_admin
-    def admin_usuarios():
-        usuarios = obtener_usuarios_para_admin()
-        return render_template('usuarios.html', usuarios=usuarios)
 
     @aplicacion.route('/admin/usuario/<int:usuario_id>/cambiar_rol', methods=['POST'])
     @requiere_login

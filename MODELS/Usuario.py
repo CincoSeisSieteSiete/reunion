@@ -10,7 +10,12 @@ class Usuario:
     def to_tuple(self):
         return (self.id, self.nombre, self.email, self.password, self.fecha_nacimiento, self.rol_id)
     
-    
+class UsuarioLogin(Usuario):
+    def __init__(self, id, nombre, email, password, fecha_nacimiento, rol_id, nombre_rol):
+        super().__init__(id, nombre, email, password, fecha_nacimiento, rol_id)
+        self.nombre_rol = nombre_rol
+        
+ 
 class UsuarioConfigurable:
     def __init__(self, nombre, email, password, fecha_nacimiento):
         self.nombre = nombre
