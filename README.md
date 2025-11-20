@@ -98,3 +98,25 @@ El sistema crea automáticamente las siguientes tablas:
 - **Base de Datos**: MySQL con PyMySQL
 - **Frontend**: Bootstrap 5, Bootstrap Icons
 - **Plantillas**: Jinja2
+
+
+
+
+# Ideas Futuras [No significa que se hagan]
+
+- Modo oscuro/claro
+- Rangos de usuario / Insignias
+    - Creyente
+    - Disipulo
+    - servidor 
+- Banners para tu perfil
+- Medallas [Esta si]
+- Economia
+    - Poder gastar tus puntos.
+        - Poder abonar un arbol que creesca
+        - Comprar banners
+        - Temas para tu perfil
+    - hacer votaciones
+        - Poder gastar el puntos para vota por tu Lider favorito
+        - Eventos futuros para hacer
+    
