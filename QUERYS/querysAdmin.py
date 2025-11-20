@@ -36,3 +36,19 @@ def modificar_rangos_usuario_grupo(id_grupo: int, id_usuario: int, nuevo_rango :
         connection.close()
 
     return True
+
+
+def es_admin(grupo_id : int, admin_id : int)-> bool:
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
+            grupo = cursor.fetchone()
+            return grupo is not None and grupo['admin_id'] != admin_id
+    except Exception as e:
+        logging.error(f"Error al modificar rangos del usuario en el grupo: {e}")
+        return False
+    finally:
+        connection.close()
+
+    return True

@@ -1,7 +1,7 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import Grupo
 import logging
 from MODELS.Grupo import Grupo
+from datetime import datetime
 
 def get_esta_grupo(grupo_id, usuario_id) -> bool:
     """
@@ -63,6 +63,44 @@ def get_raking_grupo(grupo_id) -> list:
             """, (grupo_id, grupo_id))
             ranking = cursor.fetchall()
             return ranking
+    except Exception as e:
+        logging.error(f"Error fetching group ranking: {e}")
+        return []
+    finally:
+        connection.close()
+        
+        
+def get_miembros_grupo(grupo_id : int) -> list:
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.id, u.nombre, u.email, u.puntos, u.racha, u.fecha_nacimiento
+                FROM usuarios u
+                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
+                WHERE gm.grupo_id = %s
+                ORDER BY u.nombre
+            """, (grupo_id,))
+            usuarios = cursor.fetchall()
+            return usuarios
+    except Exception as e:
+        logging.error(f"Error fetching group ranking: {e}")
+        return []
+    finally:
+        connection.close()
+        
+
+def asistencias_hoy(grupo_id : int) -> list:
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            hoy = datetime.now().strftime('%Y-%m-%d')
+            cursor.execute("""
+                SELECT usuario_id FROM asistencias 
+                WHERE grupo_id = %s AND fecha = %s AND presente = TRUE
+            """, (grupo_id, hoy))
+            asistentes = [a['usuario_id'] for a in cursor.fetchall()]
+            return asistentes
     except Exception as e:
         logging.error(f"Error fetching group ranking: {e}")
         return []

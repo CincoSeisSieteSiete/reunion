@@ -57,3 +57,17 @@ def get_info(usuario_id : int) -> Usuario | None:
         return None
     finally:
         connection.close()
+
+
+def get_users_medallas() -> list:
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT id, nombre, email FROM usuarios ORDER BY nombre")
+            usuarios = cursor.fetchall()
+            return usuarios
+    except Exception as e:
+        logging.error(f"error al agregar medalla: {e}")
+        return []
+    finally:
+        connection.close()
