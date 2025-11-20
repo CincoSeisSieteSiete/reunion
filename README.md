@@ -119,4 +119,5 @@ El sistema crea automáticamente las siguientes tablas:
     - hacer votaciones
         - Poder gastar el puntos para vota por tu Lider favorito
         - Eventos futuros para hacer
-    
+- Reinicio de puntos anualmente
+- Apartados de eventos
