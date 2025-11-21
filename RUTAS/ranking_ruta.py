@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from DB.conexion import get_connection
 from QUERYS.querysRaking import get_50_posiciones_raking
 
 

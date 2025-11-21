@@ -183,7 +183,7 @@ def perfil():
 @app.route('/ranking')
 @login_required
 def ranking_global():
-    ranking_global_rutas()
+    return ranking_global_rutas()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
 def subir_imagen_medalla():
@@ -245,4 +245,4 @@ def tomar_asistencia(grupo_id):
 if __name__ == '__main__':
     # Ejecutar aplicación
     app.run(debug=True, host='0.0.0.0', port=5000)
-    #debug=True, host='0.0.0.0', port=5000
+    #app.run(debug=True, host='127.0.0.1', port=5000)

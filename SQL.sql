@@ -1,144 +1,76 @@
-CREATE DATABASE IF NOT EXISTS asistencias_db
-  DEFAULT CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 21-11-2025 a las 18:24:38
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
-USE asistencias_db;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- =========================
--- TABLA: roles
--- =========================
-CREATE TABLE `roles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
--- TABLA: usuarios
--- =========================
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `fecha_nacimiento` date DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
-  `puntos` int(11) DEFAULT 0,
-  `racha` int(11) DEFAULT 0,
-  `fecha_registro` datetime DEFAULT current_timestamp(),
-  `rol_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `idx_email` (`email`),
-  KEY `idx_puntos` (`puntos`),
-  KEY `fk_rol` (`rol_id`),
-  CONSTRAINT `fk_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
--- =========================
--- TABLA: admin_logs
--- =========================
-CREATE TABLE `admin_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `admin_id` int(11) NOT NULL,
-  `accion` varchar(255) NOT NULL,
-  `objetivo_id` int(11) NOT NULL,
-  `detalle` text DEFAULT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- Base de datos: `asistencias_db`
+--
 
--- =========================
--- TABLA: grupos
--- =========================
-CREATE TABLE `grupos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `admin_id` int(11) NOT NULL,
-  `codigo_invitacion` varchar(20) NOT NULL,
-  `fecha_creacion` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `codigo_invitacion` (`codigo_invitacion`),
-  KEY `admin_id` (`admin_id`),
-  KEY `idx_codigo` (`codigo_invitacion`),
-  CONSTRAINT `grupos_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- --------------------------------------------------------
 
--- =========================
--- TABLA: asistencias
--- =========================
+--
+-- Estructura de tabla para la tabla `asistencias`
+--
+
 CREATE TABLE `asistencias` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `grupo_id` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `presente` tinyint(1) DEFAULT 1,
-  `fecha_registro` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_asistencia` (`usuario_id`,`grupo_id`,`fecha`),
-  KEY `grupo_id` (`grupo_id`),
-  KEY `idx_fecha` (`fecha`),
-  CONSTRAINT `asistencias_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `asistencias_ibfk_2` FOREIGN KEY (`grupo_id`) REFERENCES `grupos` (`id`) ON DELETE CASCADE
+  `fecha_registro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
--- TABLA: grupo_miembros
--- =========================
-CREATE TABLE `grupo_miembros` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `grupo_id` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `fecha_union` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_miembro` (`grupo_id`,`usuario_id`),
-  KEY `usuario_id` (`usuario_id`),
-  CONSTRAINT `grupo_miembros_ibfk_1` FOREIGN KEY (`grupo_id`) REFERENCES `grupos` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `grupo_miembros_ibfk_2` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- Índices para tablas volcadas
+--
 
--- =========================
--- TABLA: invitaciones
--- =========================
-CREATE TABLE `invitaciones` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `codigo` varchar(20) NOT NULL,
-  `grupo_id` int(11) NOT NULL,
-  `usado_por` int(11) DEFAULT NULL,
-  `fecha_creacion` datetime DEFAULT current_timestamp(),
-  `fecha_uso` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `grupo_id` (`grupo_id`),
-  KEY `usado_por` (`usado_por`),
-  KEY `idx_codigo` (`codigo`),
-  CONSTRAINT `invitaciones_ibfk_1` FOREIGN KEY (`grupo_id`) REFERENCES `grupos` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `invitaciones_ibfk_2` FOREIGN KEY (`usado_por`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- Indices de la tabla `asistencias`
+--
+ALTER TABLE `asistencias`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_asistencia` (`usuario_id`,`grupo_id`,`fecha`),
+  ADD KEY `grupo_id` (`grupo_id`),
+  ADD KEY `idx_fecha` (`fecha`);
 
--- =========================
--- TABLA: medallas
--- =========================
-CREATE TABLE `medallas` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `imagen` varchar(255) NOT NULL,
-  `fecha_creacion` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
 
--- =========================
--- TABLA: usuarios_medallas
--- =========================
-CREATE TABLE `usuarios_medallas` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `usuario_id` int(11) NOT NULL,
-  `medalla_id` int(11) NOT NULL,
-  `fecha_obtencion` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_usuario_medalla` (`usuario_id`,`medalla_id`),
-  KEY `medalla_id` (`medalla_id`),
-  CONSTRAINT `usuarios_medallas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `usuarios_medallas_ibfk_2` FOREIGN KEY (`medalla_id`) REFERENCES `medallas` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- AUTO_INCREMENT de la tabla `asistencias`
+--
+ALTER TABLE `asistencias`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `asistencias`
+--
+ALTER TABLE `asistencias`
+  ADD CONSTRAINT `asistencias_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `asistencias_ibfk_2` FOREIGN KEY (`grupo_id`) REFERENCES `grupos` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

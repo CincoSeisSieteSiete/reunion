@@ -12,7 +12,7 @@ def get_asistencia_usuario(usuario_id : int) -> list:
                     ORDER BY fecha DESC
                 """, (usuario_id,))
             asistencias = cursor.fetchall()
-            return asistencias['asistenias']
+            return asistencias
     except Exception as e:
         logging.error(f"error al dar asistencia: {e}")
     finally:
