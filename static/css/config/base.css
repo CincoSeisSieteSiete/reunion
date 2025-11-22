@@ -66,7 +66,12 @@ input:checked + .slider:before {
 .tema form{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
+}
+
+.tema{
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -92,10 +97,93 @@ input:checked + .slider:before {
     margin-bottom: 20px;
 }
 
+
 .back-link img{
     width: 60px;
     height: 60px;
 }
+
+
+.apartado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;               /* 🔥 Ocupa todo el ancho */
+    padding: 20px 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.apartado img {
+    width: 32px;
+    height: 52px;
+    object-fit: contain;
+}
+
+.info-config {
+    width: 100%;
+}
+
+.info-config h2 {
+    margin-bottom: 5px;
+}
+
+.config-container-apartado {
+    width: 100%;
+    max-width: 600px;         /* Igual que tus otros bloques */
+    margin: 0 auto;
+}
+
+
+.config-link{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.alerta {
+    border-left: 5px solid var(--accent-color);
+    background-color: var(--alert-bg);
+    color: var(--text-primary);
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 600px;
+}
+
+.alerta h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.alerta p {
+    margin: 0.2rem 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.beta-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--beta-bg);
+    color: var(--beta-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.nuevo-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--beta-bg);
+    color: var(--nuevo);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
 
 
 /* Para telefono*/

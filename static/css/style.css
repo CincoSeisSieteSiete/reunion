@@ -9,6 +9,19 @@ Global Styles
 Base.html
 */
 
+:root{
+    :root {
+    --alert-bg: #fff3cd;       /* amarillo claro */
+    --accent-color: #ffc107;   /* borde izquierda */
+    --text-primary: #222222;   
+    --text-secondary: #555555; 
+    --beta-bg: rgba(0,0,0,0.05);
+    --beta-color: #444444;
+    --nuevo: rgb(0, 110, 6);
+}
+
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: white;
@@ -170,6 +183,27 @@ body:has(main:below(.navbar)) .navbar a {
     padding: 1rem 2rem 4rem;
     min-height: 100vh;
 }
+
+.beta-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--beta-bg);
+    color: var(--beta-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.nuevo-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--beta-bg);
+    color: var(--nuevo);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+
 
 /* Alert Messages */
 .alert {

@@ -11,11 +11,15 @@
     --gray-700: #666666;
 }
 
+
+
 /* Fondo general */
 body {
     background: var(--bg-body);
     color: var(--text-main);
 }
+
+
 
 /* 🔹 NAVBAR */
 .navbar {

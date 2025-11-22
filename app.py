@@ -14,9 +14,12 @@ from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 from RUTAS.configuraciones_usuarios_rutas import configuracion
 from RUTAS.tema_ruta import cambiar_tema
-
+from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
 
 app = Flask(__name__)
+
+app.register_blueprint(configuraciones_usuarios_rutas)
+
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
 app.permanent_session_lifetime = timedelta(days=10)
 app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
@@ -32,9 +35,6 @@ def index():
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
 
-@app.route('/configuracion')
-def configuracion_view():
-    return configuracion()
 
 @app.route('/tema', methods=['GET', 'POST'])
 def cambiar_tema_view():
