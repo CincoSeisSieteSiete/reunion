@@ -1,5 +1,5 @@
 # Configuración de la base de datos MySQL Local
-
+"""
 data ={
   "host": "localhost",
   "user": "root",
@@ -19,4 +19,3 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-"""
