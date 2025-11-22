@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from werkzeug.security import generate_password_hash
-import secrets
 from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
@@ -14,6 +12,8 @@ from RUTAS.login_ruta import login_rutas
 from RUTAS.crear_grupo_ruta import crear_grupo_rutas
 from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
+from RUTAS.configuraciones_usuarios_rutas import configuracion
+from RUTAS.tema_ruta import cambiar_tema
 
 
 app = Flask(__name__)
@@ -26,22 +26,28 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 def page_not_found(e):
     return render_template('404.html'), 404
 
-
 @app.route('/')
 def index():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
 
+@app.route('/configuracion')
+def configuracion_view():
+    return configuracion()
+
+@app.route('/tema', methods=['GET', 'POST'])
+def cambiar_tema_view():
+    cambiar_tema()
+    return redirect('/configuracion')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return register_rutas()
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
-
 
 @app.route('/logout')
 def logout():
@@ -49,7 +55,6 @@ def logout():
     session.permanent = False
     flash('Sesión cerrada exitosamente', 'info')
     return redirect(url_for('login'))
-
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -73,7 +78,6 @@ def crear_grupo():
 @login_required
 def unirse_grupo():
     return unirse_grupo_rutas()
-
 
 @app.route('/cumples/<int:id_grupo>')
 @login_required
@@ -392,8 +396,6 @@ def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
     else:
         # Primera asistencia
         cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-
-
 
 if __name__ == '__main__':
     # Ejecutar aplicación

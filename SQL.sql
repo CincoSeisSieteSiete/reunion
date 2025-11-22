@@ -25,6 +25,7 @@ CREATE TABLE `usuarios` (
   `password` varchar(255) NOT NULL,
   `puntos` int(11) DEFAULT 0,
   `racha` int(11) DEFAULT 0,
+  `tema` bit(1) DEFAULT 0,
   `fecha_registro` datetime DEFAULT current_timestamp(),
   `rol_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),

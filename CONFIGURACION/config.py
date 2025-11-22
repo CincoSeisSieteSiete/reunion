@@ -8,8 +8,8 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-"""
 
+"""
 # Configuración para despliegue en PythonAnywhere
 data ={
   "host": "nioyfp.mysql.pythonanywhere-services.com",

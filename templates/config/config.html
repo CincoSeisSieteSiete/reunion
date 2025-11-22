@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/config/base.css') }}">
+
+{% if session.get('tema', 0) == 0 %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/light.css') }}">
+{% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/dark.css') }}">
+{% endif %}
+{% endblock %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<section class="config-container">
+    <div class="tema">
+        <form method="POST" action="/tema">
+            <section class="info-config">
+                <h2>Tema</h2>
+                <p>Selecciona el tema que prefieras para la interfaz de usuario.</p>
+            </section>
+
+            <div class="Opcion">
+                {% if session.get('tema', 0) == 0 %}
+                    <span>Claro</span>
+                {% else %}
+                    <span>Oscuro</span>
+                {% endif %}
+
+                <label class="switch">
+                    <input type="checkbox"
+                        id="tema"
+                        name="tema"
+                        value="1"
+                        onchange="this.form.submit()"
+                        {% if session.get('tema', 0) == 1 %}checked{% endif %}>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
