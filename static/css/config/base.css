@@ -4,7 +4,19 @@
     margin: 0 auto;
     padding: 40px 20px;
 }
+.diviciones{
+    display: flex;
+    align-items: center; 
+    gap: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+}
 
+.diviciones hr{
+    flex: 1;
+    height: 1px;
+}
 /* Switch estilo iOS */
 .switch {
     position: relative;
@@ -71,10 +83,19 @@ input:checked + .slider:before {
 }
 
 .info-config p{
-    
     line-height: 1.5;
     width: 90%;
 }  
+
+.back-link{
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.back-link img{
+    width: 60px;
+    height: 60px;
+}
 
 
 /* Para telefono*/

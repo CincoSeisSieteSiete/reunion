@@ -13,6 +13,17 @@
 {% block title %}Configuración{% endblock %}
 
 {% block content %}
+<section class="regreso">
+    <a href="/perfil" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+</section>
+
+<div class="diviciones">
+    <span>Personalización</span>
+    <hr>
+</div>
+
 <section class="config-container">
     <div class="tema">
         <form method="POST" action="/tema">
