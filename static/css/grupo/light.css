@@ -1,0 +1,17 @@
+:root {
+    /* Paleta Minimalista Premium */
+    --bg-body: #ffffff;       /* Gris muy claro, no blanco puro */
+    --bg-surface: #ffffff;    /* Blanco puro para tarjetas */
+    --primary: #18181b;       /* Negro suave para acciones principales */
+    --text-main: #111827;     /* Texto casi negro */
+    --text-sec: #6b7280;      /* Gris medio para secundarios */
+    --border: #e5e7eb;        /* Borde sutil */
+    --radius: 16px;           /* Curvas modernas */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    /* Colores de Ranking Elegantes (Pastel/Saturados) */
+    --gold-bg: #fffbeb; --gold-text: #b45309; --gold-border: #fcd34d;
+    --silver-bg: #f8fafc; --silver-text: #475569; --silver-border: #cbd5e1;
+    --bronze-bg: #fff7ed; --bronze-text: #9a3412; --bronze-border: #fdba74;
+}

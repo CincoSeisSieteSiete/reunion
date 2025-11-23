@@ -9,11 +9,49 @@ Global Styles
 Base.html
 */
 
+.main-container {
+    width: 70%;
+    margin: 5rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 15px;
+
+    /* POSICIÓN INICIAL: afuera por la izquierda */
+    transform: translateX(-120%);
+    opacity: 0;
+
+    transition: transform 0.7s ease, opacity 0.7s ease;
+}
+
+/* Cuando entra: cruza totalmente y termina en el centro */
+.main-container.enter-active {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Cuando sale: se va por la derecha */
+.main-container.exit-active {
+    transform: translateX(120%);
+    opacity: 0;
+}
+
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background: white;
     min-height: 100vh;
 
+}
+
+.regreso{
+    display: flex;
+    align-items: center;
+
+}
+
+.regreso img{
+    width: 44px;
+    height: 44px;
 }
 
 .iconos{

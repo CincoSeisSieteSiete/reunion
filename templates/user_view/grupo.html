@@ -3,11 +3,23 @@
 {% block title %}{{ grupo.nombre }}{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/grupo.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grupo/base.css') }}">
+    {% if session.get('tema', 0) == 0 %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/grupo/light.css') }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/grupo/dark.css') }}">
+    {% endif %}
 {% endblock %}
 
+
 {% block content %}
+
+<section class="regreso">
+    <a href="javascript:history.back()" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+</section>
+
 <main class="ui-container">
 
     <header class="ui-header">
