@@ -1,5 +1,4 @@
 
-
 body {
     background-color: var(--bg-body);
     color: var(--text-main);
@@ -8,6 +7,7 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
+
 
 .ui-container {
     width: 100%;
@@ -22,8 +22,8 @@ body {
 }
 
 .admin-badge {
-    background: #f3f4f6;
-    color: var(--text-sec);
+    background: var(--bg-surface);
+    color: var(---primary);
     font-size: 0.75rem;
     font-weight: 600;
     padding: 4px 12px;
@@ -106,13 +106,13 @@ body {
 .action-btn span { font-size: 1.1em; }
 
 /* Tipos de botón */
-.primary { background: var(--primary); color: white; box-shadow: var(--shadow-sm);  text-decoration: none; }
-.primary:hover { background: #27272a; transform: translateY(-1px);  }
+.primary { background: var(--primary); color: var(--bg-surface); box-shadow: var(--shadow-sm);  text-decoration: none; }
+.primary:hover { background: var(--bg-body); transform: translateY(-1px);  }
 
 .secondary { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);  text-decoration: none; }
 .secondary:hover { border-color: #d1d5db; background: #f9fafb; }
 
-.ghost:hover { color: var(--text-main); background: #f3f4f6; }
+.ghost:hover { color: var(--text-main); background: var(--bg-body); }
 .ghost { color: var(--text-sec);}
 .ghost a { color: var(--text-sec); border-bottom: 1px solid black; text-decoration-color: var(--text-sec); }
 
@@ -147,7 +147,7 @@ body {
 .rank-medal { font-size: 2.5rem; margin-bottom: 10px; display: block; }
 .rank-avatar-lg {
     width: 80px; height: 80px;
-    background: var(--primary); color: white;
+    background: var(--primary); color: var(--bg-body);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 2rem; font-weight: 700;
@@ -195,7 +195,7 @@ body {
 
 .row-avatar {
     width: 36px; height: 36px;
-    background: var(--text-main); color: white;
+    background: var(--text-main); color:  var(---primary);
     border-radius: 50%;
     font-weight: 600; font-size: 0.9rem;
     display: flex; align-items: center; justify-content: center;

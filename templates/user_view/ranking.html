@@ -8,6 +8,13 @@
 {% endblock %}
 
 {% block content %}
+
+<section class="regreso">
+    <a href="javascript:history.back()" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+</section>
+
 <div class="min-container">
     
     <div class="ranking-header">

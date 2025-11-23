@@ -232,36 +232,32 @@ def tomar_asistencia(grupo_id):
         asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
 
         # Obtener todos los miembros del grupo
-        # un json para retornar solo los usarios id, nombres, recha y puntos
         miembros = get_miembros_grupo(grupo_id)
-        
         ids_miembros = [m['usuario_id'] for m in miembros]
-        
+
         for usuario in ids_miembros:
             presente = str(usuario) in asistentes
-            
-            # Insertar o actualizar asistencia
+
             insertar_asistencia(usuario, grupo_id, presente)
+
             if presente:
-                update_puntos(usuario, grupo_id)      
-                flash('Asistencia registrada exitosamente', 'success')
-                return redirect(url_for('ver_grupo', grupo_id=grupo_id))
+                update_puntos(usuario, grupo_id)
 
-            # GET: mostrar formulario de asistencia
-            # muestra datos de racha y puntos actuales
-        miembros = presentes_del_dia(grupo_id)
+        flash('Asistencia registrada exitosamente', 'success')
+        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
 
-        # Obtener asistencia de hoy si existe
-        # para saber si el usario ya marcó presente
-        asistentes_hoy = asistencias_hoy(grupo_id)
+    # GET: mostrar formulario
+    miembros = presentes_del_dia(grupo_id)
+    asistentes_hoy = asistencias_hoy(grupo_id)
 
-        return render_template(
-                'gestionar/tomar_asistencia.html',
-                grupo_id=grupo_id,
-                miembros=miembros,
-                asistentes_hoy=asistentes_hoy,
-                fecha_hoy=datetime.now().strftime('%Y-%m-%d')
-            )
+    return render_template(
+        'gestionar/tomar_asistencia.html',
+        grupo_id=grupo_id,
+        miembros=miembros,
+        asistentes_hoy=asistentes_hoy,
+        fecha_hoy=datetime.now().strftime('%Y-%m-%d')
+    )
+
 
 if __name__ == '__main__':
     # Ejecutar aplicación

@@ -19,7 +19,13 @@ body {
     color: var(--text-main);
 }
 
+.regreso img{
+    filter: invert(1);
+}
 
+.back-link img{
+    filter: invert(1);
+}
 
 /* 🔹 NAVBAR */
 .navbar {

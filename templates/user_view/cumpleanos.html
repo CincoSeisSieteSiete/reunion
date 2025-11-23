@@ -19,6 +19,12 @@
     {% set year_siguiente = year_actual + 1 %}
 {% endif %}
 
+<section class="regreso">
+    <a href="javascript:history.back()" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+</section>
+
 <div class="calendar-nav">
     <span class="current-month-year">
     {{ ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][mes_actual - 1] }}
