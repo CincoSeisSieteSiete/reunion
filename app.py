@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_limiter import Limiter, util
 from werkzeug.security import generate_password_hash
 import secrets
 from datetime import datetime, timedelta
@@ -27,6 +28,12 @@ app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
 app.permanent_session_lifetime = timedelta(days=10)
 app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 
+limiter = Limiter(
+    app=app,
+    key_func=util.get_remote_address, # Usa la IP para la limitación
+    default_limits=["200 per day", "50 per hour"] # Límites predeterminados
+)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -40,10 +47,11 @@ def index():
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limiter("10 per day", "5 per hour")
 def register():
     return register_rutas()
 
-
+@limiter.limiter("10 per day", "5 per hour")
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
@@ -69,13 +77,18 @@ def dashboard():
 def ver_grupo(grupo_id):
     return ver_grupo_ruta(grupo_id)
 
+#LIMITAR CANTIDAD DE CREAR 5 GRUPOS
 @app.route('/crear_grupo', methods=['GET', 'POST'])
+@limiter.limiter("5 per day", "5 per hour")
 @login_required
 @lideres_required
 def crear_grupo():
     return crear_grupo_rutas()
 
+
+#LIMITAR LA ENTRADA HASTA 100 GRUPOS
 @app.route('/unirse_grupo', methods=['GET', 'POST'])
+@limiter.limiter("10 per day", "5 per hour")
 @login_required
 def unirse_grupo():
     return unirse_grupo_rutas()
@@ -186,6 +199,7 @@ def ranking_global():
     return ranking_global_rutas()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
+@limiter.limiter("3 per hour")
 def subir_imagen_medalla():
     imagen = request.files.get('imagen')
     nombre_imagen = request.form.get('nombre_imagen')
@@ -203,6 +217,7 @@ def subir_imagen_medalla():
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
 @lideres_required
+@limiter.limiter("2 per day")
 def tomar_asistencia(grupo_id):
     if request.method == 'POST':
         fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
@@ -244,5 +259,5 @@ def tomar_asistencia(grupo_id):
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
-    #app.run(debug=True, host='127.0.0.1', port=5000)
+    #app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='127.0.0.1', port=5000)
