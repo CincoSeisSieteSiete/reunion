@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/config/base.css') }}">
+
+{% if session.get('tema', 0) == 0 %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/light.css') }}">
+{% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/dark.css') }}">
+{% endif %}
+{% endblock %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<section class="regreso">
+    <a href="/perfil" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+</section>
+
+<div class="alerta">
+    <h2>Importante</h2>
+    <p>Estas funciones están actualmente en fase BETA.</p>
+    <p>Algunas pueden no estar completamente funcionales. Te recomendamos mantener los ajustes predeterminados para evitar problemas.</p>
+</div>
+
+
+<div class="diviciones">
+    <span>Personalización</span>
+    <hr>
+</div>
+
+<section class="config-container-apartado">
+    <div class="tema">
+        <form method="POST" action="/tema">
+            <section class="info-config">
+                <h2>Tema</h2>
+                <span class="beta-label">BETA</span>
+                <p>Selecciona el tema que prefieras para la interfaz de usuario.</p>
+            </section>
+
+            <div class="Opcion">
+                {% if session.get('tema', 0) == 0 %}
+                    <span>Claro</span>
+                {% else %}
+                    <span>Oscuro</span>
+                {% endif %}
+
+                <label class="switch">
+                    <input type="checkbox"
+                        id="tema"
+                        name="tema"
+                        value="1"
+                        onchange="this.form.submit()"
+                        {% if session.get('tema', 0) == 1 %}checked{% endif %}>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="config-container-apartado">
+    <a href="/configuracion/idioma" class="apartado">
+        <section class="info-config">
+            <h2>Idioma</h2>
+            <span class="beta-label">En desarrollo</span>
+            <p>Selecciona el idioma de la interfaz de la aplicación.</p>
+        </section>
+        <img src="{{ url_for('static', filename='iconos/language.svg') }}" alt="">
+    </a>
+</section>
+
+
+<div class="diviciones">
+    <span>Cuenta</span>
+    <hr>
+</div>
+
+<section class="config-container-apartado">
+    <a href="/configuracion/cuenta" class="apartado">
+        <section class="info-config">
+            <h2>Configuración de la cuenta</h2>
+            <span class="nuevo-label">Reciente</span>
+            <p>Gestiona la información de tu cuenta, como el correo electrónico y la contraseña.</p>
+        </section>
+        <img src="{{ url_for('static', filename='iconos/arrow-right.svg') }}" >
+    </a>
+</section>
+
+<section class="config-container-apartado">
+    <a href="/configuracion/notificaciones" class="apartado">
+        <section class="info-config">
+            <h2>Notificaciones</h2>
+            <span class="beta-label">En desarrollo</span>
+            <p>Configura tus preferencias de notificación para mantenerte informado.</p>
+        </section>
+        <img src="{{ url_for('static', filename='iconos/arrow-right.svg') }}" alt="">
+    </a>
+</section>
+
+<section class="config-container-apartado">
+    <a href="/configuracion/privacidad" class="apartado">
+        <section class="info-config">
+            <h2>Privacidad y seguridad</h2>
+            <span class="beta-label">En desarrollo</span>
+            <p>Ajusta tus configuraciones de privacidad y seguridad para proteger tu cuenta.</p>
+        </section>
+        <img src="{{ url_for('static', filename='iconos/arrow-right.svg') }}" alt="">
+    </a>
+</section>
+
+<div class="diviciones">
+    <span>Otros</span>
+    <hr>
+</div>
+
+<section class="config-container-apartado">
+    <a href="/logout" class="apartado">
+        <section class="info-config">
+            <h2>Cerrar sesión</h2>
+            <p>Salir de tu cuenta de forma segura.</p>
+        </section>
+        <img src="{{ url_for('static', filename='iconos/exit.svg') }}" alt="">
+    </a>
+</section>
+
+
+{% endblock %}

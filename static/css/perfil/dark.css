@@ -25,6 +25,10 @@ body {
     color: var(--text-sec);
 }
 
+.Configuración-link img{
+    filter: invert(1);
+}
+
 .min-stats-row,
 .min-card {
     background: var(--bg-card);

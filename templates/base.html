@@ -50,7 +50,9 @@
           </ul>
         </li>
         {% endif %}
-        <li><a href="/logout"><img class="EXIT" src="{{url_for('static', filename='iconos/exit.svg')}}" alt=""></a></li>
+          <!--
+            Aquí iba lo de cerrar session del usuario
+          -->
         {% else %}
         <li class="login"><a href="/login">Iniciar Sesión</a></li>
         <li class="register"><a href="/register">Registrarse</a></li>
@@ -141,9 +143,7 @@
       <div class="div3">
         <ul>
           <li>Sebastian</li>
-          <li>Kevin</li>
           <li>Edgar</li>
-          <li>Ezquiel</li>
         </ul>
       </div>
       <div class="div4">
@@ -169,8 +169,9 @@
           © 2025 - Niozex Studio
         </span>
         <span>
-          S, E, K, E
+          S, E
         </span>
+
       </div>
     </div>
   </section>

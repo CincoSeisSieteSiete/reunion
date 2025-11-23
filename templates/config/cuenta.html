@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/config/cuenta/base.css') }}">
+
+{% if session.get('tema', 0) == 0 %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/cuenta/light.css') }}">
+{% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/cuenta/dark.css') }}">
+{% endif %}
+{% endblock %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<section class="regreso">
+    <a href="/configuracion" class="back-link">
+        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+    </a>
+        <span>Configuración de Cuenta</span>
+        
+</section>
+
+<section class="config-form-container">
+    <form action="/configuracion/cuenta" method="POST" class="config-form">
+<div class="input-group">
+    <label for="nombre">Nombre de usuario</label>
+    <input type="text" id="nombre" name="nombre" value="{{ user.nombre }}" required>
+    <p>Este es tu nombre de usuario que se mostrará en la plataforma.</p>
+</div>
+
+<div class="input-group">
+    <label for="email">Correo electrónico</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+    <p>Correo actual</p>
+</div>
+
+<div class="input-group">
+    <label for="password">Nueva contraseña</label>
+    <input type="password" id="password" name="password" placeholder="X X X X X X X X X X X">
+    <p>Dejar vacío para mantener la contraseña actual</p>
+</div>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+</section>
+
+{% endblock %}

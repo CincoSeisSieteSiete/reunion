@@ -1,0 +1,15 @@
+:root {
+    --bg-form: #1f1f1f;
+    --text-primary: #eeeeee;
+    --text-secondary: #bbbbbb;
+    --border-color: #444444;
+    --input-bg: #2b2b2b;
+    --accent-color: #4a90e2;
+    --accent-color-hover: #357ab8;
+    --hover-bg: #2a2a2a;
+    --flash-success-bg: #2e4d2e;
+    --flash-success-color: #a6e3a1;
+    --flash-error-bg: #4d2e2e;
+    --flash-error-color: #f39c9c;
+    --page-bg: #121212;
+}

@@ -1,0 +1,9 @@
+:root {
+    --alert-bg: #fff3cd;       /* amarillo claro */
+    --accent-color: #ffc107;   /* borde izquierda */
+    --text-primary: #222222;   
+    --text-secondary: #555555; 
+    --beta-bg: rgba(0,0,0,0.05);
+    --beta-color: #444444;
+    --nuevo: rgb(0, 110, 6);
+}
