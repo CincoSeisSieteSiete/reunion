@@ -1,3 +1,4 @@
+/* 🌑 Tema oscuro */
 :root {
     --bg-body: #0d0f12;
     --bg-card: #1a1d21;
@@ -10,11 +11,97 @@
     --gray-700: #666666;
 }
 
-/* Aplicación de variables */
-body { background: var(--bg-body); color: var(--text-main); }
-.navbar { background: var(--bg-body); }
-.navbar a { color: var(--text-main); }
-.modal { background-color: var(--bg-body); }
-.modal-content { background: var(--bg-card); color: var(--text-main); }
-.alert { background: var(--bg-card); border-color: var(--accent); }
-.alert-close { color: var(--text-main); }
+
+
+/* Fondo general */
+body {
+    background: var(--bg-body);
+    color: var(--text-main);
+}
+
+
+
+/* 🔹 NAVBAR */
+.navbar {
+    background: var(--bg-body);
+}
+
+.navbar-brand {
+    color: var(--text-main);
+}
+
+.navbar-brand:hover {
+    color: var(--accent);
+}
+
+/* 🔹 Links del menú */
+.navbar a {
+    color: var(--text-main);
+}
+
+.navbar a:hover {
+    color: var(--accent);
+}
+
+.iconos {
+    filter: invert(1); /* Iconos blancos */
+}
+
+/* 🔹 Botón menú móvil */
+.navbar-toggle {
+    color: var(--text-main);
+    background: transparent;
+    border: none;
+}
+
+.navbar-toggle:hover {
+    color: var(--accent);
+}
+
+/* 🔹 UL menú */
+.navbar-menu {
+    background: var(--bg-body);
+}
+
+.Menu-urls a {
+    color: var(--text-main);
+}
+
+.Menu-urls a:hover {
+    background: var(--gray-800);
+    color: var(--accent);
+}
+
+/* 🔹 Dropdown */
+.dropdown-toggle {
+    background: var(--bg-card);
+    color: var(--text-main);
+}
+
+.dropdown-toggle:hover {
+    background: var(--gray-800);
+    color: var(--accent);
+}
+
+.dropdown-menu {
+    background: var(--bg-card);
+    border: 1px solid var(--gray-800);
+}
+
+.dropdown-menu li a {
+    color: var(--text-main);
+}
+
+.dropdown-menu li a:hover {
+    background: var(--gray-800);
+    color: var(--accent);
+}
+
+/* 🔹 Logout icon */
+.EXIT {
+    filter: invert(1);
+}
+
+.back-link{
+    filter: invert(1);
+}

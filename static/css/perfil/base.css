@@ -3,6 +3,19 @@ body {
     margin: 0;
 }
 
+.Configuración-link{
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: right;
+
+}
+
+.min-back-link img{
+    width: 34px;
+    height: 44px;
+    transition: filter 0.3s;
+}
+
 .min-container {
     width: 100%;
     margin: 0 auto;

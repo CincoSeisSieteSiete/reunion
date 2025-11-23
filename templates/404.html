@@ -2,16 +2,78 @@
 
 {% block title %}Página No Encontrada{% endblock %}
 
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/404/base.css') }}">
+
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/404/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/404/dark.css') }}">
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<div style="text-align:center; margin-top:5rem;">
-    <h1>404</h1>
-    <h2>Oops! La página que buscas no existe.</h2>
-    <p>Revisa la URL se te regresará al inicio en 10 segundos.</p>
-</div>
+<section class="error-page">
+    <div class="error-container">
+        <h1 id="error-code">404</h1>
+        <h2 id="error-title">Oops! Esta sección no está disponible.</h2>
+        {% if referer %}
+            <p>Venías desde: <strong>{{ referer }}</strong></p>
+        {% else %}
+            <p>No se detecta la página anterior.</p>
+        {% endif %}
+        <p>Es posible que este apartado aún esté en desarrollo.</p>
+        <p>Serás redirigido al inicio en <span id="countdown">10</span> segundos.</p>
+        <a href="/" class="btn-home">Volver al inicio</a>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
 <script>
-    setTimeout(function() {
+// Animación inicial
+anime.timeline({ loop: false })
+  .add({
+    targets: '#error-code',
+    scale: [0, 1],
+    opacity: [0, 1],
+    easing: 'easeOutElastic(1, .6)',
+    duration: 1200,
+  })
+  .add({
+    targets: '#error-title',
+    translateY: [-50, 0],
+    opacity: [0, 1],
+    easing: 'easeOutExpo',
+    duration: 800,
+    offset: '-=600'
+  })
+  .add({
+    targets: '#countdown',
+    scale: [0, 1],
+    easing: 'easeOutBack',
+    duration: 500,
+    offset: '-=400'
+  });
+
+// Countdown animado
+let countdown = 10;
+const countdownEl = document.getElementById('countdown');
+const interval = setInterval(() => {
+    countdown--;
+    countdownEl.textContent = countdown;
+
+    anime({
+        targets: '#countdown',
+        scale: [1.2, 1],
+        duration: 300,
+        easing: 'easeOutQuad'
+    });
+
+    if(countdown <= 0){
+        clearInterval(interval);
         window.location.href = '/';
-    }, 10000);
+    }
+}, 1000);
 </script>
 {% endblock %}

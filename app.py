@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from werkzeug.security import generate_password_hash
-import secrets
 from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
@@ -21,8 +19,14 @@ from QUERYS.queryMedallas import agregar_medalla, asignar_medalla, eliminar_meda
 from QUERYS.queryUsuario import get_users_medallas, get_info
 from QUERYS.queryAsistencias import get_asistencia_usuario, insertar_asistencia, presentes_del_dia
 
+from RUTAS.configuraciones_usuarios_rutas import configuracion
+from RUTAS.tema_ruta import cambiar_tema
+from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
 
 app = Flask(__name__)
+
+app.register_blueprint(configuraciones_usuarios_rutas)
+
 app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
 app.permanent_session_lifetime = timedelta(days=10)
 app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
@@ -32,22 +36,25 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 def page_not_found(e):
     return render_template('404.html'), 404
 
-
 @app.route('/')
 def index():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
 
+
+@app.route('/tema', methods=['GET', 'POST'])
+def cambiar_tema_view():
+    cambiar_tema()
+    return redirect('/configuracion')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return register_rutas()
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
-
 
 @app.route('/logout')
 def logout():
@@ -55,7 +62,6 @@ def logout():
     session.permanent = False
     flash('Sesión cerrada exitosamente', 'info')
     return redirect(url_for('login'))
-
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -79,7 +85,6 @@ def crear_grupo():
 @login_required
 def unirse_grupo():
     return unirse_grupo_rutas()
-
 
 @app.route('/cumples/<int:id_grupo>')
 @login_required
@@ -240,9 +245,7 @@ def tomar_asistencia(grupo_id):
                 fecha_hoy=datetime.now().strftime('%Y-%m-%d')
             )
 
-
-
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
-    #app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run()
+    #debug=True, host='0.0.0.0', port=5000

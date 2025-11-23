@@ -1,0 +1,54 @@
+/* Variables por defecto */
+:root {
+    --bg-color: #ffffff;
+    --text-primary: #222222;
+    --text-secondary: #555555;
+    --accent-color: #4f46e5;
+    --accent-color-hover: #4338ca;
+}
+
+/* Contenedor de la página de error */
+.error-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+}
+
+/* Contenedor interno */
+.error-container h1 {
+    font-size: 8rem;
+    margin: 0;
+    color: var( --text-primary);
+}
+
+.error-container h2 {
+    font-size: 2rem;
+    margin: 1rem 0;
+}
+
+.error-container p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Botón volver al inicio */
+.error-container .btn-home {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    background-color: var(--accent-color);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.error-container .btn-home:hover {
+    background-color: var(--accent-color-hover);
+}

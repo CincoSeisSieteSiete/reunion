@@ -1,5 +1,5 @@
 # Configuración de la base de datos MySQL Local
-
+"""
 data ={
   "host": "localhost",
   "user": "root",
@@ -8,8 +8,8 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-"""
 
+"""
 # Configuración para despliegue en PythonAnywhere
 data ={
   "host": "nioyfp.mysql.pythonanywhere-services.com",
@@ -19,4 +19,3 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-"""

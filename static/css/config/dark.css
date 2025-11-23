@@ -1,0 +1,23 @@
+:root {
+    --alert-bg: #5a4a1c;       /* amarillo oscuro */
+    --accent-color: #ffc107;   
+    --text-primary: #eeeeee;
+    --text-secondary: #cccccc;
+    --beta-bg: rgba(255,255,255,0.1);
+    --beta-color: #ffffff;
+    --nuevo: rgb(0, 255, 13);
+}
+
+img{
+    filter: invert(1);
+}
+
+.regreso{
+    filter: invert(1);
+}
+
+.config-container h2, p{
+    color: white;
+}
+
+

@@ -3,8 +3,6 @@ from datetime import datetime, date
 from calendar import monthrange
 from QUERYS.querysCumpleanos import get_cumpleanos
 
-from DB.conexion import get_connection
-
 def cumpleanos_rutas(id_grupo: int):
     # Fecha actual
     hoy_real = date.today()
@@ -13,14 +11,14 @@ def cumpleanos_rutas(id_grupo: int):
     try:
         mes_solicitado = int(request.args.get('mes', hoy_real.month))
         year_solicitado = int(request.args.get('year', hoy_real.year))
-    except:
+    except:  # noqa: E722
         mes_solicitado = hoy_real.month
         year_solicitado = hoy_real.year
 
     # Validar fecha
     try:
         fecha_inicio_mes = date(year_solicitado, mes_solicitado, 1)
-    except:
+    except:  # noqa: E722
         fecha_inicio_mes = hoy_real
         mes_solicitado = hoy_real.month
         year_solicitado = hoy_real.year
