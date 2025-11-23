@@ -51,6 +51,7 @@ def unir_usuario_a_grupo(usuario_id, grupo_id):
         return True
     except Exception as e:
         logging.error(f"Error uniendo a grupo: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()

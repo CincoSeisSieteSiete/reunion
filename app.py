@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
-from DB.conexion import get_connection
 
 # ESTA ES LA FORMA CORRECTA
 from RUTAS.dashboard_ruta import dashboard_rutas
@@ -12,6 +11,14 @@ from RUTAS.login_ruta import login_rutas
 from RUTAS.crear_grupo_ruta import crear_grupo_rutas
 from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
+from RUTAS.ranking_ruta import ranking_global_rutas
+from QUERYS.querysAdmin import es_admin
+from QUERYS.queryPuntos import update_puntos, gestion_puntos_usuario
+from QUERYS.queryGrupo import get_miembros_grupo, asistencias_hoy
+from QUERYS.queryMedallas import agregar_medalla, asignar_medalla, eliminar_medalla, get_medallas, get_medallas_of_user
+from QUERYS.queryUsuario import get_users_medallas, get_info
+from QUERYS.queryAsistencias import get_asistencia_usuario, insertar_asistencia, presentes_del_dia
+
 from RUTAS.configuraciones_usuarios_rutas import configuracion
 from RUTAS.tema_ruta import cambiar_tema
 from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
@@ -86,201 +93,102 @@ def cumpleanos(id_grupo):
 
 # ==========================================================================================
 
-def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
+def actualizar_racha_y_puntos(usuario_id, grupo_id):
     """Actualiza la racha y puntos del usuario"""
-    if isinstance(fecha_actual, datetime):
-        fecha_obj = fecha_actual.date()
-    else:
-        fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
-
-    # Obtener última asistencia antes de la fecha actual
-    cursor.execute("""
-        SELECT fecha FROM asistencias
-        WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
-        ORDER BY fecha DESC LIMIT 1
-    """, (usuario_id, grupo_id, fecha_obj))
-    ultima_asistencia = cursor.fetchone()
-
-    if ultima_asistencia:
-        ultima_fecha = ultima_asistencia['fecha']
-        if isinstance(ultima_fecha, datetime):
-            ultima_fecha = ultima_fecha.date()
-        diferencia = (fecha_obj - ultima_fecha).days
-
-        if diferencia <= 7:
-            cursor.execute("UPDATE usuarios SET racha = racha + 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-        else:
-            cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-    else:
-        cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-
+    update_puntos(usuario_id, grupo_id)
+    
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
 @lideres_required
 def gestionar_puntos(grupo_id):
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            # Verificar permisos
-            cursor.execute("SELECT admin_id FROM grupos WHERE id = %s", (grupo_id,))
-            grupo = cursor.fetchone()
-            
-            if not grupo or grupo['admin_id'] != session['user_id']:
-                flash('No tienes permisos', 'danger')
-                return redirect(url_for('dashboard'))
-            
-            if request.method == 'POST':
+    
+    if es_admin(grupo_id, session['user_id']):
+        flash('No tienes permisos', 'danger')
+        return redirect(url_for('dashboard'))
+    
+    if request.method == 'POST':
                 usuario_id = request.form.get('usuario_id')
                 puntos = int(request.form.get('puntos', 0))
                 accion = request.form.get('accion')
                 
-                if accion == 'agregar':
-                    cursor.execute("UPDATE usuarios SET puntos = puntos + %s WHERE id = %s", (puntos, usuario_id))
-                elif accion == 'quitar':
-                    cursor.execute("UPDATE usuarios SET puntos = GREATEST(0, puntos - %s) WHERE id = %s", (puntos, usuario_id))
-                
-                connection.commit()
+                puntos = puntos if accion == 'agregar' else -puntos
+                gestion_puntos_usuario(puntos, usuario_id)
                 flash('Puntos actualizados exitosamente', 'success')
                 return redirect(url_for('gestionar_puntos', grupo_id=grupo_id))
+    miembros = get_miembros_grupo(grupo_id)
             
-            # Obtener miembros del grupo
-            cursor.execute("""
-                SELECT u.id, u.nombre, u.puntos, u.racha
-                FROM usuarios u
-                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
-                WHERE gm.grupo_id = %s
-                ORDER BY u.nombre
-            """, (grupo_id,))
-            miembros = cursor.fetchall()
-            
-            return render_template('gestionar/gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
-    finally:
-        connection.close()
+    return render_template('gestionar/gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
+    
 
 
 
 @app.route('/admin/medallas', methods=['GET', 'POST'])
 @admin_required
 def gestionar_medallas():
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            if request.method == 'POST':
-                accion = request.form.get('accion')
+    if request.method == 'POST':
+        accion = request.form.get('accion')
                 
-                if accion == 'crear':
-                    nombre = request.form.get('nombre')
-                    descripcion = request.form.get('descripcion')
-                    imagen = request.form.get('imagen')
+        if accion == 'crear':
+            nombre = request.form.get('nombre')
+            descripcion = request.form.get('descripcion')
+            imagen = request.form.get('imagen')
+            if not agregar_medalla(nombre,descripcion, imagen):
+                flash('Fallo crear medalla', 'error')
+            else:
+                flash('Medalla creada exitosamente', 'success')
                     
-                    cursor.execute(
-                        "INSERT INTO medallas (nombre, descripcion, imagen) VALUES (%s, %s, %s)",
-                        (nombre, descripcion, imagen)
-                    )
-                    connection.commit()
-                    flash('Medalla creada exitosamente', 'success')
+        elif accion == 'asignar':
+            usuario_id = request.form.get('usuario_id')
+            medalla_id = request.form.get('medalla_id')
+                                    
+            if not asignar_medalla(usuario_id, medalla_id):
+                flash('Fallo al asignar medalla', 'success')
+            else:
+                flash('Medalla asignada exitosamente', 'success')
+                                    
+        elif accion == 'eliminar':
+            medalla_id = request.form.get('medalla_id')
+            if not eliminar_medalla(medalla_id):
+                flash('No se pudo eliminar la medalla', 'success')
+            else:
+                flash('Medalla eliminada exitosamente', 'success')
                 
-                elif accion == 'asignar':
-                    usuario_id = request.form.get('usuario_id')
-                    medalla_id = request.form.get('medalla_id')
-                    
-                    cursor.execute(
-                        "INSERT IGNORE INTO usuarios_medallas (usuario_id, medalla_id) VALUES (%s, %s)",
-                        (usuario_id, medalla_id)
-                    )
-                    connection.commit()
-                    flash('Medalla asignada exitosamente', 'success')
-                
-                elif accion == 'eliminar':
-                    medalla_id = request.form.get('medalla_id')
-                    cursor.execute("DELETE FROM medallas WHERE id = %s", (medalla_id,))
-                    connection.commit()
-                    flash('Medalla eliminada exitosamente', 'success')
-                
-                return redirect(url_for('gestionar_medallas'))
+            return redirect(url_for('gestionar_medallas'))
             
-            # Obtener todas las medallas
-            cursor.execute("SELECT * FROM medallas ORDER BY fecha_creacion DESC")
-            medallas = cursor.fetchall()
+        # Obtener todas las medallas
+        medallas = get_medallas()
             
-            # Obtener todos los usuarios
-            cursor.execute("SELECT id, nombre, email FROM usuarios ORDER BY nombre")
-            usuarios = cursor.fetchall()
+        # Obtener todos los usuarios
+        usuarios = get_users_medallas()
 
             # 🖼️ Obtener imágenes del directorio static/medallas
-            medallas_path = os.path.join(app.root_path, 'static', 'medallas')
-            imagenes = [f for f in os.listdir(medallas_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg'))]
+        medallas_path = os.path.join(app.root_path, 'static', 'medallas')
+        imagenes = [f for f in os.listdir(medallas_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg'))]
             
-            return render_template(
+        return render_template(
                 'gestionar/gestionar_medallas.html',
                 medallas=medallas,
                 usuarios=usuarios,
                 imagenes=imagenes
             )
-    finally:
-        connection.close()
 
 @app.route('/perfil')
 @login_required
 def perfil():
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            # Información del usuario
-            cursor.execute("""
-                SELECT u.*,
-                       (SELECT COUNT(*) FROM usuarios_medallas WHERE usuario_id = u.id) as total_medallas,
-                       (SELECT COUNT(*) FROM asistencias WHERE usuario_id = u.id AND presente = TRUE) as total_asistencias
-                FROM usuarios u
-                WHERE u.id = %s
-            """, (session['user_id'],))
-            user = cursor.fetchone()
+    user = get_info(session['user_id'])
+    # Medallas del usuario
+    medallas = get_medallas_of_user(session['user_id'])
+    
+    historial = get_asistencia_usuario(session['user_id'])
             
-            # Medallas del usuario
-            cursor.execute("""
-                SELECT m.*, um.fecha_obtencion
-                FROM medallas m
-                INNER JOIN usuarios_medallas um ON m.id = um.medalla_id
-                WHERE um.usuario_id = %s
-                ORDER BY um.fecha_obtencion DESC
-            """, (session['user_id'],))
-            medallas = cursor.fetchall()
-            
-            # Historial de asistencias
-            cursor.execute("""
-                SELECT a.fecha, g.nombre as grupo_nombre, a.presente
-                FROM asistencias a
-                INNER JOIN grupos g ON a.grupo_id = g.id
-                WHERE a.usuario_id = %s
-                ORDER BY a.fecha DESC
-                LIMIT 20
-            """, (session['user_id'],))
-            historial = cursor.fetchall()
-            
-            return render_template('user_view/perfil.html', user=user, medallas=medallas, historial=historial)
-    finally:
-        connection.close()
+    return render_template('user_view/perfil.html', user=user, medallas=medallas, historial=historial)
+
 
 @app.route('/ranking')
 @login_required
 def ranking_global():
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT u.id, u.nombre, u.puntos, u.racha,
-                       (SELECT COUNT(*) FROM usuarios_medallas WHERE usuario_id = u.id) as total_medallas,
-                       (SELECT COUNT(*) FROM asistencias WHERE usuario_id = u.id AND presente = TRUE) as total_asistencias
-                FROM usuarios u
-                ORDER BY u.puntos DESC, u.racha DESC
-                LIMIT 50
-            """)
-            ranking = cursor.fetchall()
-            
-            return render_template('user_view/ranking.html', ranking=ranking)
-    finally:
-        connection.close()
+    return ranking_global_rutas()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
 def subir_imagen_medalla():
@@ -301,101 +209,41 @@ def subir_imagen_medalla():
 @login_required
 @lideres_required
 def tomar_asistencia(grupo_id):
-    connection = get_connection()
-    try:
-        with connection.cursor() as cursor:
-            if request.method == 'POST':
-                fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
-                asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
+    if request.method == 'POST':
+        fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
+        asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
 
-                # Obtener todos los miembros del grupo
-                # un json para retornar solo los usarios id, nombres, recha y puntos
-                cursor.execute("SELECT usuario_id FROM grupo_miembros WHERE grupo_id = %s", (grupo_id,))
-                todos_miembros = [m['usuario_id'] for m in cursor.fetchall()]
-
-                for usuario_id in todos_miembros:
-                    presente = str(usuario_id) in asistentes
-
-                    # Insertar o actualizar asistencia
-                    cursor.execute("""
-                        INSERT INTO asistencias (usuario_id, grupo_id, fecha, presente)
-                        VALUES (%s, %s, %s, %s)
-                        ON DUPLICATE KEY UPDATE presente = %s
-                    """, (usuario_id, grupo_id, fecha, presente, presente))
-
-                    if presente:
-                        # Actualizar racha y puntos
-                        actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha)
-
-                connection.commit()
+        # Obtener todos los miembros del grupo
+        # un json para retornar solo los usarios id, nombres, recha y puntos
+        miembros = get_miembros_grupo(grupo_id)
+        
+        ids_miembros = [m['usuario_id'] for m in miembros]
+        
+        for usuario in ids_miembros:
+            presente = str(usuario) in asistentes
+            
+            # Insertar o actualizar asistencia
+            insertar_asistencia(usuario, grupo_id, presente)
+            if presente:
+                update_puntos(usuario, grupo_id)      
                 flash('Asistencia registrada exitosamente', 'success')
                 return redirect(url_for('ver_grupo', grupo_id=grupo_id))
 
             # GET: mostrar formulario de asistencia
             # muestra datos de racha y puntos actuales
-            cursor.execute("""
-                SELECT u.id, u.nombre, u.racha, u.puntos
-                FROM usuarios u
-                INNER JOIN grupo_miembros gm ON u.id = gm.usuario_id
-                WHERE gm.grupo_id = %s
-                ORDER BY u.nombre
-            """, (grupo_id,))
-            miembros = cursor.fetchall()
+        miembros = presentes_del_dia(grupo_id)
 
-            # Obtener asistencia de hoy si existe
-            # para saber si el usario ya marcó presente
-            hoy = datetime.now().strftime('%Y-%m-%d')
-            cursor.execute("""
-                SELECT usuario_id FROM asistencias 
-                WHERE grupo_id = %s AND fecha = %s AND presente = TRUE
-            """, (grupo_id, hoy))
-            asistentes_hoy = [a['usuario_id'] for a in cursor.fetchall()]
+        # Obtener asistencia de hoy si existe
+        # para saber si el usario ya marcó presente
+        asistentes_hoy = asistencias_hoy(grupo_id)
 
-            return render_template(
+        return render_template(
                 'gestionar/tomar_asistencia.html',
                 grupo_id=grupo_id,
                 miembros=miembros,
                 asistentes_hoy=asistentes_hoy,
-                fecha_hoy=hoy
+                fecha_hoy=datetime.now().strftime('%Y-%m-%d')
             )
-    finally:
-        connection.close()
-
-def actualizar_racha_y_puntos(cursor, usuario_id, grupo_id, fecha_actual):
-    """Actualiza la racha y puntos del usuario por asistencia."""
-    
-    # 1. Asegurar que fecha_actual es un objeto date para la resta.
-    if isinstance(fecha_actual, str):
-        fecha_obj = datetime.strptime(fecha_actual, '%Y-%m-%d').date()
-    elif isinstance(fecha_actual, datetime):
-        fecha_obj = fecha_actual.date()
-    else:
-        fecha_obj = fecha_actual
-
-    # 2. Obtener última asistencia antes de la fecha actual
-    cursor.execute("""
-        SELECT fecha FROM asistencias
-        WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
-        ORDER BY fecha DESC LIMIT 1
-    """, (usuario_id, grupo_id, fecha_obj))
-    ultima_asistencia = cursor.fetchone()
-
-    # 3. Aplicar lógica de racha
-    if ultima_asistencia:
-        ultima_fecha = ultima_asistencia['fecha']
-        # Convertir a date si es necesario (el driver MySQLdb/pymysql suele devolver datetime)
-        if isinstance(ultima_fecha, datetime):
-            ultima_fecha = ultima_fecha.date()
-            
-        diferencia = (fecha_obj - ultima_fecha).days
-
-        if diferencia <= 7: # No se rompe la racha: fue hace 7 días o menos
-            cursor.execute("UPDATE usuarios SET racha = racha + 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-        else: # Se rompe la racha: más de 7 días
-            cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
-    else:
-        # Primera asistencia
-        cursor.execute("UPDATE usuarios SET racha = 1, puntos = puntos + 10 WHERE id = %s", (usuario_id,))
 
 if __name__ == '__main__':
     # Ejecutar aplicación

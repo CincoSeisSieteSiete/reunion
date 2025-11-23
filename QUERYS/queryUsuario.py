@@ -22,6 +22,7 @@ def Update_info(usuario : UsuarioConfigurable, usuario_id : int) -> bool:
 
     except Exception as e:
         logging.error(f"Error al actualizar la información del usuario: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()
@@ -55,5 +56,19 @@ def get_info(usuario_id : int) -> Usuario | None:
     except Exception as e:
         logging.error(f"Error al obtener la información del usuario: {e}")
         return None
+    finally:
+        connection.close()
+
+
+def get_users_medallas() -> list:
+    connection = get_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT id, nombre, email FROM usuarios ORDER BY nombre")
+            usuarios = cursor.fetchall()
+            return usuarios
+    except Exception as e:
+        logging.error(f"error al agregar medalla: {e}")
+        return []
     finally:
         connection.close()

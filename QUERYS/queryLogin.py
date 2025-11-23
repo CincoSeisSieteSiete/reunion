@@ -1,19 +1,22 @@
 from DB.conexion import get_connection
-from MODELS.Grupo import Grupo
 import logging
+from MODELS.Usuario import Usuario, UsuarioDict as UD
 
-def get_usuario(email: str):
+def get_usuario(email: str) -> Usuario:
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT u.*, r.nombre AS rol
+                SELECT u.*
                 FROM usuarios u
-                LEFT JOIN roles r ON u.rol_id = r.id
                 WHERE u.email = %s
             """, (email,))
-            user = cursor.fetchone()
-            return user
+            user_data = cursor.fetchone()
+            # Convertir a objeto Usuario
+            u = Usuario.from_dict(user_data)
+            if not u:
+                logging.warning(f"No existe el email {email}")
+            return u
     except Exception as e:
         logging.error(f"Error fetching user: {e}")
         return None

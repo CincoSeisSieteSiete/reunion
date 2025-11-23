@@ -24,8 +24,8 @@ def get_info_usuario(usuario_id: int) -> dict:
             total_asistencias = cursor.fetchone()['total_asistencias']
 
             return {
-                'total_medallas': total_medallas,
-                'total_asistencias': total_asistencias
+                'total_medallas': total_medallas if total_medallas else 0,
+                'total_asistencias': total_asistencias if total_asistencias else 0
             }
     except Exception as e:
         logging.error(f"Error al obtener la información del usuario: {e}")
@@ -47,6 +47,7 @@ def update_fecha_nacimiento(usuario_id: int, nueva_fecha: datetime) -> None:
             connection.commit()
     except Exception as e:
         logging.error(f"Error al actualizar la fecha de nacimiento: {e}")
+        connection.rollback()
     finally:
         connection.close()
 

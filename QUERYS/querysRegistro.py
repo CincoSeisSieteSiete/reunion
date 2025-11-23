@@ -56,6 +56,7 @@ def create_user(usuario: Usuario) -> bool:
             return True
     except Exception as e:
         print(f"Error creando usuario: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()
