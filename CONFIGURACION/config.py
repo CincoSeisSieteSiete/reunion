@@ -19,3 +19,4 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
+
