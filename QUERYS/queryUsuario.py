@@ -22,6 +22,7 @@ def Update_info(usuario : UsuarioConfigurable, usuario_id : int) -> bool:
 
     except Exception as e:
         logging.error(f"Error al actualizar la información del usuario: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()

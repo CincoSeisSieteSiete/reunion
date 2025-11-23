@@ -13,6 +13,7 @@ def agregar_medalla(nombre, descripcion, imagen) -> bool:
             return True
     except Exception as e:
         logging.error(f"error al agregar medalla: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()
@@ -29,6 +30,7 @@ def asignar_medalla(usuario_id : int, medalla_id : int) -> bool:
             return True
     except Exception as e:
         logging.error(f"error al asignar medalla: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()
@@ -43,6 +45,7 @@ def eliminar_medalla(medalla_id : int) -> bool:
             return True
     except Exception as e:
         logging.error(f"error al agregar medalla: {e}")
+        connection.rollback()
         return False
     finally:
         connection.close()  

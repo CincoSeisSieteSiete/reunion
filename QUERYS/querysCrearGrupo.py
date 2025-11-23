@@ -15,6 +15,7 @@ def querys_crear_grupo(grupo : Grupo) -> int:
             return cursor.lastrowid
     except Exception as e:
         logging.error(f"Error al crear el grupo: {e}")
+        connection.rollback()
         return -1
     finally:
         connection.close()
@@ -33,5 +34,6 @@ def querys_agregar_admin(miembro : GrupoMiembro) -> None:
             
     except Exception as e:
         logging.error(f"Error al crear el grupo: {e}")
+        connection.rollback()
     finally:
         connection.close()

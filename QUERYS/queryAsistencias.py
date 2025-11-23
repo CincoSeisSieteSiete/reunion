@@ -31,6 +31,7 @@ def insertar_asistencia(usuario_id : int, grupo_id : int, presente : bool) -> No
             conexion.commit()
     except Exception as e:
         logging.error(f"error al insertar asistencia: {e}")
+        conexion.rollback()
     finally:
         conexion.close()
         

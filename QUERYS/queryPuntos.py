@@ -30,6 +30,7 @@ def update_puntos(usuario_id : int, grupo_id : int) -> None:
             
     except Exception as e:
         logging.error(f"Error al actualizar puntos: {e}")
+        connection.rollback()
         return None
     finally:
         connection.close()
@@ -45,6 +46,7 @@ def gestion_puntos_usuario(puntos : int, usuario_id : int):
             
     except Exception as e:
         logging.error(f"Error al actualizar puntos: {e}")
+        connection.rollback()
         return None
     finally:
         connection.close()

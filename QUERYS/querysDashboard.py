@@ -47,6 +47,7 @@ def update_fecha_nacimiento(usuario_id: int, nueva_fecha: datetime) -> None:
             connection.commit()
     except Exception as e:
         logging.error(f"Error al actualizar la fecha de nacimiento: {e}")
+        connection.rollback()
     finally:
         connection.close()
 
