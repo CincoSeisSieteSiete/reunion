@@ -11,7 +11,8 @@ def get_asistencia_usuario(usuario_id : int) -> list:
                     WHERE usuario_id = %s
                     ORDER BY fecha DESC
                 """, (usuario_id,))
-            asistencias = cursor.fetchall()
+            asistencias_data = cursor.fetchall()
+            asistencias = [dict(row) for row in asistencias_data]
             return asistencias
     except Exception as e:
         logging.error(f"error al dar asistencia: {e}")
@@ -22,12 +23,15 @@ def insertar_asistencia(usuario_id : int, grupo_id : int, presente : bool) -> No
     conexion = get_connection()
     try:
         with conexion.cursor() as cursor:
-            fecha = datetime.now()
+            fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            presente_str = str(int(presente))
+            grupo_id_str = str(grupo_id)
+            usuario_id_str = str(usuario_id)
             cursor.execute("""
                         INSERT INTO asistencias (usuario_id, grupo_id, fecha, presente)
                         VALUES (%s, %s, %s, %s)
                         ON DUPLICATE KEY UPDATE presente = %s
-                    """, (usuario_id, grupo_id, fecha, presente))
+                    """, (usuario_id_str, grupo_id_str, fecha, presente_str, presente_str))
             conexion.commit()
     except Exception as e:
         logging.error(f"error al insertar asistencia: {e}")

@@ -1,10 +1,14 @@
 from flask import render_template, request, redirect, url_for, flash, session
-from QUERYS.querysUnirGrupo import obtener_grupo_por_codigo, unir_usuario_a_grupo, ya_esta_en_el_grupo
+from QUERYS.querysUnirGrupo import obtener_grupo_por_codigo, unir_usuario_a_grupo, ya_esta_en_el_grupo, limite_union_grupos
 
 def unirse_grupo_rutas():
     if request.method == 'POST':
         codigo = request.form.get('codigo')
         usuario_id = session.get('user_id')
+        
+        if limite_union_grupos(usuario_id):
+            flash("Ya no puedes unirte a mas grupos llegaste al limite.", "error")
+            return redirect(url_for('unirse_grupo'))
 
         # Buscar grupo por codigo
         grupo = obtener_grupo_por_codigo(codigo)

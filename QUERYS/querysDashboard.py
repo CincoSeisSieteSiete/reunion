@@ -4,8 +4,8 @@ import logging
 
 def get_info_usuario(usuario_id: int) -> dict:
     """Devuelve información del usuario: total de medallas y asistencias."""
+    connection = get_connection()
     try:
-        connection = get_connection()
         with connection.cursor() as cursor:
             # Total medallas
             cursor.execute("""

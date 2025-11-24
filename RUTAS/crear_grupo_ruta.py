@@ -9,11 +9,17 @@ from datetime import date
 from DB.conexion import get_connection
 
 from MODELS.Grupo import Grupo
-from QUERYS.querysCrearGrupo import querys_crear_grupo, querys_agregar_admin, GrupoMiembro
+from QUERYS.querysCrearGrupo import querys_crear_grupo, querys_agregar_admin, GrupoMiembro, querys_verificar_limite_crear_grupos
 
 
 def crear_grupo_rutas():
     if request.method == 'POST':
+        admin_id = session['user_id']
+        
+        if querys_verificar_limite_crear_grupos(admin_id):
+            flash('Llegaste al limite de crear grupos', 'danger')
+            return redirect(url_for('crear_grupo'))
+            
         nombre = request.form.get('nombre')
         descripcion = request.form.get('descripcion')
         
@@ -25,7 +31,7 @@ def crear_grupo_rutas():
         codigo = secrets.token_urlsafe(8)
         
         #Crear el grupo 
-        grupo = Grupo(nombre, descripcion, session['user_id'], codigo)
+        grupo = Grupo(nombre, descripcion, admin_id, codigo)
         grupo_id = querys_crear_grupo(grupo)
         
         if grupo_id == -1:

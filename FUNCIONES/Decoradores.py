@@ -27,7 +27,7 @@ def lideres_required(f):
                     flash('No tienes permisos de líder', 'danger')
                     return redirect(url_for('index'))
 
-                cursor.execute("SELECT nombre FROM roles WHERE id = %s", (user['rol_id'],))
+                cursor.execute("SELECT nombre FROM roles WHERE rol_id = %s", (user['rol_id'],))
                 rol = cursor.fetchone()
                 if not rol or rol['nombre'] not in ['admin', 'lider']:
                     flash('No tienes permisos de líder', 'danger')

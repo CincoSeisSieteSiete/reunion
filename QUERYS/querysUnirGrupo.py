@@ -2,6 +2,28 @@ from DB.conexion import get_connection
 import logging
 
 
+def limite_union_grupos(usuario_id : int) -> bool:
+    connection = get_connection()
+    LIMITE_GRUPOS = 100
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT COUNT(*) as total 
+                FROM grupo_miembros as gm
+                WHERE gm.usuario_id = %s;
+            """, (usuario_id,))
+            
+            result = cursor.fetchone()
+            total_grupos = result['total']
+            
+            return total_grupos > LIMITE_GRUPOS
+    except Exception as e:
+        logging.error(f"Error obteniendo grupo por código: {e}")
+        return None
+    finally:
+        connection.close()
+
+
 def obtener_grupo_por_codigo(codigo):
     """ Retorna el grupo si el código existe """
     connection = get_connection()

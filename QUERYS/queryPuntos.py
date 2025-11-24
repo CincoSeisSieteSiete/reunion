@@ -8,7 +8,8 @@ def update_puntos(usuario_id : int, grupo_id : int) -> None:
     try:
         with connection.cursor() as cursor:
             
-            fecha_actual = datetime.now()
+            fecha_actual = datetime.now().date()
+
             cursor.execute("""
         SELECT fecha FROM asistencias 
         WHERE usuario_id = %s AND grupo_id = %s AND presente = TRUE AND fecha < %s
@@ -16,8 +17,12 @@ def update_puntos(usuario_id : int, grupo_id : int) -> None:
         """, (usuario_id, grupo_id, fecha_actual))
             
             fecha_anterior = cursor.fetchone()
+
+            dias_pasados = 0
+
+            if fecha_anterior is not None:
+                dias_pasados = (fecha_anterior['fecha'] - fecha_actual).days
             
-            dias_pasados = (fecha_anterior['fecha'] - fecha_actual).day
             es_menor_7_dias = dias_pasados <= maximo_dias_pasado
             
             if es_menor_7_dias:
