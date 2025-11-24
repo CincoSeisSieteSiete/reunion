@@ -37,8 +37,8 @@
         <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos"
               src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
         {% endif %}
-        
-          <!--
+
+        <!--
             Aquí iba lo de cerrar session del usuario
           -->
         {% else %}
@@ -115,14 +115,14 @@
   </section>
 
 
-<!-- unpkg -->
-<script src="https://unpkg.com/@barba/core"></script>
+  <!-- unpkg -->
+  <script src="https://unpkg.com/@barba/core"></script>
 
-<!-- jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
+  <!-- jsdelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
 
-<script src="{{ url_for('static', filename='js/barba.js')}}"></script>
-<script src="{{ url_for('static', filename='js/menu.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
 </body>
 
 </html>

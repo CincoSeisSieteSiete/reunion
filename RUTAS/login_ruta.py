@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from QUERYS.queryLogin import get_usuario
 from QUERYS.queryRol import get_rol_name
 from MODELS.Usuario import Usuario
+from JWT.JWT import crear_access_token, crear_refresh_token
 
 def login_rutas():
     if request.method == 'POST':
@@ -21,7 +22,12 @@ def login_rutas():
             session['tema'] = 1 if user.tema == b'\x01' else 0
             session['user_rol'] = nombre_rol
             flash(f'Bienvenido, {user.nombre}!', 'success')
-            return redirect(url_for('dashboard'))
+            access_token = crear_access_token(user.id)
+            refresh_token = crear_refresh_token(user.id)
+            respuesta = make_response(redirect(url_for('dashboard')))
+            respuesta.set_cookie('access_token', access_token)
+            respuesta.set_cookie('refresh_token', refresh_token)
+            return respuesta
         else:
             get_rol_name(1)
             flash('Email o contraseña incorrectos', 'danger')

@@ -25,6 +25,8 @@ from QUERYS.queryAsistencias import get_asistencia_usuario, insertar_asistencia,
 from RUTAS.configuraciones_usuarios_rutas import configuracion
 from RUTAS.tema_ruta import cambiar_tema
 from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
+from JWT.JWT import verificar_y_renovar_token, eliminar_token
+from flask_jwt_extended import JWTManager, unset_jwt_cookies, jwt_required
 
 app = Flask(__name__)
 
@@ -39,6 +41,17 @@ limiter = Limiter(
     key_func=util.get_remote_address, # Usa la IP para la limitación
     default_limits=["200 per day", "50 per hour"] # Límites predeterminados
 )
+
+app.config['JWT_SECRET_KEY'] = 'jsabebJSKAEAVKHA1U3Y6HSHA'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # Usa cookies en lugar de headers
+app.config['JWT_COOKIE_SECURE'] = False  # True en producción con HTTPS
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # Protección CSRF
+app.config['JWT_COOKIE_SAMESITE'] = 'Lax'  # Previene CSRF
+app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token'
+app.config['JWT_REFRESH_COOKIE_NAME'] = 'refresh_token'
+jwt = JWTManager(app)
+
 
 
 @app.errorhandler(404)
@@ -58,24 +71,23 @@ def cambiar_tema_view():
     return redirect('/configuracion')
 
 @app.route('/register', methods=['GET', 'POST'])
-@limiter.limiter("10 per day", "5 per hour")
+@limiter.limit("5 per hour")
 def register():
     return register_rutas()
 
-@limiter.limiter("10 per day", "5 per hour")
+@limiter.limit("5 per hour")
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
 
 @app.route('/logout')
+@eliminar_token
 def logout():
-    session.clear()
-    session.permanent = False
-    flash('Sesión cerrada exitosamente', 'info')
     return redirect(url_for('login'))
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
+@verificar_y_renovar_token
 def dashboard():
     if not session.get("logged"):
         return redirect("/login")
@@ -86,19 +98,19 @@ def dashboard():
 def ver_grupo(grupo_id):
     return ver_grupo_ruta(grupo_id)
 
-#LIMITAR CANTIDAD DE CREAR 5 GRUPOS
 @app.route('/crear_grupo', methods=['GET', 'POST'])
-@limiter.limiter("5 per day", "5 per hour")
+@limiter.limit("1 per hour")
 @login_required
 @lideres_required
+@verificar_y_renovar_token
 def crear_grupo():
     return crear_grupo_rutas()
 
 
-#LIMITAR LA ENTRADA HASTA 100 GRUPOS
 @app.route('/unirse_grupo', methods=['GET', 'POST'])
-@limiter.limiter("10 per day", "5 per hour")
+@limiter.limit("10 per day")
 @login_required
+@verificar_y_renovar_token
 def unirse_grupo():
     return unirse_grupo_rutas()
 
@@ -108,7 +120,7 @@ def cumpleanos(id_grupo):
     return cumpleanos_rutas(id_grupo)
 
 # ==========================================================================================
-
+@verificar_y_renovar_token
 def actualizar_racha_y_puntos(usuario_id, grupo_id):
     """Actualiza la racha y puntos del usuario"""
     update_puntos(usuario_id, grupo_id)
@@ -117,6 +129,7 @@ def actualizar_racha_y_puntos(usuario_id, grupo_id):
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
 @lideres_required
+@verificar_y_renovar_token
 def gestionar_puntos(grupo_id):
     
     if es_admin(grupo_id, session['user_id']):
@@ -141,6 +154,7 @@ def gestionar_puntos(grupo_id):
 
 @app.route('/admin/medallas', methods=['GET', 'POST'])
 @admin_required
+@verificar_y_renovar_token
 def gestionar_medallas():
     if request.method == 'POST':
         accion = request.form.get('accion')
@@ -203,11 +217,13 @@ def perfil():
 
 @app.route('/ranking')
 @login_required
+@verificar_y_renovar_token
 def ranking_global():
     return ranking_global_rutas()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
-@limiter.limiter("3 per hour")
+@limiter.limit("3 per hour")
+@verificar_y_renovar_token
 def subir_imagen_medalla():
     imagen = request.files.get('imagen')
     nombre_imagen = request.form.get('nombre_imagen')
@@ -225,7 +241,8 @@ def subir_imagen_medalla():
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
 @lideres_required
-@limiter.limiter("2 per day")
+@limiter.limit("2 per day")
+@verificar_y_renovar_token
 def tomar_asistencia(grupo_id):
     if request.method == 'POST':
         fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
@@ -258,6 +275,28 @@ def tomar_asistencia(grupo_id):
         fecha_hoy=datetime.now().strftime('%Y-%m-%d')
     )
 
+
+@app.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)  # Requiere el refresh token
+def refresh():
+    """
+    Renueva el access token usando el refresh token
+    """
+    try:
+        user_id = get_jwt_identity()
+        
+        # Crear nuevo access token
+        new_access_token = create_access_token(identity=user_id)
+        
+        # Establecer nueva cookie
+        response = jsonify({'mensaje': 'Token renovado'})
+        set_access_cookies(response, new_access_token)
+        
+        logging.info(f"Token renovado para usuario: {user_id}")
+        return response, 200
+    except Exception as e:
+        logging.error(f"Error al renovar token: {e}")
+        return jsonify({'error': 'No se pudo renovar el token'}), 401
 
 if __name__ == '__main__':
     # Ejecutar aplicación
