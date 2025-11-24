@@ -16,7 +16,7 @@ def querys_verificar_limite_crear_grupos(admin_id: int) -> bool:
             result = cursor.fetchone()
             total_grupos = result['total']
             
-            return total_grupos < LIMITE_GRUPOS
+            return total_grupos > LIMITE_GRUPOS
             
     except Exception as e:
         logging.error(f"Error al verificar límite de grupos: {e}")

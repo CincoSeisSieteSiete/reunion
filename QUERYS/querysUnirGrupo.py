@@ -16,7 +16,7 @@ def limite_union_grupos(usuario_id : int) -> bool:
             result = cursor.fetchone()
             total_grupos = result['total']
             
-            return total_grupos < LIMITE_GRUPOS
+            return total_grupos > LIMITE_GRUPOS
     except Exception as e:
         logging.error(f"Error obteniendo grupo por código: {e}")
         return None

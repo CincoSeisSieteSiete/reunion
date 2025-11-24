@@ -24,6 +24,7 @@ def login_rutas():
             flash(f'Bienvenido, {user.nombre}!', 'success')
             access_token = crear_access_token(user.id)
             refresh_token = crear_refresh_token(user.id)
+
             respuesta = make_response(redirect(url_for('dashboard')))
             respuesta.set_cookie('access_token', access_token)
             respuesta.set_cookie('refresh_token', refresh_token)

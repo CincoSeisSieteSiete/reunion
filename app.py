@@ -47,13 +47,13 @@ app.config['JWT_SECRET_KEY'] = 'jsabebJSKAEAVKHA1U3Y6HSHA'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # Usa cookies en lugar de headers
 app.config['JWT_COOKIE_SECURE'] = False  # True en producción con HTTPS
-app.config['JWT_COOKIE_CSRF_PROTECT'] = True  # Protección CSRF
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False    # Protección CSRF
 app.config['JWT_COOKIE_SAMESITE'] = 'Lax'  # Previene CSRF
 app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token'
 app.config['JWT_REFRESH_COOKIE_NAME'] = 'refresh_token'
 jwt = JWTManager(app)
 
-
+logging.basicConfig(level=logging.INFO)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -84,6 +84,8 @@ def login():
 @app.route('/logout')
 @eliminar_token
 def logout():
+    session.clear()
+    session.permanent = False
     return redirect(url_for('login'))
 
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -206,6 +208,7 @@ def gestionar_medallas():
 
 @app.route('/perfil')
 @login_required
+@verificar_y_renovar_token
 def perfil():
     user = get_info(session['user_id'])
     # Medallas del usuario
@@ -218,7 +221,6 @@ def perfil():
 
 @app.route('/ranking')
 @login_required
-@verificar_y_renovar_token
 def ranking_global():
     return ranking_global_rutas()
 
@@ -251,7 +253,7 @@ def tomar_asistencia(grupo_id):
 
         # Obtener todos los miembros del grupo
         miembros = get_miembros_grupo(grupo_id)
-        ids_miembros = [m['usuario_id'] for m in miembros]
+        ids_miembros = [m['id'] for m in miembros]
 
         for usuario in ids_miembros:
             presente = str(usuario) in asistentes

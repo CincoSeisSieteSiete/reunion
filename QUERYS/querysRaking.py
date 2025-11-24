@@ -1,8 +1,9 @@
 from DB.conexion import get_connection
 from MODELS.Usuario import Usuario
 import logging
+from typing import List
 
-def get_50_posiciones_raking() -> Usuario:
+def get_50_posiciones_raking() -> List[Usuario]:
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
@@ -14,9 +15,12 @@ def get_50_posiciones_raking() -> Usuario:
                 ORDER BY u.puntos DESC, u.racha DESC
                 LIMIT 50
             """)
-            ranking = cursor.fetchall()
-            u = Usuario.from_dict(ranking)
-            return u
+            ranking_data = cursor.fetchall()
+            ranking = []
+            for usuario in ranking_data:
+                u = Usuario.from_dict(usuario)
+                ranking.append(u)
+            return ranking
     except Exception as e:
         logging.error(f"Error fetching ranking data: {e}")
         return []

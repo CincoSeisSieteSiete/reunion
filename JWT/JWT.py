@@ -1,8 +1,12 @@
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, verify_jwt_in_request
+from flask_jwt_extended import (
+    create_access_token, create_refresh_token, 
+    jwt_required, verify_jwt_in_request, get_jwt_identity,
+    unset_jwt_cookies, unset_refresh_cookies, set_access_cookies
+)
 from datetime import timedelta
 import logging
 from functools import wraps
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, make_response
 
 def crear_access_token(id_usuario : int):
     logging.info(f"Creando token para el usuario {id_usuario}")
@@ -29,11 +33,11 @@ def crear_refresh_token(id_usuario : int):
 def eliminar_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        response = make_response(f(*args, **kwargs))
         unset_jwt_cookies(response)
-        session.clear()
-        session.permanent = False
+        unset_refresh_cookies(response)
         flash('Sesión cerrada exitosamente', 'info')
-        return f(*args, **kwargs)
+        return response
     return decorated_function
 
 
@@ -67,7 +71,7 @@ def verificar_y_renovar_token(f):
                     new_access_token = create_access_token(identity=user_id)
                     
                     # Establecer nueva cookie y continuar
-                    response = app.make_response(f(*args, **kwargs))
+                    response = make_response(f(*args, **kwargs))
                     set_access_cookies(response, new_access_token)
                     
                     logging.info(f"Token renovado automáticamente para: {user_id}")
