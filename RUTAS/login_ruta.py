@@ -26,11 +26,11 @@ def login_rutas():
             refresh_token = crear_refresh_token(user.id)
 
             respuesta = make_response(redirect(url_for('dashboard')))
-            respuesta.set_cookie('access_token', access_token)
-            respuesta.set_cookie('refresh_token', refresh_token)
+            # max_age en segundos: 30 días = 30 * 24 * 60 * 60 = 2592000
+            respuesta.set_cookie('access_token', access_token, max_age=2592000, httponly=True, samesite='Lax')
+            respuesta.set_cookie('refresh_token', refresh_token, max_age=2592000, httponly=True, samesite='Lax')
             return respuesta
         else:
-            get_rol_name(1)
             flash('Email o contraseña incorrectos', 'danger')
     
     return render_template('inicio/login.html')
