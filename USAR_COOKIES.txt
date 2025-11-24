@@ -1,2 +1,29 @@
-'access_token' 
-'refresh_token'
+USO DE COOKIES JWT EN LA APP
+Login
+
+Nombres:
+access_token 
+refresh_token
+
+Al iniciar sesión, se deben enviar los siguientes tokens:
+access_token (cookie)
+refresh_token (cookie)
+El login retorna ambos tokens en cookies para el usuario autenticado.
+Renovación de token
+
+Endpoint: /refresh (POST)
+Se debe enviar:
+refresh_token (cookie)
+Retorna:
+Nuevo access_token (cookie)
+Acción: Renueva el access token usando el refresh token y lo actualiza en la cookie.
+Logout
+
+Endpoint: /logout
+Acción: Inhabilita los tokens eliminando las cookies de sesión (access_token y refresh_token).
+El usuario queda desautenticado.
+Endpoints que requieren y refrescan token
+
+Ejemplo: /dashboard, /crear_grupo, /unirse_grupo, /ranking, /admin/grupo/<grupo_id>/puntos, /admin/medallas, /grupo/<grupo_id>/asistencia
+Decoradores usados: @verificar_y_renovar_token, @jwt_required
+Estos endpoints requieren que el usuario envíe el access_token (cookie) y, si está expirado pero el refresh_token es válido, lo refrescan automáticamente.

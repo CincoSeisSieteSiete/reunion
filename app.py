@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_limiter import Limiter, util
 from werkzeug.security import generate_password_hash
 import secrets
@@ -25,8 +25,9 @@ from QUERYS.queryAsistencias import get_asistencia_usuario, insertar_asistencia,
 from RUTAS.configuraciones_usuarios_rutas import configuracion
 from RUTAS.tema_ruta import cambiar_tema
 from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
-from JWT.JWT import verificar_y_renovar_token, eliminar_token
-from flask_jwt_extended import JWTManager, unset_jwt_cookies, jwt_required
+from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token
+from flask_jwt_extended import JWTManager, jwt_required,get_jwt_identity, set_access_cookies
+import logging
 
 app = Flask(__name__)
 
@@ -286,7 +287,7 @@ def refresh():
         user_id = get_jwt_identity()
         
         # Crear nuevo access token
-        new_access_token = create_access_token(identity=user_id)
+        new_access_token = crear_access_token(user_id)
         
         # Establecer nueva cookie
         response = jsonify({'mensaje': 'Token renovado'})
