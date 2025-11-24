@@ -125,12 +125,10 @@ def cumpleanos(id_grupo):
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
-<<<<<<< Updated upstream
 @lideres_required
 @verificar_y_renovar_token
-=======
 @grupo_admin_required
->>>>>>> Stashed changes
+
 def gestionar_puntos(grupo_id):
     return gestionar_puntos_ruta(grupo_id)
     
@@ -163,13 +161,10 @@ def subir_imagen_medalla():
 
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
-<<<<<<< Updated upstream
 @lideres_required
 @limiter.limit("2 per day")
 @verificar_y_renovar_token
-=======
 @grupo_admin_required
->>>>>>> Stashed changes
 def tomar_asistencia(grupo_id):
     return tomar_asistencia_ruta(grupo_id)
 
