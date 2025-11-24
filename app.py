@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
 
-# ESTA ES LA FORMA CORRECTA
+# IMPORTAR RUTAS
 from RUTAS.dashboard_ruta import dashboard_rutas
 from RUTAS.grupo_ruta import ver_grupo_ruta
 from RUTAS.register_ruta import register_rutas
@@ -15,19 +15,16 @@ from RUTAS.crear_grupo_ruta import crear_grupo_rutas
 from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 from RUTAS.ranking_ruta import ranking_global_rutas
-from QUERYS.querysAdmin import es_admin
-from QUERYS.queryPuntos import update_puntos, gestion_puntos_usuario
-from QUERYS.queryGrupo import get_miembros_grupo, asistencias_hoy
-from QUERYS.queryMedallas import agregar_medalla, asignar_medalla, eliminar_medalla, get_medallas, get_medallas_of_user
-from QUERYS.queryUsuario import get_users_medallas, get_info
-from QUERYS.queryAsistencias import get_asistencia_usuario, insertar_asistencia, presentes_del_dia
-
-from RUTAS.configuraciones_usuarios_rutas import configuracion
+from RUTAS.configuraciones_usuarios_rutas import configuracion, configuraciones_usuarios_rutas
 from RUTAS.tema_ruta import cambiar_tema
 from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
 from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token
 from flask_jwt_extended import JWTManager, jwt_required,get_jwt_identity, set_access_cookies
-import logging
+from RUTAS.ajustar_puntos_ruta import gestionar_puntos_ruta
+from RUTAS.gestionar_medallas_ruta import gestionar_medallas_ruta
+from RUTAS.perfil_ruta import perfil_ruta
+from RUTAS.asistencia_ruta import tomar_asistencia_ruta
+from RUTAS.subir_imagen_ruta import subir_imagen_medalla_ruta
 
 app = Flask(__name__)
 
@@ -122,35 +119,14 @@ def unirse_grupo():
 def cumpleanos(id_grupo):
     return cumpleanos_rutas(id_grupo)
 
-# ==========================================================================================
-@verificar_y_renovar_token
-def actualizar_racha_y_puntos(usuario_id, grupo_id):
-    """Actualiza la racha y puntos del usuario"""
-    update_puntos(usuario_id, grupo_id)
-    
+
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
 @lideres_required
 @verificar_y_renovar_token
 def gestionar_puntos(grupo_id):
-    
-    if es_admin(grupo_id, session['user_id']):
-        flash('No tienes permisos', 'danger')
-        return redirect(url_for('dashboard'))
-    
-    if request.method == 'POST':
-                usuario_id = request.form.get('usuario_id')
-                puntos = int(request.form.get('puntos', 0))
-                accion = request.form.get('accion')
-                
-                puntos = puntos if accion == 'agregar' else -puntos
-                gestion_puntos_usuario(puntos, usuario_id)
-                flash('Puntos actualizados exitosamente', 'success')
-                return redirect(url_for('gestionar_puntos', grupo_id=grupo_id))
-    miembros = get_miembros_grupo(grupo_id)
-            
-    return render_template('gestionar/gestionar_puntos.html', grupo_id=grupo_id, miembros=miembros)
+    return gestionar_puntos_ruta(grupo_id)
     
 
 
@@ -159,64 +135,13 @@ def gestionar_puntos(grupo_id):
 @admin_required
 @verificar_y_renovar_token
 def gestionar_medallas():
-    if request.method == 'POST':
-        accion = request.form.get('accion')
-                
-        if accion == 'crear':
-            nombre = request.form.get('nombre')
-            descripcion = request.form.get('descripcion')
-            imagen = request.form.get('imagen')
-            if not agregar_medalla(nombre,descripcion, imagen):
-                flash('Fallo crear medalla', 'error')
-            else:
-                flash('Medalla creada exitosamente', 'success')
-                    
-        elif accion == 'asignar':
-            usuario_id = request.form.get('usuario_id')
-            medalla_id = request.form.get('medalla_id')
-                                    
-            if not asignar_medalla(usuario_id, medalla_id):
-                flash('Fallo al asignar medalla', 'success')
-            else:
-                flash('Medalla asignada exitosamente', 'success')
-                                    
-        elif accion == 'eliminar':
-            medalla_id = request.form.get('medalla_id')
-            if not eliminar_medalla(medalla_id):
-                flash('No se pudo eliminar la medalla', 'success')
-            else:
-                flash('Medalla eliminada exitosamente', 'success')
-                
-            return redirect(url_for('gestionar_medallas'))
-            
-        # Obtener todas las medallas
-        medallas = get_medallas()
-            
-        # Obtener todos los usuarios
-        usuarios = get_users_medallas()
-
-            # 🖼️ Obtener imágenes del directorio static/medallas
-        medallas_path = os.path.join(app.root_path, 'static', 'medallas')
-        imagenes = [f for f in os.listdir(medallas_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.svg'))]
-            
-        return render_template(
-                'gestionar/gestionar_medallas.html',
-                medallas=medallas,
-                usuarios=usuarios,
-                imagenes=imagenes
-            )
+    return gestionar_medallas_ruta(app)
 
 @app.route('/perfil')
 @login_required
 @verificar_y_renovar_token
 def perfil():
-    user = get_info(session['user_id'])
-    # Medallas del usuario
-    medallas = get_medallas_of_user(session['user_id'])
-    
-    historial = get_asistencia_usuario(session['user_id'])
-            
-    return render_template('user_view/perfil.html', user=user, medallas=medallas, historial=historial)
+    return perfil_ruta()
 
 
 @app.route('/ranking')
@@ -228,18 +153,7 @@ def ranking_global():
 @limiter.limit("3 per hour")
 @verificar_y_renovar_token
 def subir_imagen_medalla():
-    imagen = request.files.get('imagen')
-    nombre_imagen = request.form.get('nombre_imagen')
-    if not imagen or not nombre_imagen:
-        return "Error: faltan datos", 400
-    # Obtener extensión original (.png, .jpg, etc.)
-    extension = os.path.splitext(imagen.filename)[1]
-    nuevo_nombre = f"{nombre_imagen}{extension}"
-    ruta_carpeta = os.path.join(app.static_folder, 'medallas')
-    os.makedirs(ruta_carpeta, exist_ok=True)
-    ruta_archivo = os.path.join(ruta_carpeta, nuevo_nombre)
-    imagen.save(ruta_archivo)
-    return redirect(url_for('gestionar/gestionar_medallas'))
+    return subir_imagen_medalla_ruta(app)
 
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
@@ -247,36 +161,7 @@ def subir_imagen_medalla():
 @limiter.limit("2 per day")
 @verificar_y_renovar_token
 def tomar_asistencia(grupo_id):
-    if request.method == 'POST':
-        fecha = request.form.get('fecha', datetime.now().strftime('%Y-%m-%d'))
-        asistentes = request.form.getlist('asistentes')  # Lista de user_id presentes
-
-        # Obtener todos los miembros del grupo
-        miembros = get_miembros_grupo(grupo_id)
-        ids_miembros = [m['id'] for m in miembros]
-
-        for usuario in ids_miembros:
-            presente = str(usuario) in asistentes
-
-            insertar_asistencia(usuario, grupo_id, presente)
-
-            if presente:
-                update_puntos(usuario, grupo_id)
-
-        flash('Asistencia registrada exitosamente', 'success')
-        return redirect(url_for('ver_grupo', grupo_id=grupo_id))
-
-    # GET: mostrar formulario
-    miembros = presentes_del_dia(grupo_id)
-    asistentes_hoy = asistencias_hoy(grupo_id)
-
-    return render_template(
-        'gestionar/tomar_asistencia.html',
-        grupo_id=grupo_id,
-        miembros=miembros,
-        asistentes_hoy=asistentes_hoy,
-        fecha_hoy=datetime.now().strftime('%Y-%m-%d')
-    )
+    return tomar_asistencia_ruta(grupo_id)
 
 
 @app.route('/refresh', methods=['POST'])
@@ -303,5 +188,5 @@ def refresh():
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    #app.run(debug=True, host='0.0.0.0', port=5000)
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+    #debug=True, host='0.0.0.0', port=5000
