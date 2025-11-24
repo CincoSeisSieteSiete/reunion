@@ -55,7 +55,11 @@ def get_medallas() -> list:
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM medallas ORDER BY fecha_creacion DESC")
-            medallas = cursor.fetchall()
+            medallas_data = cursor.fetchall()
+            medallas = []
+            for medalla in medallas_data:
+                medalla['imagen'] = medalla['imagen'].decode('utf-8')
+                medallas.append(medalla)
             return medallas
     except Exception as e:
         logging.error(f"error al agregar medalla: {e}")
