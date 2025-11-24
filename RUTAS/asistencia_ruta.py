@@ -15,7 +15,7 @@ def tomar_asistencia_ruta(grupo_id):
         
         # Obtener todos los miembros del grupo
         miembros = get_miembros_grupo(grupo_id)
-        ids_miembros = [m['usuario_id'] for m in miembros]
+        ids_miembros = [m['id'] for m in miembros]
         
         # Registrar asistencia para cada miembro
         for usuario in ids_miembros:

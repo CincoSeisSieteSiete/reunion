@@ -6,7 +6,7 @@ from flask_jwt_extended import (
 from datetime import timedelta
 import logging
 from functools import wraps
-from flask import flash, redirect, url_for, make_response
+from flask import flash, redirect, url_for, make_response, jsonify
 
 def crear_access_token(id_usuario : int):
     logging.info(f"Creando token para el usuario {id_usuario}")
@@ -88,3 +88,26 @@ def verificar_y_renovar_token(f):
                 return redirect(url_for('login'))
     
     return decorated_function
+
+
+def renovar_token_logica():
+    """
+    Lógica para renovar el access token usando el refresh token.
+    Esta función se llama desde la ruta /refresh.
+    """
+    try:
+        # El decorador @jwt_required(refresh=True) ya verificó el refresh token
+        user_id = get_jwt_identity()
+        
+        # Crear nuevo access token
+        new_access_token = create_access_token(identity=user_id)
+        
+        # Establecer nueva cookie
+        response = jsonify({'mensaje': 'Token renovado'})
+        set_access_cookies(response, new_access_token)
+        
+        logging.info(f"Token renovado para usuario: {user_id}")
+        return response, 200
+    except Exception as e:
+        logging.error(f"Error al renovar token: {e}")
+        return jsonify({'error': 'No se pudo renovar el token'}), 401
