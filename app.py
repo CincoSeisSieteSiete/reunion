@@ -17,14 +17,16 @@ from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 from RUTAS.ranking_ruta import ranking_global_rutas
 from RUTAS.configuraciones_usuarios_rutas import configuracion, configuraciones_usuarios_rutas
 from RUTAS.tema_ruta import cambiar_tema
-from RUTAS.configuraciones_usuarios_rutas import configuraciones_usuarios_rutas
-from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token
-from flask_jwt_extended import JWTManager, jwt_required,get_jwt_identity, set_access_cookies
 from RUTAS.ajustar_puntos_ruta import gestionar_puntos_ruta
 from RUTAS.gestionar_medallas_ruta import gestionar_medallas_ruta
 from RUTAS.perfil_ruta import perfil_ruta
 from RUTAS.asistencia_ruta import tomar_asistencia_ruta
 from RUTAS.subir_imagen_ruta import subir_imagen_medalla_ruta
+from RUTAS.JWT_ruta import refresh_ruta
+
+from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token
+from flask_jwt_extended import  JWTManager, jwt_required
+import logging
 
 app = Flask(__name__)
 
@@ -165,28 +167,13 @@ def tomar_asistencia(grupo_id):
 
 
 @app.route('/refresh', methods=['POST'])
-@jwt_required(refresh=True)  # Requiere el refresh token
+@jwt_required(refresh=True)
 def refresh():
-    """
-    Renueva el access token usando el refresh token
-    """
-    try:
-        user_id = get_jwt_identity()
-        
-        # Crear nuevo access token
-        new_access_token = crear_access_token(user_id)
-        
-        # Establecer nueva cookie
-        response = jsonify({'mensaje': 'Token renovado'})
-        set_access_cookies(response, new_access_token)
-        
-        logging.info(f"Token renovado para usuario: {user_id}")
-        return response, 200
-    except Exception as e:
-        logging.error(f"Error al renovar token: {e}")
-        return jsonify({'error': 'No se pudo renovar el token'}), 401
+    return refresh_ruta()
+
+
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='127.0.0.1', port=5000)
     #debug=True, host='0.0.0.0', port=5000
