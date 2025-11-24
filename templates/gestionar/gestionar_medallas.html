@@ -3,13 +3,18 @@
 {% block title %}Gestionar Medallas{% endblock %}
 
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/Medallas.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/medallas/base.css') }}">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/medallas/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/medallas/dark.css') }}">
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="medals-container">
   <div class="medals-grid">
-    
+
     <!-- Crear nueva medalla -->
     <div>
       <div class="medal-card">
@@ -34,11 +39,12 @@
             <select class="form-select" id="imagen" name="imagen" onchange="mostrarVistaPrevia()" required>
               <option value="">Seleccionar imagen...</option>
               {% for img in imagenes %}
-                <option value="{{ img }}">{{ img }}</option>
+              <option value="{{ img }}">{{ img }}</option>
               {% endfor %}
             </select>
             <div class="form-hint">Las imágenes se cargan automáticamente desde static/medallas/</div>
-            <img id="preview" src="" alt="Vista previa" style="display:none; width:100px; margin-top:10px; border:2px solid #000;">
+            <img id="preview" src="" alt="Vista previa"
+              style="display:none; width:100px; margin-top:10px; border:2px solid #000;">
           </div>
 
           <button type="submit" class="submit-btn">Crear Medalla</button>
@@ -57,7 +63,7 @@
             <select class="form-select" id="usuario_id" name="usuario_id" required>
               <option value="">Seleccionar usuario...</option>
               {% for usuario in usuarios %}
-                <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+              <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
               {% endfor %}
             </select>
           </div>
@@ -67,7 +73,7 @@
             <select class="form-select" id="medalla_id" name="medalla_id" required>
               <option value="">Seleccionar medalla...</option>
               {% for medalla in medallas %}
-                <option value="{{ medalla.id }}">{{ medalla.nombre }}</option>
+              <option value="{{ medalla.id }}">{{ medalla.nombre }}</option>
               {% endfor %}
             </select>
           </div>
@@ -86,16 +92,15 @@
       <div class="medals-display">
         {% for medalla in medallas %}
         <div class="medal-item">
-          <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}"
-               alt="{{ medalla.nombre }}"
-               class="medal-img"
-               onerror="this.src='https://via.placeholder.com/80?text=No+Image'">
+          <img src="{{ url_for('static', filename='medallas/' + medalla.imagen) }}" alt="{{ medalla.nombre }}"
+            class="medal-img" onerror="this.src='https://via.placeholder.com/80?text=No+Image'">
 
           <form method="POST">
             <input type="hidden" name="accion" value="editar">
             <input type="hidden" name="medalla_id" value="{{ medalla.id }}">
 
-            <input type="text" name="nombre" value="{{ medalla.nombre }}" class="form-input" style="margin-bottom:10px;">
+            <input type="text" name="nombre" value="{{ medalla.nombre }}" class="form-input"
+              style="margin-bottom:10px;">
             <textarea name="descripcion" class="form-textarea">{{ medalla.descripcion }}</textarea>
 
             <button type="submit" class="submit-btn" style="margin-top:10px;">Guardar</button>
@@ -126,7 +131,8 @@
   <form method="POST" enctype="multipart/form-data" action="{{ url_for('subir_imagen_medalla') }}">
     <div class="form-group">
       <label for="nombre_imagen" class="form-label">Nombre de la imagen</label>
-      <input type="text" class="form-input" id="nombre_imagen" name="nombre_imagen" placeholder="Ej: oro, plata, bronce" required>
+      <input type="text" class="form-input" id="nombre_imagen" name="nombre_imagen" placeholder="Ej: oro, plata, bronce"
+        required>
     </div>
     <div class="form-group">
       <label for="imagen" class="form-label">Seleccionar imagen</label>
@@ -137,16 +143,16 @@
 </div>
 
 <script>
-function mostrarVistaPrevia() {
-  const select = document.getElementById('imagen');
-  const img = document.getElementById('preview');
-  const valor = select.value;
-  if (valor) {
-    img.src = "{{ url_for('static', filename='medallas/') }}" + valor;
-    img.style.display = 'block';
-  } else {
-    img.style.display = 'none';
+  function mostrarVistaPrevia() {
+    const select = document.getElementById('imagen');
+    const img = document.getElementById('preview');
+    const valor = select.value;
+    if (valor) {
+      img.src = "{{ url_for('static', filename='medallas/') }}" + valor;
+      img.style.display = 'block';
+    } else {
+      img.style.display = 'none';
+    }
   }
-}
 </script>
 {% endblock %}

@@ -1,22 +1,30 @@
 :root {
-    /* Paleta Minimalista Premium - Dark Mode */
-    --bg-body: #1f1f23;       /* Fondo principal oscuro */
-    --bg-surface: #2a2a30;    /* Tarjetas y superficies */
-    --primary: #f9fafb;       /* Texto y acciones principales claros */
-    --text-main: #e5e7eb;     /* Texto principal claro */
-    --text-sec: #9ca3af;      /* Texto secundario gris */
-    --border: #374151;        /* Bordes sutiles en modo oscuro */
-    --radius: 16px;           /* Curvas modernas */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -1px rgba(0,0,0,0.4);
+  /* ====== PALETA BASE - DARK MODE ====== */
+  --bg-body: #1f1f23;           /* Fondo principal */
+  --bg-surface: #2a2a30;        /* Superficies / tarjetas */
 
-    /* Colores de Ranking Elegantes - Dark Mode */
-    --gold-bg: #78350f; --gold-text: #fef3c7; --gold-border: #fcd34d;
-    --silver-bg: #1f2937; --silver-text: #f3f4f6; --silver-border: #cbd5e1;
-    --bronze-bg: #7c2d12; --bronze-text: #fff7ed; --bronze-border: #fdba74;
+  --primary: #f9fafb;           /* Texto fuerte o color primario */
+  --text-main: #e5e7eb;         /* Texto principal */
+  --text-sec: #9ca3af;          /* Texto secundario */
+  --border: #374151;            /* Borde sutil */
+
+  /* ====== RADIUS & SHADOW ====== */
+  --radius: 16px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
+  --shadow-md: 
+    0 4px 6px -1px rgba(0,0,0,0.50),
+    0 2px 4px -1px rgba(0,0,0,0.40);
+
+  /* ====== COLORS RANKING - DARK MODE ====== */
+  --gold-bg: #78350f;
+  --gold-text: #fef3c7;
+  --gold-border: #fcd34d;
+
+  --silver-bg: #1f2937;
+  --silver-text: #f3f4f6;
+  --silver-border: #cbd5e1;
+
+  --bronze-bg: #7c2d12;
+  --bronze-text: #fff7ed;
+  --bronze-border: #fdba74;
 }
-
-.regreso img{
-    
-}
-

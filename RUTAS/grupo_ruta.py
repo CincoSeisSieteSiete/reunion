@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from QUERYS.queryGrupo import get_esta_grupo, get_grupo_info, get_raking_grupo
 
+from QUERYS.querysAdmin import es_lider_global
+
 def ver_grupo_ruta(grupo_id):
     """
     Lógica para mostrar la página de un grupo específico.
@@ -24,12 +26,12 @@ def ver_grupo_ruta(grupo_id):
     # Obtener ranking del grupo
     ranking = get_raking_grupo(grupo_id)
         
-    # Verificar si el usuario es admin del grupo
-    es_admin = grupo['admin_id'] == session['user_id']
+    # Verificar si el usuario es admin del grupo o líder global
+    es_admin_val = (grupo['admin_id'] == session['user_id']) or es_lider_global(session['user_id'])
         
     return render_template('user_view/grupo.html', 
                             grupo=grupo,
                             grupo_id=grupo_id,
                             ranking=ranking,
-                            es_admin=es_admin,
+                            es_admin=es_admin_val,
                             tema=1)

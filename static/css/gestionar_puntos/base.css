@@ -1,0 +1,246 @@
+/* ========================================
+   GESTIONAR PUNTOS - BASE STYLES
+   ======================================== */
+
+.manage-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.manage-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  padding: 2.5rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.manage-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.manage-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.form-select,
+.form-input {
+  padding: 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-select:focus,
+.form-input:focus {
+  background: var(--input-focus-bg);
+  color: var(--input-focus-text);
+  border-color: var(--border-focus);
+}
+
+.button-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.action-btn {
+  padding: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.btn-add:hover {
+  background: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-hover-text);
+  transform: translateY(-2px);
+}
+
+.btn-remove {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+}
+
+.btn-remove:hover {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
+  transform: translateY(-2px);
+}
+
+.section-divider {
+  height: 2px;
+  background: var(--border-color);
+  margin: 3rem 0;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+}
+
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.members-table thead {
+  background: var(--table-header-bg);
+  color: var(--table-header-text);
+}
+
+.members-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 2px solid var(--border-color);
+}
+
+.members-table td {
+  padding: 1rem;
+  border: 2px solid var(--border-color);
+  font-family: 'Courier New', monospace;
+  color: var(--text-primary);
+}
+
+.members-table tbody tr {
+  background: var(--table-row-bg);
+  transition: background 0.3s ease;
+}
+
+.members-table tbody tr:hover {
+  background: var(--table-row-hover);
+}
+
+.member-name-cell {
+  font-weight: 700;
+}
+
+.stat-value {
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manage-container {
+    padding: 2rem 1rem;
+  }
+
+  .manage-card {
+    padding: 1.5rem;
+  }
+
+  .manage-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .button-group {
+    grid-template-columns: 1fr;
+  }
+
+  .members-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .members-table thead {
+    display: none;
+  }
+
+  .members-table tbody,
+  .members-table tr,
+  .members-table td {
+    display: block;
+  }
+
+  .members-table tr {
+    margin-bottom: 1rem;
+    border: 2px solid var(--border-color);
+  }
+
+  .members-table td {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .members-table td:last-child {
+    border-bottom: none;
+  }
+
+  .members-table td::before {
+    content: attr(data-label);
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+  }
+}
+
+@media (max-width: 480px) {
+  .manage-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .manage-card {
+    padding: 1rem;
+  }
+}

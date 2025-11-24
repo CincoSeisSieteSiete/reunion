@@ -2,8 +2,16 @@
 
 {% block title %}Registrarse{% endblock %}
 
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/base.css') }}">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/dark.css') }}">
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 
 <div class="auth-container">
   <div class="auth-card">
@@ -27,10 +35,10 @@
       </div>
 
       <div class="auth-form-group">
-  <label for="fecha_nacimiento" class="auth-label">Fecha de Nacimiento</label>
-  <input type="date" class="auth-input" id="fecha_nacimiento" name="fecha_nacimiento" required>
-  <p class="Ejm">Ejemplo: 01/01/2000</p>
-</div>
+        <label for="fecha_nacimiento" class="auth-label">Fecha de Nacimiento</label>
+        <input type="date" class="auth-input" id="fecha_nacimiento" name="fecha_nacimiento" required>
+        <p class="Ejm">Ejemplo: 01/01/2000</p>
+      </div>
 
 
       <button type="submit" class="auth-submit">Registrarse</button>
@@ -57,7 +65,7 @@
     opacity: [0, 1],
     translateX: [-20, 0],
     duration: 600,
-    delay: anime.stagger(100, {start: 300}),
+    delay: anime.stagger(100, { start: 300 }),
     easing: 'easeOutCubic'
   });
 </script>

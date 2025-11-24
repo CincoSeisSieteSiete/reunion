@@ -2,8 +2,16 @@
 
 {% block title %}Iniciar Sesión{% endblock %}
 
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/base.css') }}">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/dark.css') }}">
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
 <div class="auth-container">
   <div class="auth-card">
@@ -44,7 +52,7 @@
     opacity: [0, 1],
     translateX: [-20, 0],
     duration: 600,
-    delay: anime.stagger(100, {start: 300}),
+    delay: anime.stagger(100, { start: 300 }),
     easing: 'easeOutCubic'
   });
 </script>

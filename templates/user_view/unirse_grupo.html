@@ -4,7 +4,12 @@
 
 
 {% block header %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/Unirse.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/base.css') }}">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/dark.css') }}">
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -19,16 +24,10 @@
             <form method="POST">
                 <div class="form-group">
                     <label for="codigo" class="form-label">Código de Invitación</label>
-                    <input 
-                        type="text" 
-                        class="form-input" 
-                        id="codigo" 
-                        name="codigo" 
-                        placeholder="INGRESA EL CÓDIGO" 
-                        required
-                        autocomplete="off"
-                    >
-                    <p class="form-help">Solicita el código al administrador del grupo, No usar espacios ni caracteres especiales.</p>
+                    <input type="text" class="form-input" id="codigo" name="codigo" placeholder="INGRESA EL CÓDIGO"
+                        required autocomplete="off">
+                    <p class="form-help">Solicita el código al administrador del grupo, No usar espacios ni caracteres
+                        especiales.</p>
                     </p>
                 </div>
                 <button type="submit" class="form-button">Unirse al Grupo</button>

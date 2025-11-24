@@ -1,22 +1,9 @@
-{% extends "base.html" %}
-
-{% block title %}Ranking Global{% endblock %}
-
-{% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/ranking.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-{% endblock %}
-
-{% block content %}
-
-<section class="regreso">
-    <a href="javascript:history.back()" class="back-link">
-        <img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
-    </a>
+<img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
+</a>
 </section>
 
 <div class="min-container">
-    
+
     <div class="ranking-header">
         <h1 class="page-title">Ranking Global</h1>
         <p class="page-subtitle">Los estudiantes más destacados de la plataforma.</p>
@@ -24,7 +11,7 @@
 
     {% if ranking|length > 0 %}
     <div class="podium-container">
-        
+
         {% if ranking[1] %}
         <div class="podium-card silver">
             <div class="podium-rank">2</div>
@@ -91,24 +78,24 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
-// Animación del Podio (Escala y Opacidad)
-anime({
-    targets: '.podium-card',
-    scale: [0.8, 1],
-    opacity: [0, 1],
-    delay: anime.stagger(200, {start: 100}), // El primero en aparecer será el 2do, luego 1ro, luego 3ro
-    duration: 800,
-    easing: 'easeOutElastic(1, .6)'
-});
+    // Animación del Podio (Escala y Opacidad)
+    anime({
+        targets: '.podium-card',
+        scale: [0.8, 1],
+        opacity: [0, 1],
+        delay: anime.stagger(200, { start: 100 }), // El primero en aparecer será el 2do, luego 1ro, luego 3ro
+        duration: 800,
+        easing: 'easeOutElastic(1, .6)'
+    });
 
-// Animación de la lista
-anime({
-    targets: '.table-row',
-    translateY: [20, 0],
-    opacity: [0, 1],
-    delay: anime.stagger(50, {start: 800}),
-    duration: 600,
-    easing: 'easeOutExpo'
-});
+    // Animación de la lista
+    anime({
+        targets: '.table-row',
+        translateY: [20, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(50, { start: 800 }),
+        duration: 600,
+        easing: 'easeOutExpo'
+    });
 </script>
 {% endblock %}

@@ -1,0 +1,256 @@
+/* ========================================
+   MEDALLAS - BASE STYLES
+   ======================================== */
+
+@view-transition {
+    navigation: auto;
+}
+
+.medals-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+.medals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.medal-card {
+    border: 2px solid var(--border-color);
+    padding: 2rem;
+    background: var(--card-bg);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.card-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.95rem;
+    border: 2px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    background: var(--input-focus-bg);
+    color: var(--input-focus-text);
+    border-color: var(--border-focus);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 2px solid var(--btn-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: var(--btn-hover-bg);
+    color: var(--btn-hover-text);
+    transform: translateY(-2px);
+}
+
+.submit-btn.btn-success {
+    background: var(--btn-success-bg);
+    color: var(--btn-success-text);
+}
+
+.submit-btn.btn-success:hover {
+    background: var(--btn-success-hover-bg);
+    color: var(--btn-success-hover-text);
+}
+
+.medals-display {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.medal-item {
+    border: 2px solid var(--border-color);
+    background: var(--item-bg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.medal-item:hover {
+    transform: translateY(-2px);
+    background: var(--item-hover-bg);
+}
+
+.medal-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    filter: var(--medal-filter);
+}
+
+.medal-name {
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+}
+
+.medal-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+    font-family: 'Courier New', monospace;
+}
+
+.delete-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--delete-btn-bg);
+    color: var(--delete-btn-text);
+    border: 2px solid var(--delete-btn-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: var(--delete-btn-hover-bg);
+    color: var(--delete-btn-hover-text);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+}
+
+/* Utility classes to avoid inline styles */
+.preview-img {
+    display: none;
+    width: 100px;
+    margin-top: 10px;
+    border: 2px solid var(--border-color);
+}
+
+.card-spacing {
+    margin-top: 2rem;
+}
+
+.upload-card {
+    margin-top: 2rem;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-spacing {
+    margin-top: 10px;
+}
+
+.input-spacing {
+    margin-bottom: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+    .medals-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .medals-container {
+        padding: 2rem 1rem;
+    }
+
+    .medal-card {
+        padding: 1.5rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .medals-display {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .medals-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .medal-card {
+        padding: 1rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+}

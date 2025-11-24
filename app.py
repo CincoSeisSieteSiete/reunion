@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 import secrets
 from datetime import datetime, timedelta
 import os
-from FUNCIONES.Decoradores import login_required, admin_required, lideres_required
+from FUNCIONES.Decoradores import login_required, admin_required, lideres_required, grupo_admin_required
 
 # IMPORTAR RUTAS
 from RUTAS.dashboard_ruta import dashboard_rutas
@@ -125,8 +125,12 @@ def cumpleanos(id_grupo):
 
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
+<<<<<<< Updated upstream
 @lideres_required
 @verificar_y_renovar_token
+=======
+@grupo_admin_required
+>>>>>>> Stashed changes
 def gestionar_puntos(grupo_id):
     return gestionar_puntos_ruta(grupo_id)
     
@@ -159,9 +163,13 @@ def subir_imagen_medalla():
 
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
+<<<<<<< Updated upstream
 @lideres_required
 @limiter.limit("2 per day")
 @verificar_y_renovar_token
+=======
+@grupo_admin_required
+>>>>>>> Stashed changes
 def tomar_asistencia(grupo_id):
     return tomar_asistencia_ruta(grupo_id)
 

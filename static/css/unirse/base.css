@@ -1,6 +1,9 @@
+/* ========================================
+   UNIRSE - BASE STYLES
+   ======================================== */
 
 @view-transition {
-  navigation: auto;
+    navigation: auto;
 }
 
 .form-container {
@@ -9,16 +12,18 @@
 }
 
 .form-card {
-    background: var(--white);
-    border: 2px solid var(--black);
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
     overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .form-header {
-    background: var(--black);
-    color: var(--white);
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 2rem;
     margin-bottom: 20px;
-    border-bottom: 2px solid var(--black);
+    border-bottom: 2px solid var(--border-color);
 }
 
 .form-title {
@@ -27,6 +32,11 @@
     letter-spacing: -0.02em;
     text-transform: uppercase;
     line-height: 1.2;
+    margin: 0;
+}
+
+.form-body {
+    padding: 2rem;
 }
 
 .form-group {
@@ -40,33 +50,36 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 1rem;
-    color: var(--black);
+    color: var(--label-color);
 }
 
 .form-input {
     width: 100%;
     padding: 1.25rem 1.5rem;
-    border: 2px solid grey;
+    border: 2px solid var(--input-border);
     border-radius: 10px;
-    background: white;
+    background: var(--input-bg);
+    color: var(--input-text);
     font-size: 1.125rem;
     font-family: 'Courier New', monospace;
     letter-spacing: 0.1em;
     transition: all 0.3s ease;
+    outline: none;
 }
 
 .form-input:focus {
-    border: 2px solid black;
+    border: 2px solid var(--input-focus-border);
+    background: var(--input-focus-bg);
 }
 
 .form-input::placeholder {
-    color: var(--gray-400);
+    color: var(--placeholder-color);
     letter-spacing: 0.05em;
 }
 
 .form-help {
     font-size: 0.875rem;
-    color: var(--gray-600);
+    color: var(--help-text-color);
     margin-top: 0.75rem;
     letter-spacing: 0.02em;
 }
@@ -74,9 +87,9 @@
 .form-button {
     width: 100%;
     padding: 1.5rem;
-    background: rgb(0, 0, 0);
-    color: white;
-    border: 2px solid black;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 2px solid var(--btn-border);
     border-radius: 20px;
     font-size: 0.875rem;
     font-weight: 700;
@@ -87,11 +100,12 @@
 }
 
 .form-button:hover {
-    background: white;
-    color: black;
+    background: var(--btn-hover-bg);
+    color: var(--btn-hover-text);
+    transform: translateY(-2px);
 }
 
-
+/* Responsive Design */
 @media (max-width: 768px) {
     .form-container {
         margin: 2rem auto;
@@ -104,5 +118,26 @@
 
     .form-title {
         font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .form-header,
+    .form-body {
+        padding: 1.5rem 1rem;
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+    }
+
+    .form-input {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+    }
+
+    .form-button {
+        padding: 1.25rem;
     }
 }

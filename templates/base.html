@@ -9,16 +9,30 @@
   <link rel="shortcut icon" href="{{url_for('static', filename='logos/Logo.png')}}">
   <meta name="view-transition" content="same-origin">
   <meta name="description" content="Sistema de gestión de asistencias y participación para grupos y comunidades.">
+
   {% block header %}{% endblock %}
+
+  <!-- Base CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
   {% if session.get('tema', 0) == 0 %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/light.css') }}">
   {% else %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/dark.css') }}">
   {% endif %}
+
+  <!-- Toast CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/toast/base.css') }}">
+  {% if session.get('tema', 0) == 0 %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/toast/light.css') }}">
+  {% else %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/toast/dark.css') }}">
+  {% endif %}
 </head>
 
 <body>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
   <nav class="navbar">
     <div class="navbar-container">
       <a class="navbar-brand" href="/">Betania</a>
@@ -37,10 +51,13 @@
         <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos"
               src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
         {% endif %}
+<<<<<<< Updated upstream
 
         <!--
             Aquí iba lo de cerrar session del usuario
           -->
+=======
+>>>>>>> Stashed changes
         {% else %}
         <li class="login"><a href="/login">Iniciar Sesión</a></li>
         <li class="register"><a href="/register">Registrarse</a></li>
@@ -50,17 +67,6 @@
   </nav>
 
   <div class="main-content">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ category }}">
-      {{ message }}
-      <button class="alert-close" onclick="this.parentElement.remove()">×</button>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
     {% block content %}{% endblock %}
   </div>
 
@@ -92,7 +98,6 @@
           <li><a href="">Política de privacidad</a></li>
           <li><a href="">Términos de servicio</a></li>
         </ul>
-
       </div>
       <div class="div5">
         <span class="Titulo_footer">
@@ -109,12 +114,18 @@
         <span>
           S, E
         </span>
-
       </div>
     </div>
   </section>
 
+  <!-- Scripts -->
+  <script src="https://unpkg.com/@barba/core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
+  <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/toast.js')}}"></script>
 
+<<<<<<< Updated upstream
   <!-- unpkg -->
   <script src="https://unpkg.com/@barba/core"></script>
 
@@ -123,6 +134,20 @@
 
   <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
   <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
+=======
+  <!-- Flask Messages for Toast -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <script>
+    var FLASK_MESSAGES = [
+      {% for category, message in messages %}
+    { category: '{{ category }}', message: '{{ message|safe }}' } {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    ];
+  </script>
+  {% endif %}
+  {% endwith %}
+>>>>>>> Stashed changes
 </body>
 
 </html>

@@ -1,18 +1,6 @@
-:root {
-    --bg-body: #f8f9fa;
-    --bg-card: #ffffff;
-    --text-main: #111111;
-    --text-sec: #6b7280;
-    --border-light: #e5e7eb;
-    
-    /* Colores de Ranking */
-    --gold: #fbbf24;
-    --silver: #9ca3af;
-    --bronze: #b45309;
-    --gold-bg: #fffbeb;
-    --silver-bg: #f3f4f6;
-    --bronze-bg: #fff7ed;
-}
+/* ========================================
+   RANKING - BASE STYLES
+   ======================================== */
 
 body {
     background-color: var(--bg-body);
@@ -38,6 +26,7 @@ body {
     font-weight: 800;
     margin: 0 0 5px 0;
     letter-spacing: -0.02em;
+    color: var(--text-main);
 }
 
 .page-subtitle {
@@ -62,13 +51,13 @@ body {
     padding: 30px 20px;
     width: 220px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    box-shadow: var(--card-shadow);
     border: 1px solid var(--border-light);
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease;
 }
 
 /* Alturas Escritorio */
@@ -77,7 +66,7 @@ body {
     height: 320px;
     border-color: var(--gold);
     z-index: 2;
-    background: linear-gradient(to bottom, var(--bg-card), var(--gold-bg));
+    background: var(--gold-gradient);
 }
 
 .podium-card.silver {
@@ -121,12 +110,21 @@ body {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.gold .podium-avatar { background: var(--gold); color: white; }
-.silver .podium-avatar { background: var(--silver); }
-.bronze .podium-avatar { background: var(--bronze); }
+.gold .podium-avatar {
+    background: var(--gold);
+    color: white;
+}
+
+.silver .podium-avatar {
+    background: var(--silver);
+}
+
+.bronze .podium-avatar {
+    background: var(--bronze);
+}
 
 .podium-name {
     font-weight: 700;
@@ -135,6 +133,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text-main);
 }
 
 .podium-points {
@@ -152,9 +151,20 @@ body {
     letter-spacing: 0.05em;
 }
 
-.gold .podium-badge { background: var(--gold); color: white; }
-.silver .podium-badge { background: var(--silver); color: white; }
-.bronze .podium-badge { background: var(--bronze); color: white; }
+.gold .podium-badge {
+    background: var(--gold);
+    color: white;
+}
+
+.silver .podium-badge {
+    background: var(--silver);
+    color: white;
+}
+
+.bronze .podium-badge {
+    background: var(--bronze);
+    color: white;
+}
 
 /* --- LISTA --- */
 .leaderboard-card {
@@ -162,7 +172,7 @@ body {
     border-radius: 16px;
     border: 1px solid var(--border-light);
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: var(--card-shadow-light);
 }
 
 .clean-table {
@@ -176,7 +186,7 @@ body {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: var(--text-sec);
-    background: #fcfcfc;
+    background: var(--table-header-bg);
     border-bottom: 1px solid var(--border-light);
 }
 
@@ -184,9 +194,12 @@ body {
     padding: 15px 20px;
     border-bottom: 1px solid var(--border-light);
     font-size: 0.9rem;
+    color: var(--text-main);
 }
 
-.clean-table tr:last-child td { border-bottom: none; }
+.clean-table tr:last-child td {
+    border-bottom: none;
+}
 
 .user-cell {
     display: flex;
@@ -197,17 +210,18 @@ body {
 .mini-avatar {
     width: 30px;
     height: 30px;
-    background: #e5e7eb;
+    background: var(--avatar-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
     font-weight: 600;
+    color: var(--avatar-text);
 }
 
 .rank-number {
-    background: #f3f4f6;
+    background: var(--rank-bg);
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -215,7 +229,17 @@ body {
     color: var(--text-sec);
 }
 
-.text-right { text-align: right; }
+.text-right {
+    text-align: right;
+}
+
+.faded-text {
+    color: var(--text-sec);
+}
+
+.user-name {
+    color: var(--text-main);
+}
 
 /* =========================================
    DISEÑO MÓVIL (Solo 1ro Grande)
@@ -226,41 +250,43 @@ body {
     }
 
     .podium-container {
-        flex-direction: column; /* Apilar verticalmente */
-        gap: 10px; /* Menos espacio entre elementos */
+        flex-direction: column;
+        gap: 10px;
         margin-bottom: 30px;
     }
 
     /* 1. ESTILO PRIMER LUGAR (ORO) - SE MANTIENE GRANDE */
     .podium-card.gold {
-        order: 1; /* Poner primero */
+        order: 1;
         width: 100%;
         height: auto;
-        padding: 40px 20px; /* Un poco más de aire */
-        margin-bottom: 15px; /* Separarlo de los otros */
-        box-shadow: 0 15px 30px rgba(251, 191, 36, 0.15); /* Brillo dorado sutil */
+        padding: 40px 20px;
+        margin-bottom: 15px;
+        box-shadow: var(--gold-shadow-mobile);
     }
 
     /* 2. ESTILO PLATA Y BRONCE - SE VUELVEN BARRAS COMPACTAS */
     .podium-card.silver,
     .podium-card.bronze {
-        order: 2; /* Van debajo del oro */
+        order: 2;
         width: 100%;
-        height: auto !important; /* Anular altura fija */
-        
-        /* Cambiar a layout horizontal (Fila) */
-        flex-direction: row; 
+        height: auto !important;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        
         padding: 15px;
-        border-radius: 12px; /* Menos redondeado */
-        border-top: 1px solid var(--border-light); /* Quitar borde grueso superior */
-        border-left: 4px solid; /* Mover el color al lateral izquierdo */
+        border-radius: 12px;
+        border-top: 1px solid var(--border-light);
+        border-left: 4px solid;
     }
 
-    .podium-card.silver { border-left-color: var(--silver); }
-    .podium-card.bronze { border-left-color: var(--bronze); }
+    .podium-card.silver {
+        border-left-color: var(--silver);
+    }
+
+    .podium-card.bronze {
+        border-left-color: var(--bronze);
+    }
 
     /* Reajustar Avatar en Plata/Bronce móvil */
     .podium-card.silver .podium-avatar,
@@ -268,9 +294,9 @@ body {
         width: 40px;
         height: 40px;
         font-size: 1rem;
-        margin-bottom: 0; /* Quitar margen inferior */
-        margin-right: 15px; /* Añadir margen derecho */
-        order: 2; /* Controlar posición */
+        margin-bottom: 0;
+        margin-right: 15px;
+        order: 2;
     }
 
     /* Reajustar Posición (Número) */
@@ -288,7 +314,7 @@ body {
     .podium-card.bronze .podium-name {
         margin-bottom: 0;
         text-align: left;
-        flex: 1; /* Ocupar espacio disponible */
+        flex: 1;
         order: 3;
     }
 
@@ -307,8 +333,8 @@ body {
     }
 
     /* Tabla general */
-    .clean-table th:nth-child(3), 
+    .clean-table th:nth-child(3),
     .clean-table td:nth-child(3) {
-        display: none; /* Ocultar columna asistencias en móvil */
+        display: none;
     }
 }

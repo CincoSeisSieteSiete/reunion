@@ -1,3 +1,34 @@
+:root {
+  /* ====== PALETA BASE – LIGHT MODE ====== */
+  --bg-body: #ffffff;         /* Fondo general */
+  --bg-surface: #ffffff;      /* Superficies y tarjetas */
+
+  --primary: #18181b;         /* Color principal para acciones */
+  --text-main: #111827;       /* Texto principal */
+  --text-sec: #6b7280;        /* Texto secundario */
+  --border: #e5e7eb;          /* Bordes sutiles */
+
+  /* ====== RADIUS & SHADOW ====== */
+  --radius: 16px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0,0,0,0.10),
+    0 2px 4px -1px rgba(0,0,0,0.06);
+
+  /* ====== COLORS RANKING – LIGHT MODE ====== */
+  --gold-bg: #fffbeb;
+  --gold-text: #b45309;
+  --gold-border: #fcd34d;
+
+  --silver-bg: #f8fafc;
+  --silver-text: #475569;
+  --silver-border: #cbd5e1;
+
+  --bronze-bg: #fff7ed;
+  --bronze-text: #9a3412;
+  --bronze-border: #fdba74;
+}
+
 /* ========================================================================= */
 /* COLORES DEL TEMA CLARO - Aplicación Directa de Colores */
 /* ========================================================================= */

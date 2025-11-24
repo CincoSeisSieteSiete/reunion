@@ -1,0 +1,111 @@
+/* ========================================
+   TOAST NOTIFICATIONS - BASE STYLES
+   ======================================== */
+
+/* Toast Container */
+#toast-container {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+    pointer-events: none;
+    align-items: center;
+}
+
+/* Toast Card */
+.toast {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    background: var(--toast-bg);
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(110px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    max-width: 400px;
+    height: 50px;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Toast Icon - Hidden */
+.toast-icon {
+    display: none;
+}
+
+/* Toast Content */
+.toast-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-message {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--toast-text);
+    margin: 0;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Toast Close Button - Hidden */
+.toast-close {
+    display: none;
+}
+
+/* Toast Variants - All same style */
+.toast-success,
+.toast-error,
+.toast-warning,
+.toast-info {
+    background: var(--toast-bg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #toast-container {
+        bottom: 60px;
+        left: 20px;
+        right: 20px;
+        transform: none;
+    }
+
+    .toast {
+        width: 100%;
+        max-width: none;
+        padding: 12px 24px;
+    }
+
+    .toast-message {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #toast-container {
+        bottom: 50px;
+        left: 16px;
+        right: 16px;
+    }
+
+    .toast {
+        padding: 10px 20px;
+    }
+
+    .toast-message {
+        font-size: 0.85rem;
+    }
+}
