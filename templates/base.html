@@ -15,9 +15,9 @@
   <!-- Base CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
   {% if session.get('tema', 0) == 0 %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/light.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/light/light.css') }}">
   {% else %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base/dark.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dark/dark.css') }}">
   {% endif %}
 
   <!-- Toast CSS -->
@@ -39,25 +39,18 @@
       <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
       <ul class="navbar-menu" id="navbarMenu">
         {% if session.user_id %}
-        <li class="Menu-urls"><a href="/dashboard"> <img class="iconos"
+        <li class="Menu-urls"><a href="/dashboard"><img class="iconos"
               src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
-        <li class="Menu-urls"><a href="/perfil"> <img class="iconos"
+        <li class="Menu-urls"><a href="/perfil"><img class="iconos"
               src="{{url_for('static', filename='iconos/user.svg')}}" alt=""> Perfil</a></li>
-        <li class="Menu-urls"><a href="/ranking"> <img class="iconos"
+        <li class="Menu-urls"><a href="/ranking"><img class="iconos"
               src="{{url_for('static', filename='iconos/list.svg')}}" alt=""> Ranking</a></li>
-        <li class="Menu-urls"><a href="/unirse_grupo"> <img class="iconos"
+        <li class="Menu-urls"><a href="/unirse_grupo"><img class="iconos"
               src="{{url_for('static', filename='iconos/123.svg')}}" alt=""> Unirse</a></li>
         {% if session.user_rol in ['lider', 'admin'] %}
-        <li class="Menu-urls"><a href="/crear_grupo"> <img class="iconos"
+        <li class="Menu-urls"><a href="/crear_grupo"><img class="iconos"
               src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
         {% endif %}
-<<<<<<< Updated upstream
-
-        <!--
-            Aquí iba lo de cerrar session del usuario
-          -->
-=======
->>>>>>> Stashed changes
         {% else %}
         <li class="login"><a href="/login">Iniciar Sesión</a></li>
         <li class="register"><a href="/register">Registrarse</a></li>
@@ -74,9 +67,7 @@
 
   <section class="footer">
     <div class="footer-container">
-      <div class="div1">
-        Sistema de Asistencias - Niozex Studio
-      </div>
+      <div class="div1">Sistema de Asistencias - Niozex Studio</div>
       <div class="div2">
         <ul>
           <li><a href="/404">Instagram </a></li>
@@ -99,42 +90,20 @@
           <li><a href="">Términos de servicio</a></li>
         </ul>
       </div>
-      <div class="div5">
-        <span class="Titulo_footer">
-          BETANIA
-        </span>
-      </div>
+      <div class="div5"><span class="Titulo_footer">BETANIA</span></div>
       <div class="div6"><span class="Titulo_footer2">REDES</span></div>
       <div class="div7"><span class="Titulo_footer2">EQUIPO</span></div>
       <div class="div8"><span class="Titulo_footer2">FEEDBACK</span></div>
-      <div class="div9">
-        <span class="copy-nioy">
-          © 2025 - Niozex Studio
-        </span>
-        <span>
-          S, E
-        </span>
-      </div>
+      <div class="div9"><span class="copy-nioy">© 2025 - Niozex Studio</span><span>S, E</span></div>
     </div>
   </section>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/@barba/core"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
   <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
   <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
   <script src="{{ url_for('static', filename='js/toast.js')}}"></script>
 
-<<<<<<< Updated upstream
-  <!-- unpkg -->
-  <script src="https://unpkg.com/@barba/core"></script>
-
-  <!-- jsdelivr -->
-  <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
-
-  <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
-  <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
-=======
   <!-- Flask Messages for Toast -->
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -143,11 +112,10 @@
       {% for category, message in messages %}
     { category: '{{ category }}', message: '{{ message|safe }}' } {% if not loop.last %}, {% endif %}
     {% endfor %}
-    ];
+        ];
   </script>
   {% endif %}
   {% endwith %}
->>>>>>> Stashed changes
 </body>
 
 </html>

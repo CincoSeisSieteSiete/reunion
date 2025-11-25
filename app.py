@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from flask_limiter import Limiter, util
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash
 import secrets
 from datetime import datetime, timedelta
@@ -38,7 +39,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 
 limiter = Limiter(
     app=app,
-    key_func=util.get_remote_address, # Usa la IP para la limitación
+    key_func=get_remote_address, # Usa la IP para la limitación
     default_limits=["200 per day", "50 per hour"] # Límites predeterminados
 )
 
@@ -127,13 +128,9 @@ def cumpleanos(id_grupo):
 @login_required
 @lideres_required
 @verificar_y_renovar_token
-@grupo_admin_required
-
 def gestionar_puntos(grupo_id):
     return gestionar_puntos_ruta(grupo_id)
     
-
-
 
 @app.route('/admin/medallas', methods=['GET', 'POST'])
 @admin_required
@@ -164,7 +161,6 @@ def subir_imagen_medalla():
 @lideres_required
 @limiter.limit("2 per day")
 @verificar_y_renovar_token
-@grupo_admin_required
 def tomar_asistencia(grupo_id):
     return tomar_asistencia_ruta(grupo_id)
 
@@ -173,8 +169,6 @@ def tomar_asistencia(grupo_id):
 @jwt_required(refresh=True)
 def refresh():
     return refresh_ruta()
-
-
 
 if __name__ == '__main__':
     # Ejecutar aplicación

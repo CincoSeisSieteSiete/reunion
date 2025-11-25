@@ -3,9 +3,9 @@
   --bg-body: #ffffff;         /* Fondo general */
   --bg-surface: #ffffff;      /* Superficies y tarjetas */
 
-  --primary: #18181b;         /* Color principal para acciones */
+  --primary: #000000;         /* Color principal para acciones */
   --text-main: #111827;       /* Texto principal */
-  --text-sec: #6b7280;        /* Texto secundario */
+  --text-sec: #52565f;        /* Texto secundario */
   --border: #e5e7eb;          /* Bordes sutiles */
 
   /* ====== RADIUS & SHADOW ====== */

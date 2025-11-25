@@ -6,9 +6,9 @@
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/base.css') }}">
 {% if session.get('tema', 0) == 0 %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/light.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/light/light.css') }}">
 {% else %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/unirse/dark.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dark/dark.css') }}">
 {% endif %}
 {% endblock %}
 

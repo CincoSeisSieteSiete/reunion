@@ -1,14 +1,25 @@
-<img src="{{ url_for('static', filename='iconos/arrow-left.svg') }}" alt="Regresar">
-</a>
-</section>
+{% extends "base.html" %}
+
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ranking/base.css') }}">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/light/light.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dark/dark.css') }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
 
 <div class="min-container">
 
+    <!-- Encabezado -->
     <div class="ranking-header">
         <h1 class="page-title">Ranking Global</h1>
         <p class="page-subtitle">Los estudiantes más destacados de la plataforma.</p>
     </div>
 
+    <!-- Podio -->
     {% if ranking|length > 0 %}
     <div class="podium-container">
 
@@ -41,9 +52,11 @@
             <div class="podium-badge">🥉 Bronce</div>
         </div>
         {% endif %}
+
     </div>
     {% endif %}
 
+    <!-- Tabla general -->
     {% if ranking|length > 3 %}
     <div class="leaderboard-card">
         <table class="clean-table">
@@ -76,19 +89,18 @@
 
 </div>
 
+<!-- Animaciones -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <script>
-    // Animación del Podio (Escala y Opacidad)
     anime({
         targets: '.podium-card',
         scale: [0.8, 1],
         opacity: [0, 1],
-        delay: anime.stagger(200, { start: 100 }), // El primero en aparecer será el 2do, luego 1ro, luego 3ro
+        delay: anime.stagger(200, { start: 100 }),
         duration: 800,
         easing: 'easeOutElastic(1, .6)'
     });
 
-    // Animación de la lista
     anime({
         targets: '.table-row',
         translateY: [20, 0],
@@ -98,4 +110,5 @@
         easing: 'easeOutExpo'
     });
 </script>
+
 {% endblock %}

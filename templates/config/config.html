@@ -4,9 +4,9 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/config/base.css') }}">
 
 {% if session.get('tema', 0) == 0 %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/light.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/light/light.css') }}">
 {% else %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/config/dark.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark/dark.css') }}">
 {% endif %}
 {% endblock %}
 
