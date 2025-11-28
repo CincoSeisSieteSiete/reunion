@@ -30,6 +30,10 @@ main {
     margin-left: auto;
 }
 
+.Botones-fecha a img{
+    filter: invert(1);
+}
+
 .current-month-year {
     font-size: 1.60rem;
     font-weight: 700;
@@ -59,10 +63,6 @@ main {
     background: var(--btn-bg);
 }
 
-.btn-secondary:hover {
-    border: 1px solid var(--btn-hover-border);
-    background: var(--btn-hover-bg);
-}
 
 .btn img {
     width: 20px;

@@ -1,12 +1,128 @@
 :root {
-  /* ====== PALETA BASE – LIGHT MODE ====== */
-  --bg-body: #ffffff;         /* Fondo general */
-  --bg-surface: #ffffff;      /* Superficies y tarjetas */
+  /* ====== PALETA BASE – LIGHT MODE (LIMPIO Y MINIMALISTA) ====== */
+  --bg-body: #ffffff;         /* Blanco puro */
+  --bg-surface: #f8f9fa;      /* Gris muy claro */
+  --bg-card: #ffffff;         /* Blanco tarjetas */
+  --page-bg: #ffffff;         /* Blanco página */
+  --card-bg: #ffffff;         /* Blanco cards */
+  --item-bg: #f0f2f5;         /* Gris claro */
+  --item-checked-bg: #e8f5e9; /* Verde claro */
+  --item-hover-bg: #e9ecef;   /* Gris hover */
+  --table-header-bg: #f8f9fa; /* Gris encabezado */
+  --alert-bg: #fff3cd;        /* Amarillo alerta */
 
-  --primary: #000000;         /* Color principal para acciones */
-  --text-main: #111827;       /* Texto principal */
-  --text-sec: #4b4e55;        /* Texto secundario */
-  --border: #e5e7eb;          /* Bordes sutiles */
+  --primary: #1976d2;         /* Azul primario */
+  --text-main: #0d1b2a;       /* Texto oscuro */
+  --text-sec: #5e6c84;        /* Texto secundario */
+  --text-primary: #0d1b2a;    /* Texto primario */
+  --text-secondary: #5e6c84;  /* Texto secundario alt */
+  --text-hint: #9ca3af;       /* Placeholder */
+  --border: #d1d5db;          /* Borde neutro */
+  --border-color: #e5e7eb;    /* Borde alternativo */
+  --border-light: #f3f4f6;    /* Borde claro */
+  --border-focus: #1976d2;    /* Borde focus (azul) */
+  --input-border: #d1d5db;    /* Borde input */
+
+  /* ====== BUTTONS ====== */
+  --btn-bg: #1976d2;          /* Azul */
+  --btn-text: #ffffff;        /* Blanco texto */
+  --btn-border: #1976d2;      /* Borde azul */
+  --btn-hover-bg: #1565c0;    /* Azul oscuro hover */
+  --btn-hover-text: #ffffff;
+  --btn-success-bg: #388e3c;  /* Verde éxito */
+  --btn-success-text: #ffffff;
+  --btn-success-hover-bg: #2e7d32;
+  --btn-success-hover-text: #ffffff;
+  --delete-btn-bg: #d32f2f;   /* Rojo eliminar */
+  --delete-btn-text: #ffffff;
+  --delete-btn-border: #d32f2f;
+  --delete-btn-hover-bg: #c62828;
+  --delete-btn-hover-text: #ffffff;
+
+  /* ====== INPUTS ====== */
+  --input-bg: #ffffff;        /* Blanco */
+  --input-text: #0d1b2a;      /* Texto oscuro */
+  --input-focus-bg: #ffffff;
+  --input-focus-text: #0d1b2a;
+  --input-focus-border: #1976d2;
+  --placeholder-color: #9ca3af;
+
+  /* ====== CHECKBOX & ITEMS ====== */
+  --checkbox-bg: #ffffff;
+  --checkbox-border: #d1d5db;
+  --checkbox-checked-bg: #388e3c;
+  --checkbox-checked-border: #388e3c;
+  --checkbox-mark: #ffffff;
+  --item-checked-border: #388e3c;
+  --badge-bg: #e0e7ff;
+  --badge-text: #3730a3;
+  --badge-border: #c7d2fe;
+  --badge-checked-bg: #388e3c;
+  --badge-checked-text: #ffffff;
+  --badge-checked-border: #388e3c;
+
+  /* ====== TOAST ====== */
+  --toast-bg: rgba(13, 27, 42, 0.95);
+  --toast-text: #ffffff;
+
+  /* ====== FORMS & CONFIG ====== */
+  --divider-color: #e5e7eb;
+  --link-color: #1976d2;
+  --link-underline: #1976d2;
+  --accent: #1976d2;
+  --accent-color: #1976d2;
+  --accent-color-hover: #1565c0;
+  --flash-success-bg: #c8e6c9;
+  --flash-success-color: #2e7d32;
+  --flash-error-bg: #ffcdd2;
+  --flash-error-color: #c62828;
+  --help-text-color: #666666;
+  --success-bg: #4caf50;
+  --success-text: #ffffff;
+  --avatar-bg: #f0f0f0;
+  --avatar-text: #111827;
+  --rank-bg: #f5f5f5;
+  --medal-filter: grayscale(0);
+  --beta-bg: #fff3cd;
+  --beta-color: #856404;
+  --nuevo: #d32f2f;
+  --header-bg: #f5f5f5;
+  --header-text: #111827;
+  --label-color: #4b4e55;
+  --item-checked-text: #ffffff;
+  --btn-primary-bg: #000000;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover-bg: #333333;
+  --btn-primary-hover-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #111827;
+  --btn-secondary-hover-bg: #f5f5f5;
+  --btn-secondary-hover-text: #111827;
+  --table-header-text: #4b4e55;
+  --item-checked-text: #ffffff;
+
+  /* ====== CALENDAR & SPECIAL ====== */
+  --day-bg: #ffffff;
+  --day-border: #cecece;
+  --day-header-bg: #f5f5f5;
+  --today-bg: #e3f2fd;
+  --today-border: #2196f3;
+  --today-text: #111827;
+  --birthday-bg: #fff3e0;
+  --birthday-text: #111827;
+  --cumple-badge-bg: #ffc107;
+  --cumple-badge-text: #111827;
+  --inactive-bg: #f5f5f5;
+  --dia-cumple-bg: #fff3e0;
+
+  /* ====== ADMIN & TABLE ====== */
+  --th-bg: #f5f5f5;
+  --row-hover-bg: #f0f0f0;
+  --btn-token-bg: #2196f3;
+  --btn-token-hover: #1976d2;
+  --btn-primary-hover: #333333;
+  --btn-disabled-bg: #cccccc;
+  --bg-color: #ffffff;
 
   /* ====== RADIUS & SHADOW ====== */
   --radius: 16px;
@@ -14,19 +130,32 @@
   --shadow-md:
     0 4px 6px -1px rgba(0,0,0,0.10),
     0 2px 4px -1px rgba(0,0,0,0.06);
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --card-shadow-light: 0 1px 2px rgba(0,0,0,0.05);
+  --gold-shadow-mobile: 0 4px 8px rgba(180, 83, 9, 0.2);
 
   /* ====== COLORS RANKING – LIGHT MODE ====== */
+  --gold: #fcd34d;
   --gold-bg: #fffbeb;
   --gold-text: #b45309;
   --gold-border: #fcd34d;
+  --gold-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 
+  --silver: #cbd5e1;
   --silver-bg: #f8fafc;
   --silver-text: #000000;
   --silver-border: #cbd5e1;
 
+  --bronze: #fdba74;
   --bronze-bg: #fff7ed;
   --bronze-text: #9a3412;
   --bronze-border: #fdba74;
+
+  /* ====== COMPATIBILITY ====== */
+  --black: #000000;
+  --white: #ffffff;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
 }
 
 /* Aplicación de variables */

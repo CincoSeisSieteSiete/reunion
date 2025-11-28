@@ -424,14 +424,14 @@ body.modal-open {
 .Titulo_footer {
     font-size: 34px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-main);
     margin: 20px 20px;
 }
 
 .Titulo_footer2 {
     font-size: 20px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-main);
 }
 
 .footer-container ul {
@@ -445,7 +445,7 @@ body.modal-open {
 
 .footer-container ul li a {
     text-decoration: none;
-    color: #555;
+    color: var(--text-sec);
     font-size: 15px;
     transition: color 0.3s ease;
 }
@@ -455,7 +455,7 @@ body.modal-open {
     margin-left: 3px;
 }
 .footer-container ul li a:hover {
-    color: #000;
+    color: var(--text-main);
     
 }
 
@@ -467,7 +467,7 @@ body.modal-open {
 .copy-nioy {
     margin: 20px;
     font-size: 14px;
-    color: #666;
+    color: var(--text-sec);
 }
 
 .div2 { grid-area: 2 / 4 / 3 / 5; }

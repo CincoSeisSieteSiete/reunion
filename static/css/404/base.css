@@ -18,6 +18,7 @@
     color: var( --text-primary);
 }
 
+@import url('../light/light.css');
 .error-container h2 {
     font-size: 2rem;
     margin: 1rem 0;
@@ -34,7 +35,7 @@
     margin-top: 2rem;
     padding: 0.8rem 2rem;
     background-color: var(--accent-color);
-    color: #fff;
+    color: var(--bg-body);
     border-radius: 8px;
     text-decoration: none;
     font-weight: 600;

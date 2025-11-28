@@ -72,11 +72,11 @@ def cambiar_tema_view():
     return redirect('/configuracion')
 
 @app.route('/register', methods=['GET', 'POST'])
-@limiter.limit("5 per hour")
+@limiter.limit("10 per hour")
 def register():
     return register_rutas()
 
-@limiter.limit("5 per hour")
+@limiter.limit("10 per hour")
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
@@ -123,7 +123,6 @@ def cumpleanos(id_grupo):
     return cumpleanos_rutas(id_grupo)
 
 
-
 @app.route('/admin/grupo/<int:grupo_id>/puntos', methods=['GET', 'POST'])
 @login_required
 @lideres_required
@@ -151,7 +150,7 @@ def ranking_global():
     return ranking_global_rutas()
 
 @app.route('/subir_imagen_medalla', methods=['POST'])
-@limiter.limit("3 per hour")
+@limiter.limit("100 per hour")
 @verificar_y_renovar_token
 def subir_imagen_medalla():
     return subir_imagen_medalla_ruta(app)
@@ -159,8 +158,6 @@ def subir_imagen_medalla():
 @app.route('/grupo/<int:grupo_id>/asistencia', methods=['GET', 'POST'])
 @login_required
 @lideres_required
-@limiter.limit("2 per day")
-@verificar_y_renovar_token
 def tomar_asistencia(grupo_id):
     return tomar_asistencia_ruta(grupo_id)
 

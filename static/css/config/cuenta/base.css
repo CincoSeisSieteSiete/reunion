@@ -5,6 +5,8 @@
     overflow: hidden;
     transition: background 0.3s, box-shadow 0.3s;
 }
+
+@import url('../../light/light.css');
 .regreso{
     display: flex;
     align-items: center;
@@ -88,7 +90,7 @@
     border: none;
     border-radius: 8px;
     background-color: var(--accent-color);
-    color: #fff;
+    color: var(--bg-body);
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;

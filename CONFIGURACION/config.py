@@ -8,7 +8,6 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-
 """
 # Configuración para despliegue en PythonAnywhere
 data ={
@@ -19,3 +18,4 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
+

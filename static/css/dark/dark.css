@@ -1,30 +1,159 @@
 :root {
-  /* ====== PALETA BASE - DARK MODE ====== */
-  --bg-body: #1f1f23;           /* Fondo principal */
-  --bg-surface: #2a2a30;        /* Superficies / tarjetas */
+  /* ====== PALETA BASE – DARK MODE (CONTRASTE FUERTE) ====== */
+  --bg-body: #0f1419;          /* Negro muy profundo */
+  --bg-surface: #1a1e27;       /* Gris muy oscuro */
+  --bg-card: #1a1e27;          /* Tarjeta oscura */
+  --page-bg: #0f1419;          /* Fondo página oscuro */
+  --card-bg: #1a1e27;          /* Card oscura */
+  --item-bg: #252d3a;          /* Item bg */
+  --item-checked-bg: #1b3a2e;  /* Item checked verde oscuro */
+  --item-hover-bg: #2a3342;    /* Item hover */
+  --table-header-bg: #1a1e27;  /* Header tabla */
+  --alert-bg: #3a3000;         /* Amarillo oscuro alerta */
 
-  --primary: #f9fafb;           /* Texto fuerte o color primario */
-  --text-main: #e5e7eb;         /* Texto principal */
-  --text-sec: #9ca3af;          /* Texto secundario */
-  --border: #374151;            /* Borde sutil */
+  --primary: #00d4ff;          /* Cyan/Teal primario CONTRASTE */
+  --text-main: #e0e6ed;        /* Texto claro */
+  --text-sec: #8b95a5;         /* Texto secundario gris */
+  --text-primary: #e0e6ed;     /* Texto primario */
+  --text-secondary: #8b95a5;   /* Texto secundario alt */
+  --text-hint: #525966;        /* Placeholder oscuro */
+  --border: #2a3342;           /* Borde oscuro */
+  --border-color: #323d4a;     /* Borde alternativo */
+  --border-light: #2a3342;     /* Borde claro oscuro */
+  --border-focus: #00d4ff;     /* Borde focus CYAN */
+  --input-border: #323d4a;     /* Borde input */
+
+  /* ====== BUTTONS ====== */
+  --btn-bg: #00d4ff;           /* Botón Cyan primario */
+  --btn-text: #0f1419;         /* Texto botón negro */
+  --btn-border: #00d4ff;       /* Borde Cyan */
+  --btn-hover-bg: #00b8d4;     /* Cyan oscuro hover */
+  --btn-hover-text: #0f1419;   /* Texto botón hover */
+  --btn-success-bg: #1bb655;   /* Verde éxito */
+  --btn-success-text: #ffffff;
+  --btn-success-hover-bg: #179547;
+  --btn-success-hover-text: #ffffff;
+  --delete-btn-bg: #ff4081;    /* Magenta/Rosa eliminar */
+  --delete-btn-text: #ffffff;
+  --delete-btn-border: #ff4081;
+  --delete-btn-hover-bg: #f50057;
+  --delete-btn-hover-text: #ffffff;
+
+  /* ====== INPUTS ====== */
+  --input-bg: #1a1e27;         /* Input fondo oscuro */
+  --input-text: #e0e6ed;       /* Texto claro */
+  --input-focus-bg: #252d3a;   /* Input focus oscuro */
+  --input-focus-text: #e0e6ed;
+  --input-focus-border: #00d4ff;
+  --placeholder-color: #525966;
+
+  /* ====== CHECKBOX & ITEMS ====== */
+  --checkbox-bg: #252d3a;
+  --checkbox-border: #3a4555;
+  --checkbox-checked-bg: #1bb655;
+  --checkbox-checked-border: #1bb655;
+  --checkbox-mark: #ffffff;
+  --item-checked-border: #1bb655;
+  --badge-bg: #1a3a4a;         /* Teal oscuro badge */
+  --badge-text: #00d4ff;       /* Cyan texto */
+  --badge-border: #00d4ff;     /* Cyan borde */
+  --badge-checked-bg: #1bb655;
+  --badge-checked-text: #ffffff;
+  --badge-checked-border: #1bb655;
+
+  /* ====== TOAST ====== */
+  --toast-bg: rgba(15, 20, 25, 0.95);
+  --toast-text: #e0e6ed;
+
+  /* ====== FORMS & CONFIG ====== */
+  --divider-color: #2a3342;
+  --link-color: #00d4ff;       /* Cyan para enlaces */
+  --link-underline: #00d4ff;
+  --accent: #00d4ff;           /* Mismo que --primary */
+  --accent-color: #00d4ff;
+  --accent-color-hover: #00b8d4;
+  --flash-success-bg: #1b3a2e; /* Fondo éxito oscuro */
+  --flash-success-color: #1bb655; /* Texto éxito claro */
+  --flash-error-bg: #4a1e1e;   /* Fondo error oscuro */
+  --flash-error-color: #ff6b9d; /* Texto error claro */
+  --help-text-color: #8b95a5;
+  --success-bg: #1bb655;
+  --success-text: #ffffff;
+  --avatar-bg: #252d3a;
+  --avatar-text: #e0e6ed;
+  --rank-bg: #1a1e27;
+  --medal-filter: brightness(1.1) contrast(1.3);
+  --beta-bg: #1a3a3a;
+  --beta-color: #00d4ff;
+  --nuevo: #ff4081;
+  --header-bg: #1a1e27;
+  --header-text: #e0e6ed;
+  --label-color: #8b95a5;
+  --item-checked-text: #ffffff;
+  --btn-primary-bg: #00d4ff;
+  --btn-primary-text: #0f1419;
+  --btn-primary-hover-bg: #00b8d4;
+  --btn-primary-hover-text: #0f1419;
+  --btn-secondary-bg: #252d3a;
+  --btn-secondary-text: #e0e6ed;
+  --btn-secondary-hover-bg: #2a3342;
+  --btn-secondary-hover-text: #e0e6ed;
+  --table-header-text: #8b95a5;
+  --item-checked-text: #ffffff;
+
+  /* ====== CALENDAR & SPECIAL ====== */
+  --day-bg: #252d3a;
+  --day-border: #323d4a;
+  --day-header-bg: #1a1e27;
+  --today-bg: #1a3a52;
+  --today-border: #00d4ff;
+  --today-text: #e0e6ed;
+  --birthday-bg: #3a2a1a;
+  --birthday-text: #e0e6ed;
+  --cumple-badge-bg: #ff9800;
+  --cumple-badge-text: #0f1419;
+  --inactive-bg: #1f1f1f;
+  --dia-cumple-bg: #3a2a1a;
+
+  /* ====== ADMIN & TABLE ====== */
+  --th-bg: #1a1e27;
+  --row-hover-bg: #252d3a;
+  --btn-token-bg: #00d4ff;
+  --btn-token-hover: #00b8d4;
+  --btn-primary-hover: #00b8d4;
+  --btn-disabled-bg: #525966;
+  --bg-color: #0f1419;
 
   /* ====== RADIUS & SHADOW ====== */
   --radius: 16px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
-  --shadow-md: 
-    0 4px 6px -1px rgba(0,0,0,0.50),
-    0 2px 4px -1px rgba(0,0,0,0.40);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5); /* Sombra más oscura */
+  --shadow-md:
+    0 4px 6px -1px rgba(0,0,0,0.40),
+    0 2px 4px -1px rgba(0,0,0,0.26);
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  --card-shadow-light: 0 1px 2px rgba(0,0,0,0.2);
+  --gold-shadow-mobile: 0 4px 8px rgba(0, 212, 255, 0.1);
 
-  /* ====== COLORS RANKING - DARK MODE ====== */
-  --gold-bg: #78350f;
-  --gold-text: #fef3c7;
-  --gold-border: #fcd34d;
+  /* ====== COLORS RANKING – DARK MODE ====== */
+  --gold: #ffeb3b;             /* Amarillo brillante */
+  --gold-bg: #332d12;
+  --gold-text: #ffeb3b;
+  --gold-border: #ffeb3b;
+  --gold-gradient: linear-gradient(135deg, #332d12 0%, #443c1c 100%);
 
-  --silver-bg: #1f2937;
-  --silver-text: #f3f4f6;
-  --silver-border: #cbd5e1;
+  --silver: #00d4ff;           /* Cyan brillante */
+  --silver-bg: #1a3a4a;
+  --silver-text: #00d4ff;
+  --silver-border: #00d4ff;
 
-  --bronze-bg: #7c2d12;
-  --bronze-text: #fff7ed;
-  --bronze-border: #fdba74;
+  --bronze: #ff9800;           /* Naranja */
+  --bronze-bg: #3a2a1a;
+  --bronze-text: #ff9800;
+  --bronze-border: #ff9800;
+
+  /* ====== COMPATIBILITY ====== */
+  --black: #e0e6ed; /* Invertido para compatibilidad */
+  --white: #0f1419; /* Invertido para compatibilidad */
+  --gray-700: #8b95a5;
+  --gray-800: #a0aab8;
 }
