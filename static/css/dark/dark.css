@@ -11,7 +11,7 @@
   --table-header-bg: #1a1e27;  /* Header tabla */
   --alert-bg: #3a3000;         /* Amarillo oscuro alerta */
 
-  --primary: #00d4ff;          /* Cyan/Teal primario CONTRASTE */
+  --primary: #ffffff;          /* Cyan/Teal primario CONTRASTE */
   --text-main: #e0e6ed;        /* Texto claro */
   --text-sec: #8b95a5;         /* Texto secundario gris */
   --text-primary: #e0e6ed;     /* Texto primario */
@@ -156,4 +156,11 @@
   --white: #0f1419; /* Invertido para compatibilidad */
   --gray-700: #8b95a5;
   --gray-800: #a0aab8;
+}
+
+.ajustes{
+  filter: invert(1);
+}
+.imgs_dark{
+  filter: invert(1);
 }

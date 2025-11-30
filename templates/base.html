@@ -43,25 +43,25 @@
 
       <li class="Menu-urls">
         <a href="/dashboard">
-          <img class="iconos" src="{{ url_for('static', filename='iconos/home.svg') }}"> Inicio
+          <img class="iconos imgs_dark" src="{{ url_for('static', filename='iconos/home.svg') }}"> Inicio
         </a>
       </li>
 
       <li class="Menu-urls">
         <a href="/perfil">
-          <img class="iconos" src="{{ url_for('static', filename='iconos/user.svg') }}"> Perfil
+          <img class="iconos imgs_dark" src="{{ url_for('static', filename='iconos/user.svg') }}"> Perfil
         </a>
       </li>
 
       <li class="Menu-urls">
         <a href="/ranking">
-          <img class="iconos" src="{{ url_for('static', filename='iconos/list.svg') }}"> Ranking
+          <img class="iconos imgs_dark" src="{{ url_for('static', filename='iconos/list.svg') }}"> Ranking
         </a>
       </li>
 
       <li class="Menu-urls">
         <a href="/unirse_grupo">
-          <img class="iconos" src="{{ url_for('static', filename='iconos/123.svg') }}"> Unirse
+          <img class="iconos imgs_dark" src="{{ url_for('static', filename='iconos/123.svg') }}"> Unirse
         </a>
       </li>
 
@@ -69,7 +69,7 @@
       {% if session.rol_name in ['lider', 'admin'] %}
       <li class="Menu-urls">
         <a href="/crear_grupo">
-          <img class="iconos" src="{{ url_for('static', filename='iconos/create.svg') }}"> Crear Grupo
+          <img class="iconos imgs_dark"  src="{{ url_for('static', filename='iconos/create.svg') }}"> Crear Grupo
         </a>
       </li>
       {% endif %}

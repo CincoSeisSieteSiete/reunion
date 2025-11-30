@@ -151,6 +151,11 @@
         height: 100vh;
     }
 
+    .auth-container{
+        min-height: 80vh;
+        height: 70vh;
+    }
+
     .auth-card {
         padding: 2rem 1.5rem;
     }

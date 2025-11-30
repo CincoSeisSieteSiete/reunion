@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding: 40px 20px;
 }
+
 .diviciones{
     display: flex;
     align-items: center; 
@@ -11,6 +12,7 @@
     width: 100%;
     max-width: 600px;
     margin: 20px auto;
+    color: var(--primary);
 }
 
 .diviciones hr{
@@ -67,6 +69,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    color: var(--primary);
 }
 
 .tema{
@@ -85,11 +88,13 @@ input:checked + .slider:before {
 .info-config h2{    
     margin-bottom: 10px;
     font-weight: bold;
+    color: var(--primary);
 }
 
 .info-config p{
     line-height: 1.5;
     width: 90%;
+    color: var(--primary);
 }  
 
 .back-link{
@@ -144,9 +149,9 @@ input:checked + .slider:before {
 }
 
 .alerta {
-    border-left: 5px solid var(--accent-color);
-    background-color: var(--alert-bg);
-    color: var(--text-primary);
+    border-left: 5px solid var(--birthday-text);
+    background-color: var(--cumple-badge-bg);
+    color: var(--primary);
     padding: 1rem 1.2rem;
     border-radius: 8px;
     margin: 0 auto;
@@ -157,12 +162,13 @@ input:checked + .slider:before {
 .alerta h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1.2rem;
+    color: var(--primary);
 }
 
 .alerta p {
     margin: 0.2rem 0;
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--primary);
 }
 
 .beta-label {
@@ -196,5 +202,3 @@ input:checked + .slider:before {
         width: 100%;
     }  
 }
-
-@import url('../light/light.css');
