@@ -202,6 +202,7 @@ body {
 @media (max-width: 768px) {
     .min-content-grid {
         grid-template-columns: 1fr;
+        max-width: 600px;
         gap: 20px;
     }
 

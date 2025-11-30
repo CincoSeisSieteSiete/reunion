@@ -32,8 +32,7 @@ import logging
 app = Flask(__name__)
 
 app.register_blueprint(configuraciones_usuarios_rutas)
-
-app.secret_key = os.getenv('SECRET_KEY', 'Nioy')
+app.secret_key = 'una_clave_secreta_larga_y_unica' # ¡CRUCIAL!
 app.permanent_session_lifetime = timedelta(days=10)
 app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 
@@ -102,12 +101,13 @@ def ver_grupo(grupo_id):
     return ver_grupo_ruta(grupo_id)
 
 @app.route('/crear_grupo', methods=['GET', 'POST'])
-@limiter.limit("1 per hour")
-@login_required
-@lideres_required
-@verificar_y_renovar_token
+@limiter.limit("50 per hour")          # Limita peticiones a 50/hora
+@login_required                        # Solo usuarios logueados
+@lideres_required                       # Solo líderes o admin
+@verificar_y_renovar_token             # Valida y renueva JWT
 def crear_grupo():
-    return crear_grupo_rutas()
+    return crear_grupo_rutas()          # Llama a la función que maneja la lógica
+
 
 
 @app.route('/unirse_grupo', methods=['GET', 'POST'])

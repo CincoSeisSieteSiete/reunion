@@ -32,32 +32,56 @@
 <body>
   <!-- Toast Container -->
   <div id="toast-container"></div>
+<nav class="navbar">
+  <div class="navbar-container">
+    <a class="navbar-brand" href="/">Betania</a>
+    <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
 
-  <nav class="navbar">
-    <div class="navbar-container">
-      <a class="navbar-brand" href="/">Betania</a>
-      <button class="navbar-toggle" onclick="toggleMenu()">☰</button>
-      <ul class="navbar-menu" id="navbarMenu">
-        {% if session.user_id %}
-        <li class="Menu-urls"><a href="/dashboard"><img class="iconos"
-              src="{{url_for('static', filename='iconos/home.svg')}}" alt=""> Inicio</a></li>
-        <li class="Menu-urls"><a href="/perfil"><img class="iconos"
-              src="{{url_for('static', filename='iconos/user.svg')}}" alt=""> Perfil</a></li>
-        <li class="Menu-urls"><a href="/ranking"><img class="iconos"
-              src="{{url_for('static', filename='iconos/list.svg')}}" alt=""> Ranking</a></li>
-        <li class="Menu-urls"><a href="/unirse_grupo"><img class="iconos"
-              src="{{url_for('static', filename='iconos/123.svg')}}" alt=""> Unirse</a></li>
-        {% if session.user_rol in ['lider', 'admin'] %}
-        <li class="Menu-urls"><a href="/crear_grupo"><img class="iconos"
-              src="{{url_for('static', filename='iconos/create.svg')}}" alt=""> Crear Grupo</a></li>
-        {% endif %}
-        {% else %}
-        <li class="login"><a href="/login">Iniciar Sesión</a></li>
-        <li class="register"><a href="/register">Registrarse</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
+    <ul class="navbar-menu" id="navbarMenu">
+
+      {% if session.user_id %}
+
+      <li class="Menu-urls">
+        <a href="/dashboard">
+          <img class="iconos" src="{{ url_for('static', filename='iconos/home.svg') }}"> Inicio
+        </a>
+      </li>
+
+      <li class="Menu-urls">
+        <a href="/perfil">
+          <img class="iconos" src="{{ url_for('static', filename='iconos/user.svg') }}"> Perfil
+        </a>
+      </li>
+
+      <li class="Menu-urls">
+        <a href="/ranking">
+          <img class="iconos" src="{{ url_for('static', filename='iconos/list.svg') }}"> Ranking
+        </a>
+      </li>
+
+      <li class="Menu-urls">
+        <a href="/unirse_grupo">
+          <img class="iconos" src="{{ url_for('static', filename='iconos/123.svg') }}"> Unirse
+        </a>
+      </li>
+
+      <!-- 👉 Ajuste por Rol -->
+      {% if session.rol_name in ['lider', 'admin'] %}
+      <li class="Menu-urls">
+        <a href="/crear_grupo">
+          <img class="iconos" src="{{ url_for('static', filename='iconos/create.svg') }}"> Crear Grupo
+        </a>
+      </li>
+      {% endif %}
+
+      {% else %}
+      <li class="login"><a href="/login">Iniciar Sesión</a></li>
+      <li class="register"><a href="/register">Registrarse</a></li>
+      {% endif %}
+
+    </ul>
+  </div>
+</nav>
 
   <div class="main-content">
     {% block content %}{% endblock %}
