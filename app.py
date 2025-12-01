@@ -64,6 +64,10 @@ def index():
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
 
+@app.route('/terminos')
+def terminos():
+    return render_template('terminos.html')
+
 
 @app.route('/tema', methods=['GET', 'POST'])
 def cambiar_tema_view():
@@ -107,7 +111,6 @@ def ver_grupo(grupo_id):
 @verificar_y_renovar_token             # Valida y renueva JWT
 def crear_grupo():
     return crear_grupo_rutas()          # Llama a la función que maneja la lógica
-
 
 
 @app.route('/unirse_grupo', methods=['GET', 'POST'])

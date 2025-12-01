@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+
+{% block title %}Términos y Condiciones{% endblock %}
+
+{% block content %}
+<div class="terminos-container">
+    <header class="terminos-header">
+        <h1>Términos y Condiciones de Uso</h1>
+        <p class="fecha-actualizacion">Última actualización: Diciembre 2025</p>
+    </header>
+
+    <section class="terminos-section">
+        <h2>1. Sobre Betania</h2>
+        <p>
+            <strong>Betania</strong> es un sistema de gestión de asistencias para reuniones cristianas con elementos de
+            gamificación.
+            Al usar este servicio, aceptas estos términos en su totalidad.
+        </p>
+        <p><strong>Funcionalidades principales:</strong></p>
+        <ul>
+            <li>Registro de asistencias a reuniones</li>
+            <li>Sistema de puntos y rachas por asistencia</li>
+            <li>Medallas y reconocimientos</li>
+            <li>Ranking de participación</li>
+            <li>Gestión de grupos de reunión</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>2. Cuenta de Usuario</h2>
+        <h3>Debes:</h3>
+        <ul>
+            <li>Proporcionar información real y actualizada</li>
+            <li>Mantener tu contraseña segura</li>
+            <li>Ser responsable de tu cuenta</li>
+            <li>Notificar cualquier uso no autorizado</li>
+        </ul>
+
+        <h3>No puedes:</h3>
+        <ul class="lista-prohibiciones">
+            <li>Crear múltiples cuentas</li>
+            <li>Compartir tu cuenta con otros</li>
+            <li>Usar información falsa</li>
+            <li>Vender o transferir tu cuenta</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>3. Sistema de Asistencias</h2>
+        <p><strong>Reglas importantes:</strong></p>
+        <ul>
+            <li>Solo los administradores de grupo pueden registrar asistencias</li>
+            <li>Cada asistencia otorga <strong>+10 puntos</strong></li>
+            <li>Las asistencias consecutivas aumentan tu <strong>racha</strong></li>
+            <li>No puedes registrar asistencias falsas</li>
+        </ul>
+
+        <p class="advertencia">⚠️ <strong>Prohibido:</strong> Manipular registros de asistencia o marcar asistencias de
+            personas ausentes</p>
+    </section>
+
+    <section class="terminos-section">
+        <h2>4. Sistema de Puntos y Rachas</h2>
+        <h3>¿Cómo funcionan?</h3>
+        <ul>
+            <li><strong>Puntos:</strong> Se ganan por asistir a reuniones (+10 por asistencia)</li>
+            <li><strong>Rachas:</strong> Días consecutivos de asistencia</li>
+            <li><strong>Ranking:</strong> Clasificación basada en puntos totales</li>
+        </ul>
+
+        <h3>Prohibiciones:</h3>
+        <ul class="lista-prohibiciones">
+            <li>Intentar manipular el sistema de puntos</li>
+            <li>Crear asistencias falsas para ganar puntos</li>
+            <li>Pedir a administradores que registren asistencias falsas</li>
+            <li>Usar exploits o bugs para obtener puntos</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>5. Grupos y Administradores</h2>
+        <h3>Administradores pueden:</h3>
+        <ul>
+            <li>Crear grupos de reunión</li>
+            <li>Generar códigos de invitación</li>
+            <li>Registrar asistencias de miembros</li>
+            <li>Ajustar puntos cuando sea necesario</li>
+        </ul>
+
+        <h3>Administradores NO pueden:</h3>
+        <ul class="lista-prohibiciones">
+            <li>Asignar puntos de forma arbitraria o injusta</li>
+            <li>Favorecer a ciertos miembros</li>
+            <li>Eliminar miembros sin razón válida</li>
+            <li>Abusar de sus privilegios administrativos</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>6. Medallas</h2>
+        <p>
+            Las medallas son reconocimientos especiales otorgados por administradores del sistema.
+            No se pueden comprar ni transferir. Cualquier intento de obtener medallas de forma fraudulenta
+            resultará en su eliminación y posibles sanciones.
+        </p>
+    </section>
+
+    <section class="terminos-section peligro">
+        <h2>7. Conductas Prohibidas</h2>
+        <p class="advertencia">🚫 <strong>Está estrictamente prohibido:</strong></p>
+        <ul class="lista-prohibiciones">
+            <li><strong>Fraude de Asistencias:</strong> Marcar asistencias falsas o de personas ausentes</li>
+            <li><strong>Manipulación de Puntos:</strong> Intentar alterar puntos o rachas de forma no autorizada</li>
+            <li><strong>Spam:</strong> Crear grupos falsos o enviar invitaciones masivas</li>
+            <li><strong>Acoso:</strong> Acosar, intimidar o faltar el respeto a otros miembros</li>
+            <li><strong>Suplantación:</strong> Hacerse pasar por otro usuario o administrador</li>
+            <li><strong>Ataques al Sistema:</strong> Intentar hackear o explotar vulnerabilidades</li>
+            <li><strong>Contenido Inapropiado:</strong> Publicar contenido ofensivo o no relacionado con reuniones
+                cristianas</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section peligro">
+        <h2>8. Sanciones</h2>
+
+        <div class="sancion-item">
+            <h4>⚠️ Advertencia</h4>
+            <p>Primera infracción menor. Notificación al usuario.</p>
+        </div>
+
+        <div class="sancion-item">
+            <h4>⏸️ Suspensión Temporal (7-30 días)</h4>
+            <p><strong>Por:</strong></p>
+            <ul>
+                <li>Spam repetido</li>
+                <li>Lenguaje inapropiado</li>
+                <li>Intentos menores de manipulación</li>
+            </ul>
+        </div>
+
+        <div class="sancion-item peligro-alto">
+            <h4>🚫 Baneo Permanente</h4>
+            <p><strong>Causas de baneo inmediato:</strong></p>
+            <ul class="lista-baneo">
+                <li>Fraude comprobado en asistencias</li>
+                <li>Manipulación del sistema de puntos</li>
+                <li>Ataques informáticos</li>
+                <li>Acoso grave a miembros</li>
+                <li>Suplantación de identidad</li>
+                <li>Reincidencia después de suspensión</li>
+            </ul>
+        </div>
+
+        <h3>Apelaciones</h3>
+        <p>
+            Puedes apelar contactando a <strong>soporte@betania.com</strong> dentro de los 7 días.
+            Las decisiones de baneo permanente son finales después de 30 días.
+        </p>
+    </section>
+
+    <section class="terminos-section">
+        <h2>9. Privacidad</h2>
+        <ul>
+            <li>Recopilamos solo datos necesarios (nombre, email, fecha de nacimiento)</li>
+            <li>Los datos de asistencia son visibles para administradores de tu grupo</li>
+            <li>Tu ranking y puntos son públicos dentro del sistema</li>
+            <li>Puedes solicitar eliminación de tu cuenta en cualquier momento</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>10. Limitaciones</h2>
+        <ul>
+            <li>El servicio se proporciona "tal cual"</li>
+            <li>No garantizamos disponibilidad 24/7</li>
+            <li>No somos responsables de pérdida de datos por fallos técnicos</li>
+            <li>Los puntos y rachas pueden restablecerse anualmente</li>
+            <li>Nos reservamos el derecho de modificar el sistema de puntos</li>
+        </ul>
+    </section>
+
+    <section class="terminos-section">
+        <h2>11. Modificaciones</h2>
+        <p>
+            Podemos actualizar estos términos en cualquier momento. Los cambios importantes se notificarán
+            con 15 días de anticipación. El uso continuado del servicio implica aceptación de los nuevos términos.
+        </p>
+    </section>
+
+    <section class="terminos-section">
+        <h2>12. Contacto</h2>
+        <p><strong>Desarrollado por:</strong> Niozex Studio (Sebastian, Edgar)</p>
+        <p><strong>Soporte:</strong> soporte@betania.com</p>
+    </section>
+
+    <section class="terminos-footer">
+        <p>Al usar Betania, aceptas estos Términos y Condiciones.</p>
+        <div class="botones-accion">
+            <a href="/dashboard" class="btn btn-primary">Acepto, continuar</a>
+            <a href="/logout" class="btn btn-secondary">No acepto, salir</a>
+        </div>
+    </section>
+</div>
+
+<style>
+    .terminos-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        line-height: 1.6;
+    }
+
+    .terminos-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .terminos-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .fecha-actualizacion {
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .terminos-section {
+        margin-bottom: 2rem;
+    }
+
+    .terminos-section h2 {
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        color: #333;
+    }
+
+    .terminos-section h3 {
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+
+    .terminos-section h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+
+    .terminos-section ul {
+        margin-left: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .terminos-section li {
+        margin-bottom: 0.4rem;
+    }
+
+    .advertencia {
+        background: #fff9e6;
+        padding: 0.8rem;
+        border-radius: 4px;
+        border-left: 3px solid #ffc107;
+        margin: 1rem 0;
+    }
+
+    .lista-prohibiciones {
+        margin-left: 1rem;
+    }
+
+    .lista-prohibiciones li {
+        color: #c62828;
+    }
+
+    .peligro {
+        background: #ffebee;
+        padding: 1rem;
+        border-radius: 4px;
+        border-left: 3px solid #f44336;
+    }
+
+    .sancion-item {
+        background: #f5f5f5;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+    }
+
+    .peligro-alto {
+        background: #ffcdd2;
+    }
+
+    .lista-baneo li {
+        color: #b71c1c;
+        font-weight: 500;
+    }
+
+    .terminos-footer {
+        text-align: center;
+        padding: 1.5rem;
+        background: #f5f5f5;
+        border-radius: 4px;
+        margin-top: 2rem;
+    }
+
+    .botones-accion {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.2s;
+    }
+
+    .btn-primary {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-secondary {
+        background: #757575;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+        .terminos-container {
+            padding: 1rem;
+        }
+
+        .terminos-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .botones-accion {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
