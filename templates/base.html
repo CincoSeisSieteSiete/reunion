@@ -74,6 +74,14 @@
         </li>
         {% endif %}
 
+        {% if session.rol_name == 'admin' %}
+          <li class="Menu-urls">
+          <a href="/admin">
+            <img class="iconos imgs_dark" src="{{ url_for('static', filename='iconos/admin.svg') }}"> Panel administrador
+          </a>
+        </li>
+        {% endif %}
+
         {% else %}
         <li class="login"><a href="/login">Iniciar Sesión</a></li>
         <li class="register"><a href="/register">Registrarse</a></li>

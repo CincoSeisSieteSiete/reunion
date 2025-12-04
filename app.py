@@ -8,6 +8,7 @@ import os
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required, grupo_admin_required
 
 # IMPORTAR RUTAS
+from RUTAS import admin_ruta
 from RUTAS.dashboard_ruta import dashboard_rutas
 from RUTAS.grupo_ruta import ver_grupo_ruta
 from RUTAS.register_ruta import register_rutas
@@ -16,6 +17,7 @@ from RUTAS.crear_grupo_ruta import crear_grupo_rutas
 from RUTAS.unirse_grupo_ruta import unirse_grupo_rutas
 from RUTAS.cumpleanos_ruta import cumpleanos_rutas
 from RUTAS.ranking_ruta import ranking_global_rutas
+from RUTAS.editar_rol import editar_rol
 from RUTAS.configuraciones_usuarios_rutas import configuracion, configuraciones_usuarios_rutas
 from RUTAS.tema_ruta import cambiar_tema
 from RUTAS.ajustar_puntos_ruta import gestionar_puntos_ruta
@@ -23,8 +25,8 @@ from RUTAS.gestionar_medallas_ruta import gestionar_medallas_ruta
 from RUTAS.perfil_ruta import perfil_ruta
 from RUTAS.asistencia_ruta import tomar_asistencia_ruta
 from RUTAS.subir_imagen_ruta import subir_imagen_medalla_ruta
+from RUTAS.admin_ruta import admin_ruta
 from RUTAS.JWT_ruta import refresh_ruta
-
 from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token
 from flask_jwt_extended import  JWTManager, jwt_required
 import logging
@@ -164,6 +166,22 @@ def subir_imagen_medalla():
 def tomar_asistencia(grupo_id):
     return tomar_asistencia_ruta(grupo_id)
 
+#=============================================================================#
+# Admin 
+#=============================================================================#
+
+@app.route('/admin')
+@login_required
+@admin_required
+@limiter.limit("1000000 per hour")
+def admin():
+    return admin_ruta()
+
+@app.route('/editar_rol', methods=['POST'])
+@login_required
+@admin_required
+def rol():
+    return editar_rol()
 
 @app.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
@@ -172,5 +190,5 @@ def refresh():
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()
     #debug=True, host='0.0.0.0', port=5000

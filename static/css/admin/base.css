@@ -1,0 +1,182 @@
+.Info-todo{
+    display: flex;
+    margin: 0 auto;
+    width: 90%;
+    min-height: 500px;
+}
+
+.Infomacion{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 70%;
+
+}
+
+.Infomacion-2{
+    width: 30%;
+    color: var(--success-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    border-radius: 40px;
+}
+
+.cards{
+    background-color: var(--bg-card);
+    width: 45%;
+    height: 45%;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.info_card{
+    width: 90%;
+    height: 90%;
+}
+
+.head{
+    width: 100%;
+    height: 50%;
+}
+
+.head picture{
+    width: 30%;
+    height: 100%;
+}
+
+.head img{
+    width: 20%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.body_card{
+    width: 100%;
+    height: 50%;
+}
+
+.Title{
+    font-size: 30px;
+    padding-left: 15px;
+}
+
+.datos{
+    width: 100%;
+    padding-left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap:10px;
+    font-size: 40px;
+}
+
+.datos span{
+    display: flex;
+    justify-content: start;
+}
+
+.datos_des{
+    font-size: 20px;
+    color: var(--text-sec);
+}
+
+/* ===============================
+   BUSCADOR DE USUARIOS
+=============================== */
+.buscador-usuarios {
+    width: 90%;
+    margin: 25px auto 10px;
+}
+
+.buscador-usuarios input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 16px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    transition: border-color 0.2s;
+}
+
+.buscador-usuarios input:focus {
+    border-color: var(--input-focus-border);
+    outline: none;
+}
+
+/* ===============================
+   TARJETAS DE USUARIOS
+=============================== */
+.lista-usuarios {
+    width: 90%;
+    margin: 15px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.usuario-card {
+    width: 280px;
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 15px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: var(--card-shadow-light);
+}
+
+.usuario-card h4 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.usuario-card small {
+    font-size: 14px;
+    color: var(--text-sec);
+}
+
+.usuario-card form {
+    margin-top: 10px;
+}
+
+.usuario-card select {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    background-color: var(--input-bg);
+    border: 2px solid var(--border);
+    color: var(--input-text);
+    cursor: pointer;
+}
+
+.usuario-card button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--success-bg);
+    border-radius: var(--radius);
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    color: var(--success-text);
+    transition: 0.2s;
+}
+
+.usuario-card button:hover {
+    background-color: var(--success-bg);
+    opacity: 0.85;
+}

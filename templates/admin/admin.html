@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="/static/css/admin/base.css">
+{% if session.get('tema', 0) == 0 %}
+<link rel="stylesheet" href="/static/css/light/light.css">
+{% else %}
+<link rel="stylesheet" href="/static/css/dark/dark.css">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<section class="Info-todo">
+
+    <section class="Infomacion">
+        <!-- Total de Usuarios -->
+        <div class="cards">
+            <div class="info_card">
+                <div class="head">
+                    <picture><img class="imgs_dark" src="/static/iconos/users.svg" alt=""></picture>
+                </div>
+                <div class="body_card">
+                    <span class="Title">Total De Usuarios</span>
+                    <div class="datos">
+                        <span id="User">0</span>
+                        <span class="datos_des">Usuarios</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Grupos -->
+        <div class="cards">
+            <div class="info_card">
+                <div class="head">
+                    <picture><img class="imgs_dark" src="/static/iconos/admin.svg" alt=""></picture>
+                </div>
+                <div class="body_card">
+                    <span class="Title">Total Grupo Creados</span>
+                    <div class="datos">
+                        <span id="Grupo">0</span>
+                        <span class="datos_des">Grupos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Líderes -->
+        <div class="cards">
+            <div class="info_card">
+                <div class="head">
+                    <picture><img class="imgs_dark" src="/static/iconos/lider.svg" alt=""></picture>
+                </div>
+                <div class="body_card">
+                    <span class="Title">Total De Lideres</span>
+                    <div class="datos">
+                        <span id="Lideres">{{ lideres_count }}</span>
+                        <span class="datos_des">Lideres</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total extra (ejemplo) -->
+        <div class="cards">
+            <div class="info_card">
+                <div class="head">
+                    <picture><img class="imgs_dark" src="/static/iconos/admin.svg" alt=""></picture>
+                </div>
+                <div class="body_card">
+                    <span class="Title">Total</span>
+                    <div class="datos">
+                        <span>{{ data }}</span>
+                        <span class="datos_des">Usuarios</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> 
+
+</section>
+
+<section>
+    <!-- Buscador -->
+    <div class="buscador-usuarios">
+        <input type="text" id="buscador" placeholder="Buscar usuario por nombre...">
+    </div>
+
+    <!-- Lista de usuarios -->
+    <div class="lista-usuarios" id="listaUsuarios">
+        {% for u in usuarios %}
+        <div class="usuario-card" data-nombre="{{ u.nombre | lower }}">
+            <h4>{{ u.nombre }}</h4>
+            <small>Rol actual: {{ u.rol_nombre or 'Sin rol' }}</small>
+
+            <form action="/editar_rol" method="POST">
+                <input type="hidden" name="user_id" value="{{ u.id }}">
+                <select name="rol_id" required>
+                    {% for r in roles %}
+                        <option value="{{ r.id }}" {% if r.id == u.rol_id %}selected{% endif %}>
+                            {{ r.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    // Buscador de usuarios
+    document.getElementById("buscador").addEventListener("input", function() {
+        const filtro = this.value.toLowerCase();
+        const cards = document.querySelectorAll(".usuario-card");
+        cards.forEach(c => {
+            const nombre = c.getAttribute("data-nombre");
+            c.style.display = nombre.includes(filtro) ? "block" : "none";
+        });
+    });
+
+    // Animación de contadores
+    function animarContador(elemento, final, duracion) {
+        let inicio = 0;
+        let incremento = final / (duracion / 50);
+        let intervalo = setInterval(() => {
+            inicio += incremento;
+            if (inicio >= final) {
+                inicio = final;
+                clearInterval(intervalo);
+            }
+            elemento.textContent = Math.floor(inicio);
+        }, 50);
+    }
+
+    const user = document.getElementById("User");
+    const grupo = document.getElementById("Grupo");
+    const lideres = document.getElementById("Lideres");
+
+    animarContador(user, {{ data }}, 2000);
+    animarContador(grupo, {{ group_count }}, 2000);
+    animarContador(lideres, {{ lideres_count }}, 2000);
+</script>
+
+{% endblock %}
