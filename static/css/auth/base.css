@@ -145,6 +145,48 @@
     opacity: 0.6;
 }
 
+/* OAuth buttons */
+.oauth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.oauth-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border: 1px solid var(--border-light);
+}
+
+.oauth-btn .oauth-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+/* Google button styles removed */
+
+.oauth-btn.facebook {
+    background: #1877f2;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(24,119,242,0.12);
+}
+
+.oauth-btn.facebook:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(24,119,242,0.14);
+}
+
+.oauth-btn.facebook .oauth-icon path { fill: #fff; }
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-container {

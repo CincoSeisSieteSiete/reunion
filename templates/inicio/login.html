@@ -31,6 +31,18 @@
       <button type="submit" class="auth-submit">Iniciar Sesión</button>
     </form>
 
+    
+
+
+    <div style="text-align:center; margin:10px 0;">
+      <a href="/login/facebook" class="oauth-btn facebook" title="Iniciar sesión con Facebook">
+        <svg class="oauth-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#ffffff" d="M22 12a10 10 0 1 0-11.5 9.9v-7H8.9v-3h2.6V9.1c0-2.6 1.5-4 3.8-4 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 3h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+        <span>Iniciar sesión con Facebook</span>
+      </a>
+    </div>
+
+    <!-- Google login button removed -->
+
     <div class="auth-footer">
       <p>¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
     </div>
@@ -55,5 +67,54 @@
     delay: anime.stagger(100, { start: 300 }),
     easing: 'easeOutCubic'
   });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '{{ FACEBOOK_CLIENT_ID }}',
+      cookie     : true,
+      xfbml      : true,
+      version    : '{{ FACEBOOK_API_VERSION }}'
+    });
+    FB.AppEvents && FB.AppEvents.logPageView && FB.AppEvents.logPageView();
+
+    // Check initial status
+    FB.getLoginStatus(function(response) {
+      // Call the user's status change callback
+      if (typeof statusChangeCallback === 'function') statusChangeCallback(response);
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  // Example statusChangeCallback: customize to send token to your server
+  function statusChangeCallback(response) {
+    console.log('FB status', response);
+    if (response.status === 'connected') {
+      // User logged into Facebook and authorized the app
+      // response.authResponse.accessToken contains the short-lived token
+      // TODO: send this token to your server to validate/create session
+      // Example (unimplemented endpoint):
+      // fetch('/auth/facebook/js', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({access_token: response.authResponse.accessToken}) })
+      //   .then(r=>r.json()).then(data=>{ if(data.ok) window.location='/dashboard'; });
+    } else {
+      // Not authorized or not logged in
+    }
+  }
 </script>
 {% endblock %}
