@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 import requests
+from werkzeug.middleware.proxy_fix import ProxyFix
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required, grupo_admin_required
 
 # IMPORTAR RUTAS
@@ -31,7 +32,6 @@ from RUTAS.admin_ruta import admin_ruta
 from RUTAS.JWT_ruta import refresh_ruta
 from JWT.JWT import verificar_y_renovar_token, eliminar_token, crear_access_token, crear_refresh_token
 from authlib.integrations.flask_client import OAuth
-import CONFIGURACION.config as app_config
 from flask_jwt_extended import  JWTManager, jwt_required
 import logging
 
@@ -39,6 +39,11 @@ app = Flask(__name__)
 
 # Load environment variables from .env if present
 load_dotenv()
+# Force OAuthlib to require secure transport (HTTPS)
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
+
+# Correct proxy headers when running behind PythonAnywhere / reverse proxies
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 app.register_blueprint(configuraciones_usuarios_rutas)
 app.secret_key = 'una_clave_secreta_larga_y_unica' # ¡CRUCIAL!
@@ -143,21 +148,19 @@ def auth_facebook_callback():
     token = None
     try:
         token = oauth.facebook.authorize_access_token()
-    except Exception:
-        token = None
-    if not token:
-        flash('No se pudo autenticar con Facebook.', 'danger')
+    except Exception as e:
+        logging.exception('Error obtaining Facebook access token')
+        flash('No se pudo autenticar con Facebook (error en el servidor).', 'danger')
         return redirect(url_for('login'))
 
     # Obtener perfil
     try:
         resp = oauth.facebook.get('me?fields=id,name,email,picture')
+        resp.raise_for_status()
         userinfo = resp.json()
-    except Exception:
-        userinfo = None
-
-    if not userinfo or not userinfo.get('email'):
-        flash('No se pudieron obtener datos del perfil de Facebook.', 'danger')
+    except Exception as e:
+        logging.exception('Error fetching Facebook profile')
+        flash('No se pudieron obtener datos del perfil de Facebook (error en servidor).', 'danger')
         return redirect(url_for('login'))
 
     from QUERYS.queryLogin import get_usuario
