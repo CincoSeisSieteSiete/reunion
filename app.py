@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash
 import secrets
 from datetime import datetime, timedelta
 import os
+from dotenv import load_dotenv
+import requests
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required, grupo_admin_required
 
 # IMPORTAR RUTAS
@@ -34,6 +36,9 @@ from flask_jwt_extended import  JWTManager, jwt_required
 import logging
 
 app = Flask(__name__)
+
+# Load environment variables from .env if present
+load_dotenv()
 
 app.register_blueprint(configuraciones_usuarios_rutas)
 app.secret_key = 'una_clave_secreta_larga_y_unica' # ¡CRUCIAL!
@@ -80,6 +85,8 @@ if app_config.FACEBOOK_CLIENT_ID and app_config.FACEBOOK_CLIENT_SECRET:
         api_base_url=f'https://graph.facebook.com/{fb_version}/',
         client_kwargs={'scope': 'email public_profile'}
     )
+else:
+    logging.warning('Facebook OAuth not configured: FACEBOOK_CLIENT_ID or FACEBOOK_CLIENT_SECRET is missing.')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -188,6 +195,93 @@ def auth_facebook_callback():
     return respuesta
 
 
+@app.route('/auth/facebook/js', methods=['POST'])
+def auth_facebook_js():
+    # Accepts JSON: { "access_token": "<fb_token>" }
+    data = request.get_json(silent=True) or {}
+    fb_token = data.get('access_token')
+    if not fb_token:
+        return jsonify({'ok': False, 'error': 'access_token missing'}), 400
+
+    if not app_config.FACEBOOK_CLIENT_ID or not app_config.FACEBOOK_CLIENT_SECRET:
+        return jsonify({'ok': False, 'error': 'Facebook OAuth not configured on server'}), 500
+
+    # Verify token using app access token
+    app_token = f"{app_config.FACEBOOK_CLIENT_ID}|{app_config.FACEBOOK_CLIENT_SECRET}"
+    try:
+        dbg = requests.get('https://graph.facebook.com/debug_token', params={
+            'input_token': fb_token,
+            'access_token': app_token
+        }, timeout=8)
+        dbg.raise_for_status()
+        dbgj = dbg.json()
+    except Exception as e:
+        logging.exception('Error verifying FB token')
+        return jsonify({'ok': False, 'error': 'token_verification_failed'}), 400
+
+    data_dbg = dbgj.get('data') or {}
+    if not data_dbg.get('is_valid'):
+        return jsonify({'ok': False, 'error': 'invalid_token'}), 400
+
+    fb_user_id = data_dbg.get('user_id')
+    if not fb_user_id:
+        return jsonify({'ok': False, 'error': 'no_user_id'}), 400
+
+    # Fetch profile using the user's token
+    try:
+        prof = requests.get(f'https://graph.facebook.com/{fb_user_id}', params={
+            'fields': 'id,name,email,picture',
+            'access_token': fb_token
+        }, timeout=8)
+        prof.raise_for_status()
+        userinfo = prof.json()
+    except Exception:
+        logging.exception('Error fetching FB profile')
+        return jsonify({'ok': False, 'error': 'profile_fetch_failed'}), 400
+
+    email = userinfo.get('email')
+    nombre = userinfo.get('name') or (email.split('@')[0] if email else f'fb_{fb_user_id}')
+    if not email:
+        return jsonify({'ok': False, 'error': 'email_not_provided'}), 400
+
+    # Create or get user
+    from QUERYS.queryLogin import get_usuario
+    from QUERYS.querysRegistro import create_user
+    from MODELS.Usuario import Usuario
+
+    user = get_usuario(email)
+    if not user:
+        random_pw = secrets.token_urlsafe(16)
+        nuevo = Usuario(nombre=nombre, email=email, password=random_pw)
+        created = create_user(nuevo)
+        if not created:
+            return jsonify({'ok': False, 'error': 'user_creation_failed'}), 500
+        user = get_usuario(email)
+
+    # Set session and JWT cookies (same as callback)
+    try:
+        from RUTAS.login_ruta import get_rol_name
+        nombre_rol = get_rol_name(user.rol_id)
+    except Exception:
+        nombre_rol = None
+
+    session.permanent = True
+    session['logged'] = True
+    session['user_id'] = user.id
+    session['user_name'] = user.nombre
+    session['tema'] = 1 if user.tema == b'\x01' else 0
+    session['rol_id'] = str(user.rol_id)
+    session['rol_name'] = nombre_rol
+
+    access_token = crear_access_token(user.id)
+    refresh_token = crear_refresh_token(user.id)
+
+    respuesta = make_response(jsonify({'ok': True, 'redirect': url_for('dashboard')}))
+    respuesta.set_cookie('access_token', access_token, max_age=2592000, httponly=True, samesite='Lax')
+    respuesta.set_cookie('refresh_token', refresh_token, max_age=2592000, httponly=True, samesite='Lax')
+    return respuesta
+
+
 @app.route('/logout')
 @eliminar_token
 def logout():
@@ -291,5 +385,5 @@ def refresh():
 
 if __name__ == '__main__':
     # Ejecutar aplicación
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()
     #debug=True, host='0.0.0.0', port=5000
