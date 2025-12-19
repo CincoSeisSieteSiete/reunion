@@ -128,6 +128,16 @@ def login_facebook():
     return oauth.facebook.authorize_redirect(redirect_uri)
 
 
+@app.route('/debug/facebook_redirect_uri')
+def debug_facebook_redirect_uri():
+    # Returns the exact redirect URI used by the app so you can add it to Facebook app settings
+    try:
+        uri = url_for('auth_facebook_callback', _external=True)
+    except Exception:
+        uri = '/auth/facebook/callback'
+    return jsonify({'redirect_uri': uri})
+
+
 @app.route('/auth/facebook/callback')
 def auth_facebook_callback():
     token = None
