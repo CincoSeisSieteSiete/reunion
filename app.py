@@ -39,8 +39,19 @@ app = Flask(__name__)
 
 # Load environment variables from .env if present
 load_dotenv()
-# Force OAuthlib to require secure transport (HTTPS)
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
+# Configure OAuthlib transport security:
+# - Respect explicit OAUTHLIB_INSECURE_TRANSPORT env var if set
+# - Otherwise allow insecure transport in development via FLASK_ENV/FLASK_DEBUG or ALLOW_INSECURE_OAUTH
+insecure_env = os.environ.get('OAUTHLIB_INSECURE_TRANSPORT')
+if insecure_env is not None:
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = insecure_env
+else:
+    allow_dev = os.environ.get('ALLOW_INSECURE_OAUTH', '').lower() in ('1', 'true', 'yes')
+    flask_env_dev = os.environ.get('FLASK_ENV') == 'development' or os.environ.get('FLASK_DEBUG') == '1'
+    if allow_dev or flask_env_dev:
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    else:
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
 
 # Correct proxy headers when running behind PythonAnywhere / reverse proxies
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
