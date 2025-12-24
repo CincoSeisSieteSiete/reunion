@@ -48,10 +48,7 @@ if insecure_env is not None:
 else:
     allow_dev = os.environ.get('ALLOW_INSECURE_OAUTH', '').lower() in ('1', 'true', 'yes')
     flask_env_dev = os.environ.get('FLASK_ENV') == 'development' or os.environ.get('FLASK_DEBUG') == '1'
-    if allow_dev or flask_env_dev:
-        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    else:
-        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Correct proxy headers when running behind PythonAnywhere / reverse proxies
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
