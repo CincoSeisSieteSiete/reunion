@@ -392,7 +392,7 @@ def tomar_asistencia(grupo_id):
 @app.route('/admin')
 @login_required
 @admin_required
-@limiter.limit("1000000 per hour")
+@limiter.limit("1000 per hour")
 def admin():
     return admin_ruta()
 

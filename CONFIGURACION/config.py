@@ -13,6 +13,8 @@ data ={
   "cursorclass": "DictCursor"
 }
 
+
+
 # Configuración para despliegue en PythonAnywhere
 data ={
   "host": "nioyfp.mysql.pythonanywhere-services.com",
@@ -32,12 +34,14 @@ FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET', '5a337946a812c
 FACEBOOK_API_VERSION = os.environ.get('FACEBOOK_API_VERSION', 'v15.0')
 
 
+
+
 # Configuración para despliegue en PythonAnywhere
 data ={
-  "host": "nioyfp.mysql.pythonanywhere-services.com",
-  "user": "nioyfp",
-  "password": "Jz@#589&<python>",
-  "database": "nioyfp$asistencias_db",
+  "host": "gateway01.us-east-1.prod.aws.tidbcloud.com",
+  "user": "4NBkpwSmH2QCvPX.root",
+  "password": "n1Lvs10IuirXA1oi",
+  "database": "asistencias_db",
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }

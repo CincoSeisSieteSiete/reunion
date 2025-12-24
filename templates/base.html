@@ -154,9 +154,11 @@
 
   <!-- Scripts -->
   <script src="https://unpkg.com/@barba/core"></script>
+  <script src="https://unpkg.com/lenis@1.3.16/dist/lenis.min.js"></script> 
   <script src="{{ url_for('static', filename='js/barba.js')}}"></script>
   <script src="{{ url_for('static', filename='js/menu.js')}}"></script>
   <script src="{{ url_for('static', filename='js/toast.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/lenis.js')}}"></script>
 
   <!-- Flask Messages for Toast -->
   {% with messages = get_flashed_messages(with_categories=true) %}
