@@ -13,7 +13,7 @@ data ={
   "cursorclass": "DictCursor"
 }
 
-
+"""
 
 # Configuración para despliegue en PythonAnywhere
 data ={
@@ -24,7 +24,7 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-"""
+
 
 # Facebook OAuth settings (set via environment variables)
 # PowerShell example:
@@ -36,13 +36,4 @@ FACEBOOK_API_VERSION = os.environ.get('FACEBOOK_API_VERSION', 'v15.0')
 
 
 
-# Configuración para despliegue en PythonAnywhere
-data ={
-  "host": "gateway01.us-east-1.prod.aws.tidbcloud.com",
-  "user": "4NBkpwSmH2QCvPX.root",
-  "password": "n1Lvs10IuirXA1oi",
-  "database": "asistencias_db",
-  "charset": "utf8mb4",
-  "cursorclass": "DictCursor"
-}
 
