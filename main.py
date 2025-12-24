@@ -54,7 +54,7 @@ else:
         os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '0'
 
 # Correct proxy headers when running behind PythonAnywhere / reverse proxies
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 app.register_blueprint(configuraciones_usuarios_rutas)
 app.secret_key = 'una_clave_secreta_larga_y_unica' # ¡CRUCIAL!
