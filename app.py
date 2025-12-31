@@ -223,6 +223,6 @@ def refresh():
     return refresh_ruta()
 
 if __name__ == '__main__':
-    # Ejecutar aplicación
+    # Ejecutar aplicación d
     app.run()
     #debug=True, host='0.0.0.0', port=5000
