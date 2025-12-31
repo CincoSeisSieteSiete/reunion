@@ -24,7 +24,7 @@
             <form method="POST">
                 <div class="form-group">
                     <label for="codigo" class="form-label">Código de Invitación</label>
-                    <input type="text" class="form-input" id="codigo" name="codigo" placeholder="INGRESA EL CÓDIGO"
+                    <input type="text" class="form-input" id="codigo" name="codigo" placeholder="INGRESA EL CÓDIGO" value="{{ request.args.get('codigo', '') }}"
                         required autocomplete="off">
                     <p class="form-help">Solicita el código al administrador del grupo, No usar espacios ni caracteres
                         especiales.</p>

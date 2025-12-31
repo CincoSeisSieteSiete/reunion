@@ -10,6 +10,7 @@ import requests
 from werkzeug.middleware.proxy_fix import ProxyFix
 from FUNCIONES.Decoradores import login_required, admin_required, lideres_required, grupo_admin_required
 
+
 # IMPORTAR RUTAS
 from RUTAS import admin_ruta
 from RUTAS.dashboard_ruta import dashboard_rutas
@@ -61,7 +62,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 30
 limiter = Limiter(
     app=app,
     key_func=get_remote_address, # Usa la IP para la limitación
-    default_limits=["200 per day", "50 per hour"] # Límites predeterminados
+    default_limits=["200 per day", "150 per hour"] # Límites predeterminados
 )
 
 app.config['JWT_SECRET_KEY'] = 'jsabebJSKAEAVKHA1U3Y6HSHA'
@@ -89,26 +90,6 @@ app_config.FACEBOOK_CLIENT_ID = getattr(app_config, 'FACEBOOK_CLIENT_ID', os.env
 app_config.FACEBOOK_CLIENT_SECRET = getattr(app_config, 'FACEBOOK_CLIENT_SECRET', os.environ.get('FACEBOOK_CLIENT_SECRET'))
 app_config.FACEBOOK_API_VERSION = getattr(app_config, 'FACEBOOK_API_VERSION', os.environ.get('FACEBOOK_API_VERSION', 'v15.0'))
 
-app.jinja_env.globals.update(FACEBOOK_CLIENT_ID=app_config.FACEBOOK_CLIENT_ID, FACEBOOK_API_VERSION=app_config.FACEBOOK_API_VERSION)
-
-# -------------------
-# OAuth / Facebook
-# -------------------
-oauth = OAuth(app)
-if app_config.FACEBOOK_CLIENT_ID and app_config.FACEBOOK_CLIENT_SECRET:
-    fb_version = app_config.FACEBOOK_API_VERSION or 'v15.0'
-    oauth.register(
-        name='facebook',
-        client_id=app_config.FACEBOOK_CLIENT_ID,
-        client_secret=app_config.FACEBOOK_CLIENT_SECRET,
-        authorize_url=f'https://www.facebook.com/{fb_version}/dialog/oauth',
-        access_token_url=f'https://graph.facebook.com/{fb_version}/oauth/access_token',
-        api_base_url=f'https://graph.facebook.com/{fb_version}/',
-        client_kwargs={'scope': 'email public_profile'}
-    )
-else:
-    logging.warning('Facebook OAuth not configured: FACEBOOK_CLIENT_ID or FACEBOOK_CLIENT_SECRET is missing.')
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -130,185 +111,14 @@ def cambiar_tema_view():
     return redirect('/configuracion')
 
 @app.route('/register', methods=['GET', 'POST'])
-@limiter.limit("10 per hour")
+@limiter.limit("0 5per hour")
 def register():
     return register_rutas()
 
-@limiter.limit("10 per hour")
+@limiter.limit("50 per hour")
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return login_rutas()
-
-
-@app.route('/login/facebook')
-def login_facebook():
-    if not app_config.FACEBOOK_CLIENT_ID or not app_config.FACEBOOK_CLIENT_SECRET:
-        flash('Facebook OAuth no está configurado en el servidor.', 'danger')
-        return redirect(url_for('login'))
-    redirect_uri = url_for('auth_facebook_callback', _external=True)
-    return oauth.facebook.authorize_redirect(redirect_uri)
-
-
-@app.route('/debug/facebook_redirect_uri')
-def debug_facebook_redirect_uri():
-    # Returns the exact redirect URI used by the app so you can add it to Facebook app settings
-    try:
-        uri = url_for('auth_facebook_callback', _external=True)
-    except Exception:
-        uri = '/auth/facebook/callback'
-    return jsonify({'redirect_uri': uri})
-
-
-@app.route('/auth/facebook/callback')
-def auth_facebook_callback():
-    token = None
-    try:
-        token = oauth.facebook.authorize_access_token()
-    except Exception as e:
-        logging.exception('Error obtaining Facebook access token')
-        flash('No se pudo autenticar con Facebook (error en el servidor).', 'danger')
-        return redirect(url_for('login'))
-
-    # Obtener perfil
-    try:
-        resp = oauth.facebook.get('me?fields=id,name,email,picture')
-        resp.raise_for_status()
-        userinfo = resp.json()
-    except Exception as e:
-        logging.exception('Error fetching Facebook profile')
-        flash('No se pudieron obtener datos del perfil de Facebook (error en servidor).', 'danger')
-        return redirect(url_for('login'))
-
-    from QUERYS.queryLogin import get_usuario
-    from QUERYS.querysRegistro import create_user
-    from MODELS.Usuario import Usuario
-    from JWT.JWT import crear_access_token, crear_refresh_token
-
-    email = userinfo.get('email')
-    nombre = userinfo.get('name') or email.split('@')[0]
-
-    user = get_usuario(email)
-    if not user:
-        import secrets
-        random_pw = secrets.token_urlsafe(16)
-        nuevo = Usuario(nombre=nombre, email=email, password=random_pw)
-        created = create_user(nuevo)
-        if not created:
-            flash('No se pudo crear el usuario a partir de Facebook.', 'danger')
-            return redirect(url_for('login'))
-        user = get_usuario(email)
-
-    # Iniciar sesión
-    nombre_rol = None
-    try:
-        from RUTAS.login_ruta import get_rol_name
-        nombre_rol = get_rol_name(user.rol_id)
-    except Exception:
-        nombre_rol = None
-
-    session.permanent = True
-    session['logged'] = True
-    session['user_id'] = user.id
-    session['user_name'] = user.nombre
-    session['tema'] = 1 if user.tema == b'\x01' else 0
-    session['rol_id'] = str(user.rol_id)
-    session['rol_name'] = nombre_rol
-
-    access_token = crear_access_token(user.id)
-    refresh_token = crear_refresh_token(user.id)
-
-    respuesta = make_response(redirect(url_for('dashboard')))
-    respuesta.set_cookie('access_token', access_token, max_age=2592000, httponly=True, samesite='Lax')
-    respuesta.set_cookie('refresh_token', refresh_token, max_age=2592000, httponly=True, samesite='Lax')
-    flash(f'Bienvenido, {user.nombre}! (Facebook)', 'success')
-    return respuesta
-
-
-@app.route('/auth/facebook/js', methods=['POST'])
-def auth_facebook_js():
-    # Accepts JSON: { "access_token": "<fb_token>" }
-    data = request.get_json(silent=True) or {}
-    fb_token = data.get('access_token')
-    if not fb_token:
-        return jsonify({'ok': False, 'error': 'access_token missing'}), 400
-
-    if not app_config.FACEBOOK_CLIENT_ID or not app_config.FACEBOOK_CLIENT_SECRET:
-        return jsonify({'ok': False, 'error': 'Facebook OAuth not configured on server'}), 500
-
-    # Verify token using app access token
-    app_token = f"{app_config.FACEBOOK_CLIENT_ID}|{app_config.FACEBOOK_CLIENT_SECRET}"
-    try:
-        dbg = requests.get('https://graph.facebook.com/debug_token', params={
-            'input_token': fb_token,
-            'access_token': app_token
-        }, timeout=8)
-        dbg.raise_for_status()
-        dbgj = dbg.json()
-    except Exception as e:
-        logging.exception('Error verifying FB token')
-        return jsonify({'ok': False, 'error': 'token_verification_failed'}), 400
-
-    data_dbg = dbgj.get('data') or {}
-    if not data_dbg.get('is_valid'):
-        return jsonify({'ok': False, 'error': 'invalid_token'}), 400
-
-    fb_user_id = data_dbg.get('user_id')
-    if not fb_user_id:
-        return jsonify({'ok': False, 'error': 'no_user_id'}), 400
-
-    # Fetch profile using the user's token
-    try:
-        prof = requests.get(f'https://graph.facebook.com/{fb_user_id}', params={
-            'fields': 'id,name,email,picture',
-            'access_token': fb_token
-        }, timeout=8)
-        prof.raise_for_status()
-        userinfo = prof.json()
-    except Exception:
-        logging.exception('Error fetching FB profile')
-        return jsonify({'ok': False, 'error': 'profile_fetch_failed'}), 400
-
-    email = userinfo.get('email')
-    nombre = userinfo.get('name') or (email.split('@')[0] if email else f'fb_{fb_user_id}')
-    if not email:
-        return jsonify({'ok': False, 'error': 'email_not_provided'}), 400
-
-    # Create or get user
-    from QUERYS.queryLogin import get_usuario
-    from QUERYS.querysRegistro import create_user
-    from MODELS.Usuario import Usuario
-
-    user = get_usuario(email)
-    if not user:
-        random_pw = secrets.token_urlsafe(16)
-        nuevo = Usuario(nombre=nombre, email=email, password=random_pw)
-        created = create_user(nuevo)
-        if not created:
-            return jsonify({'ok': False, 'error': 'user_creation_failed'}), 500
-        user = get_usuario(email)
-
-    # Set session and JWT cookies (same as callback)
-    try:
-        from RUTAS.login_ruta import get_rol_name
-        nombre_rol = get_rol_name(user.rol_id)
-    except Exception:
-        nombre_rol = None
-
-    session.permanent = True
-    session['logged'] = True
-    session['user_id'] = user.id
-    session['user_name'] = user.nombre
-    session['tema'] = 1 if user.tema == b'\x01' else 0
-    session['rol_id'] = str(user.rol_id)
-    session['rol_name'] = nombre_rol
-
-    access_token = crear_access_token(user.id)
-    refresh_token = crear_refresh_token(user.id)
-
-    respuesta = make_response(jsonify({'ok': True, 'redirect': url_for('dashboard')}))
-    respuesta.set_cookie('access_token', access_token, max_age=2592000, httponly=True, samesite='Lax')
-    respuesta.set_cookie('refresh_token', refresh_token, max_age=2592000, httponly=True, samesite='Lax')
-    return respuesta
 
 
 @app.route('/logout')
@@ -341,7 +151,7 @@ def crear_grupo():
 
 
 @app.route('/unirse_grupo', methods=['GET', 'POST'])
-@limiter.limit("10 per day")
+@limiter.limit("50 per day")
 @login_required
 @verificar_y_renovar_token
 def unirse_grupo():
@@ -413,6 +223,6 @@ def refresh():
     return refresh_ruta()
 
 if __name__ == '__main__':
-    # Ejecutar aplicación
+    # Ejecutar aplicación d
     app.run()
     #debug=True, host='0.0.0.0', port=5000

@@ -20,9 +20,20 @@
         </a>
     </div>
     <header class="min-profile-header">
-        <div class="min-avatar">
+        {% if user.genero_id|string == '1' %}
+        <div class="min-avatar" style="background-color: blue;">
             {{ user.nombre[0] | upper }}
         </div>
+        {% elif user.genero_id|string == '2' %}
+            <div class="min-avatar" style="background-color: rgb(252, 124, 146);">
+                {{ user.nombre[0] | upper }}
+            </div>
+        {% else %}
+            <div class="min-avatar">
+                {{ user.nombre[0] | upper }}
+            </div>
+        {% endif %}
+
         <h1 class="min-name">{{ user.nombre }}</h1>
         <p class="min-email">{{ user.email }}</p>
 

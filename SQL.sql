@@ -15,6 +15,16 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================
+-- TABLA: Generos M y F
+-- =========================
+
+CREATE TABLE `generos`(
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `nombre` varchar(50) NOT NULL,
+  UNIQUE KEY `nombre` (`nombre`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =========================
 -- TABLA: usuarios
 -- =========================
 CREATE TABLE `usuarios` (
@@ -26,6 +36,7 @@ CREATE TABLE `usuarios` (
   `puntos` int(11) DEFAULT 0,
   `racha` int(11) DEFAULT 0,
   `tema` bit(1) DEFAULT 0,
+  `genero_id` varchar(1),
   `fecha_registro` datetime DEFAULT current_timestamp(),
   `rol_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -33,7 +44,10 @@ CREATE TABLE `usuarios` (
   KEY `idx_email` (`email`),
   KEY `idx_puntos` (`puntos`),
   KEY `fk_rol` (`rol_id`),
-  CONSTRAINT `fk_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`)
+  KEY `fk_genero` (`genero_id`),
+  CONSTRAINT `fk_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`),
+  CONSTRAINT `fk_genero` FOREIGN KEY (`genero_id`) REFERENCES `generos` (`id`),
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================

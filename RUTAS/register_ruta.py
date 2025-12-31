@@ -10,10 +10,11 @@ def register_rutas():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         email = request.form.get('email')
+        genero = request.form.get('genero_id')
         password = request.form.get('password')
         fecha_nacimiento = request.form.get('fecha_nacimiento')
 
-        if not nombre or not email or not password or not fecha_nacimiento:
+        if not nombre or not email or not password or not fecha_nacimiento or not genero:
             flash('Todos los campos son obligatorios', 'danger')
             return redirect(url_for('register'))
 
@@ -28,8 +29,8 @@ def register_rutas():
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO usuarios (nombre, email, password, fecha_nacimiento, rol_id) VALUES (%s, %s, %s, %s, %s)",
-                    (nombre, email, hashed_password, fecha_nacimiento, rol_id)
+                    "INSERT INTO usuarios (nombre, email, password, genero_id, fecha_nacimiento, rol_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (nombre, email, hashed_password, genero, fecha_nacimiento, rol_id)
                 )
                 connection.commit()
 

@@ -14,7 +14,6 @@ data ={
 }
 
 """
-
 # Configuración para despliegue en PythonAnywhere
 data ={
   "host": "nioyfp.mysql.pythonanywhere-services.com",
@@ -24,15 +23,6 @@ data ={
   "charset": "utf8mb4",
   "cursorclass": "DictCursor"
 }
-
-
-# Facebook OAuth settings (set via environment variables)
-# PowerShell example:
-# $env:FACEBOOK_CLIENT_ID='your-id'; $env:FACEBOOK_CLIENT_SECRET='your-secret'
-FACEBOOK_CLIENT_ID = os.environ.get('FACEBOOK_CLIENT_ID', '881029631032282')
-FACEBOOK_CLIENT_SECRET = os.environ.get('FACEBOOK_CLIENT_SECRET', '5a337946a812c8ce7eb1e5821917f356')
-FACEBOOK_API_VERSION = os.environ.get('FACEBOOK_API_VERSION', 'v15.0')
-
 
 
 
