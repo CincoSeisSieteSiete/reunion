@@ -33,11 +33,12 @@
                             {{ grupo.total_miembros }} miembros</span>
                     </div>
                     <p class="group-description">{{ grupo.descripcion or 'Sin descripción' }}</p>
-                    <div class="group-actions">
+                    <div class="group-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <a href="{{ url_for('ver_grupo', grupo_id=grupo.id) }}" class="btn-primary">
                             <span>Ver Grupo</span>
                             <span class="btn-arrow">→</span>
                         </a>
+    
                     </div>
                 </div>
             </div>
@@ -45,9 +46,9 @@
         </div>
         {% else %}
         <div class="empty-state">
-            <div class="empty-icon">👥</div>
             <p class="empty-text">No estás en ningún grupo</p>
             <p class="empty-subtext">Únete o crea un grupo para comenzar</p>
+            <p  class="texss">Si deseas crear un grupo, contáctanos para solicitar el rango de líder.</p>
             <div class="empty-actions">
                 {% if session.user_rol == 'admin' %}
                 <a href="{{ url_for('crear_grupo') }}" class="btn-primary">

@@ -13,7 +13,7 @@
 
 {% block content %}
 
-<div class="auth-container">
+<div class="auth-container registerAu">
   <div class="auth-card">
     <form method="POST">
       <div class="auth-form-group">
@@ -32,6 +32,16 @@
         <label for="password" class="auth-label">Contraseña</label>
         <input type="password" class="auth-input" id="password" name="password" minlength="8" required>
         <p class="Ejm">Mínimo 8 caracteres</p>
+      </div>
+
+      <div class="auth-form-group">
+        <label for="genero_id" class="auth-label">Género</label>
+        <select class="auth-input" id="genero_id" name="genero_id" required>
+          <option value="" disabled selected>Selecciona tu género</option>
+          <option value="1">Masculino</option>
+          <option value="2">Femenino</option>
+        </select>
+        <p class="Ejm">Selecciona una opción de la lista</p>
       </div>
 
       <div class="auth-form-group">

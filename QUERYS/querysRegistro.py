@@ -37,23 +37,35 @@ def create_user(usuario: Usuario) -> bool:
     connection = get_connection()
     try:
         with connection.cursor() as cursor:
+            # Aseguramos que el SQL incluya genero_id
             sql = """
-                INSERT INTO usuarios (nombre, email, password, fecha_nacimiento, rol_id)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO usuarios (nombre, email, password, genero_id, fecha_nacimiento, rol_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
             """
+            
             hashed_password = generate_password_hash(usuario.password)
+            
+            # Formateamos la fecha si existe
+            fecha_nac = usuario.fecha_nacimiento.strftime("%Y-%m-%d") if usuario.fecha_nacimiento else None
+            
+            # Importante: Asegúrate de que genero_id sea un int o None
+            genero = int(usuario.genero_id) if usuario.genero_id else None
+            
             data = (
                 usuario.nombre,
                 usuario.email,
                 hashed_password,
-                usuario.fecha_nacimiento.strftime("%Y-%m-%d") if usuario.fecha_nacimiento else None,
+                genero, 
+                fecha_nac,
                 usuario.rol_id or get_default_role_id()
             )
-            print("Insertando usuario con datos:", data)
+            
+            print(f"Insertando usuario: {usuario.email} con Género ID: {genero}")
+            
             cursor.execute(sql, data)
             connection.commit()
-            print("Usuario registrado correctamente")
             return True
+            
     except Exception as e:
         print(f"Error creando usuario: {e}")
         connection.rollback()

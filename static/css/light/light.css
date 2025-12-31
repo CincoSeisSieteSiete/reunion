@@ -24,10 +24,10 @@
   --input-border: #d1d5db;    /* Borde input */
 
   /* ====== BUTTONS ====== */
-  --btn-bg: #1976d2;          /* Azul */
-  --btn-text: #ffffff;        /* Blanco texto */
-  --btn-border: #1976d2;      /* Borde azul */
-  --btn-hover-bg: #1565c0;    /* Azul oscuro hover */
+  --btn-bg: #ffffff;          /* Azul */
+  --btn-text: #000000;        /* Blanco texto */
+  --btn-border: #6d6d6d;      /* Borde azul */
+  --btn-hover-bg: #000000;    /* Azul oscuro hover */
   --btn-hover-text: #ffffff;
   --btn-success-bg: #388e3c;  /* Verde éxito */
   --btn-success-text: #ffffff;

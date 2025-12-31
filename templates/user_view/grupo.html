@@ -36,9 +36,18 @@
             <div class="code-label">Código de invitación</div>
             <div class="code-value">
                 {{ grupo.codigo_invitacion }}
-                <span class="copy-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                </span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="https://api.whatsapp.com/send?text={{ url_for('unirse_grupo', codigo=grupo.codigo_invitacion, _external=True) }}" 
+                       target="_blank" 
+                       onclick="event.stopPropagation()" 
+                       title="Compartir por WhatsApp"
+                       style="color: #25D366; display: flex; align-items: center;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.304-5.291c0-5.449 4.432-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.888 9.884m0-19.857C3.875 1.928.001 5.801.001 10.557c0 1.675.437 3.278 1.268 4.69L.003 24l8.915-2.336c1.37.747 2.922 1.141 4.518 1.141h.003c5.514 0 9.994-4.481 9.994-9.994 0-2.67-1.039-5.18-2.905-7.046A9.922 9.922 0 0112.051 1.928z"/></svg>
+                    </a>
+                    <span class="copy-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2-2v1"></path></svg>
+                    </span>
+                </div>
             </div>
             <div class="toast">¡Copiado!</div>
         </div>
@@ -108,7 +117,7 @@
                 <thead>
                     <tr>
                         <th width="50">Pos</th>
-                        <th>Estudiante</th>
+                        <th>Integrantes</th>
                         <th class="text-right">Puntos</th>
                     </tr>
                 </thead>
@@ -119,7 +128,7 @@
                         <td>
                             <div class="user-flex">
                                 <div class="avatar-xs">{{ usuario.nombre[0] | upper }}</div>
-                                <span>{{ usuario.nombre }}</span>
+                                <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" >{{ usuario.nombre }}</span>
                             </div>
                         </td>
                         <td class="text-right"><strong>{{ usuario.puntos }}</strong></td>

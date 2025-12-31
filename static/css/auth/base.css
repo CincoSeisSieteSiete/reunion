@@ -21,6 +21,10 @@
     background: var(--page-bg);
 }
 
+.registerAu{
+    margin-top: 200px;
+}
+
 .auth-card {
     background: var(--bg-body);
     border: 1px solid var(--border-light);
